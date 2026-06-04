@@ -1,0 +1,15 @@
+{
+  "table": "users",
+  "supabase_ready": true,
+  "fields": [
+    "id",
+    "name",
+    "email",
+    "password_demo",
+    "role",
+    "created_at",
+    "updated_at",
+    "last_login_at"
+  ],
+  "users": []
+}
