@@ -1,45 +1,11 @@
-# Free App Swap - basisstructuur
+# FreeAppSwap
 
-Dit is de eerste modulaire basis voor het planetenstelsel.
+Werkende split-versie op basis van de laatste goede single HTML.
 
-## Starten
+Bestanden:
+- `index.html` bevat de vaste HTML-structuur van het universum.
+- `css/style.css` bevat alle styling en animatieklassen.
+- `js/app.js` bevat login/localStorage, search-links, download/upload bollen en flow.
+- `data/users.json` en `data/apps.json` zijn placeholders voor latere Supabase-tabellen.
 
-Open `index.html` rechtstreeks in de browser.
-
-Beter: start een kleine lokale server zodat de aparte component-html's netjes geladen worden:
-
-```bash
-python -m http.server 8000
-```
-
-Ga daarna naar:
-
-```text
-http://localhost:8000
-```
-
-Op Windows kan je ook `start_server.bat` dubbelklikken.
-
-## Structuur
-
-```text
-freeappswap/
-  index.html
-  css/style.css
-  js/*.js
-  components/*.html
-  data/users.json
-  data/apps.json
-  assets/
-```
-
-## Login/register
-
-Voorlopig wordt de login lokaal opgeslagen in `localStorage`.
-De structuur is bewust Supabase-ready gehouden.
-
-In Account zit een knop om de lokale users JSON te downloaden.
-
-## Later Supabase
-
-`data/users.json` en `data/apps.json` tonen de velden die later naar Supabase-tabellen kunnen worden vertaald.
+Lokaal testen via Live Server, niet door `index.html` direct als file te openen.

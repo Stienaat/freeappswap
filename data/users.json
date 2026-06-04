@@ -1,15 +1,4 @@
 {
-  "table": "users",
-  "supabase_ready": true,
-  "fields": [
-    "id",
-    "name",
-    "email",
-    "password_demo",
-    "role",
-    "created_at",
-    "updated_at",
-    "last_login_at"
-  ],
+  "schema": "free_app_swap_prototype_users_v1",
   "users": []
 }

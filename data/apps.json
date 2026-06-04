@@ -1,30 +1,16 @@
 {
-  "table": "apps",
-  "supabase_ready": true,
   "apps": [
     {
-      "id": "app_familieconnect",
       "name": "FamilieConnect",
-      "category": "Android",
-      "description": "Familie tracker / viewer",
-      "download_url": "",
-      "created_at": ""
+      "category": "Android"
     },
     {
-      "id": "app_latin_square",
       "name": "Latin Square",
-      "category": "Game",
-      "description": "Puzzelspel",
-      "download_url": "",
-      "created_at": ""
+      "category": "Game"
     },
     {
-      "id": "app_intercom",
       "name": "Intercom",
-      "category": "WebRTC",
-      "description": "Eenvoudige intercom demo",
-      "download_url": "",
-      "created_at": ""
+      "category": "WebRTC"
     }
   ]
 }

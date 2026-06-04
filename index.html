@@ -3,67 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free App Swap</title>
+  <title>Free App Swap - Login JSON ready</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
-  <div class="countdown" id="countdown" aria-hidden="true"></div>
-  <main class="space" id="space" aria-label="Free App Swap universe">
-    <div class="bubble home" id="homeBubble" data-bubble="home">
-      <div class="home-globe">
-        <svg viewBox="0 0 1000 1000" class="globe-svg" aria-hidden="true">
-          <defs>
-            <clipPath id="globeClip"><circle cx="500" cy="500" r="498"/></clipPath>
-            <radialGradient id="ocean" cx="30%" cy="22%" r="78%">
-              <stop offset="0%" stop-color="#ffffff"/>
-              <stop offset="18%" stop-color="#dffaff"/>
-              <stop offset="42%" stop-color="#76d9ff"/>
-              <stop offset="72%" stop-color="#289bd6"/>
-              <stop offset="100%" stop-color="#185e9f"/>
-            </radialGradient>
-            <radialGradient id="shade" cx="78%" cy="84%" r="65%">
-              <stop offset="0%" stop-color="rgba(0,0,0,.36)"/>
-              <stop offset="42%" stop-color="rgba(0,0,0,.15)"/>
-              <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-            </radialGradient>
-            <path id="arcTop" d="M 190 292 C 330 170, 670 170, 810 292"/>
-          </defs>
-          <g clip-path="url(#globeClip)">
-            <circle cx="500" cy="500" r="500" fill="url(#ocean)"/>
-            <path d="M170,380 C230,310 300,300 345,350 C390,400 360,455 415,505 C465,550 545,520 575,580 C610,655 520,735 410,700 C315,670 300,590 230,575 C155,558 105,470 170,380Z" fill="#62d389" opacity=".82"/>
-            <path d="M620,275 C710,245 815,310 820,405 C825,485 750,520 710,585 C665,655 710,740 630,785 C555,828 485,760 520,690 C550,630 610,610 585,545 C560,480 490,440 525,365 C545,325 575,290 620,275Z" fill="#50c878" opacity=".76"/>
-            <path d="M115,650 C160,605 230,615 270,660 C312,710 265,775 190,770 C125,766 78,704 115,650Z" fill="#72dc96" opacity=".62"/>
-            <path d="M780,630 C840,590 910,635 902,710 C895,780 815,800 775,750 C745,710 735,665 780,630Z" fill="#72dc96" opacity=".55"/>
-            <path d="M150,250 C250,205 350,218 445,255 C535,290 650,285 790,235" stroke="white" stroke-width="32" stroke-linecap="round" fill="none" opacity=".35"/>
-            <path d="M105,520 C255,470 365,500 480,535 C620,578 770,552 900,492" stroke="white" stroke-width="28" stroke-linecap="round" fill="none" opacity=".22"/>
-            <circle cx="500" cy="500" r="500" fill="url(#shade)"/>
-            <circle cx="290" cy="210" r="180" fill="white" opacity=".30"/>
-            <circle cx="230" cy="160" r="80" fill="white" opacity=".40"/>
-          </g>
-          <text font-family="system-ui, Segoe UI, sans-serif" font-weight="950" font-size="58" letter-spacing="5" fill="#1e1e2f" opacity=".94">
-            <textPath href="#arcTop" startOffset="50%" text-anchor="middle">FREE APP SWAP</textPath>
-          </text>
-          <text x="500" y="395" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="850" font-size="35" fill="#1e1e2f">An exchange market for apps</text>
-          <text x="500" y="438" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="850" font-size="35" fill="#1e1e2f">made by hobby developers</text>
-          <text x="500" y="520" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="900" font-size="34" fill="#1e1e2f" opacity=".90">Free apps • No ads • No subscriptions</text>
-          <text x="500" y="590" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="700" font-size="27" fill="#1e1e2f" opacity=".80">Downloading is free</text>
-          <text x="500" y="628" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="700" font-size="27" fill="#1e1e2f" opacity=".80">Uploading requires a free member account</text>
-        </svg>
+  <main class="space">
+    <div class="countdown" id="countdown">
+      <span>3</span><span>2</span><span>1</span>
+    </div>
+    <div class="dotrow" id="dotrow">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="bubble home" id="home">
+      <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-label="Free App Swap wereldbol">
+        <defs>
+          <clipPath id="clipWorld"><circle cx="500" cy="500" r="500"/></clipPath>
+          <radialGradient id="worldOcean" cx="31%" cy="22%" r="82%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="16%" stop-color="#eafcff"/>
+            <stop offset="40%" stop-color="#79dfff"/>
+            <stop offset="70%" stop-color="#209be0"/>
+            <stop offset="100%" stop-color="#1560a7"/>
+          </radialGradient>
+          <radialGradient id="worldShade" cx="78%" cy="84%" r="70%">
+            <stop offset="0%" stop-color="rgba(0,0,0,.36)"/>
+            <stop offset="42%" stop-color="rgba(0,0,0,.14)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+          <path id="arcTop" d="M 185 295 C 330 165, 670 165, 815 295"/>
+          <path id="arcBottom" d="M 178 706 C 338 835, 662 835, 822 706"/>
+        </defs>
+
+        <g clip-path="url(#clipWorld)">
+          <circle cx="500" cy="500" r="500" fill="url(#worldOcean)"/>
+
+          <path d="M168,378 C232,305 305,300 348,352 C392,405 363,456 420,506 C470,551 548,521 580,582 C615,656 522,735 410,700 C315,670 300,590 230,575 C153,557 104,470 168,378Z" fill="#69d98e" opacity=".82"/>
+          <path d="M620,272 C710,244 815,312 820,406 C826,486 750,522 710,586 C666,654 710,741 631,786 C556,828 485,760 520,690 C550,630 610,610 585,545 C560,480 490,440 525,365 C545,324 575,290 620,272Z" fill="#50c878" opacity=".76"/>
+          <path d="M115,650 C160,605 230,615 270,660 C312,710 265,775 190,770 C125,766 78,704 115,650Z" fill="#72dc96" opacity=".62"/>
+          <path d="M780,630 C840,590 910,635 902,710 C895,780 815,800 775,750 C745,710 735,665 780,630Z" fill="#72dc96" opacity=".55"/>
+
+          <path d="M150,250 C250,205 350,218 445,255 C535,290 650,285 790,235" stroke="white" stroke-width="32" stroke-linecap="round" fill="none" opacity=".34"/>
+          <path d="M105,520 C255,470 365,500 480,535 C620,578 770,552 900,492" stroke="white" stroke-width="28" stroke-linecap="round" fill="none" opacity=".21"/>
+
+          <circle cx="500" cy="500" r="500" fill="url(#worldShade)"/>
+          <circle cx="292" cy="210" r="178" fill="white" opacity=".28"/>
+          <circle cx="230" cy="160" r="78" fill="white" opacity=".38"/>
+          <ellipse cx="250" cy="155" rx="155" ry="48" fill="white" opacity=".68" transform="rotate(-34 250 155)"/>
+        </g>
+
+        <text font-family="system-ui, Segoe UI, sans-serif" font-weight="950" font-size="58" letter-spacing="5" fill="#111733" opacity=".94">
+          <textPath href="#arcTop" startOffset="50%" text-anchor="middle">FREE APP SWAP</textPath>
+        </text>
+
+        <text x="500" y="396" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="850" font-size="35" fill="#111733">An exchange market for apps</text>
+        <text x="500" y="440" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="850" font-size="35" fill="#111733">made by hobby developers</text>
+        <text x="500" y="522" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-weight="900" font-size="34" fill="#111733" opacity=".92">Free apps • No ads • No subscriptions</text>
+
+        <g font-family="system-ui, Segoe UI, sans-serif" font-weight="700" font-size="27" fill="#111733" opacity=".82">
+          <text x="500" y="592" text-anchor="middle">Downloading is free</text>
+          <text x="500" y="630" text-anchor="middle">Uploading requires a free member account</text>
+          <text x="500" y="668" text-anchor="middle">Respect for privacy • Clear information</text>
+        </g>
+
+        <text font-family="system-ui, Segoe UI, sans-serif" font-weight="850" font-size="30" letter-spacing="2" fill="#111733" opacity=".80">
+          <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">CLICK OUTSIDE THIS WORLD TO BEGIN</textPath>
+        </text>
+      </svg>
+    </div>
+
+    <div class="bubble search" id="search">
+      <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-label="Zoek bol">
+        <defs>
+          <radialGradient id="searchBall" cx="30%" cy="18%" r="85%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="20%" stop-color="#fff4a5"/>
+            <stop offset="50%" stop-color="#ffc24f"/>
+            <stop offset="76%" stop-color="#ff8b25"/>
+            <stop offset="100%" stop-color="#d85b22"/>
+          </radialGradient>
+          <radialGradient id="searchShade" cx="82%" cy="88%" r="70%">
+            <stop offset="0%" stop-color="rgba(0,0,0,.34)"/>
+            <stop offset="45%" stop-color="rgba(0,0,0,.10)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="500" cy="500" r="500" fill="url(#searchBall)"/>
+        <circle cx="500" cy="500" r="500" fill="url(#searchShade)"/>
+        <ellipse cx="285" cy="150" rx="175" ry="55" fill="white" opacity=".72" transform="rotate(-34 285 150)"/>
+        <circle cx="290" cy="175" r="120" fill="white" opacity=".24"/>
+        <g fill="none" stroke="#111733" stroke-width="46" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="410" cy="330" r="92"/>
+          <path d="M478 398 L620 540"/>
+        </g>
+        <text x="500" y="510" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="120" font-weight="950" fill="#111733">ZOEK</text>
+      </svg>
+      <div class="search-panel" aria-hidden="false">
+        <div class="search-menu">
+          <button class="search-link" type="button" data-target="account">ACCOUNT</button>
+          <button class="search-link" type="button" data-target="download">DOWNLOAD</button>
+          <button class="search-link" type="button" data-target="upload">UPLOAD</button>
+        </div>
       </div>
     </div>
 
-    <div class="bubble search" id="searchBubble" data-bubble="search"></div>
-    <div class="bubble account active" id="accountBubble" data-bubble="account"></div>
-    <div class="bubble download hidden" id="downloadBubble" data-bubble="download"></div>
-    <div class="bubble upload hidden" id="uploadBubble" data-bubble="upload"></div>
+    <div class="bubble account" id="account">
+      <div class="account-shell">
+        <form class="account-form" id="accountForm">
+          <div class="account-title">ACCOUNT</div>
+          <input id="loginName" name="name" type="text" placeholder="Naam" autocomplete="name" />
+          <input id="loginEmail" name="email" type="email" placeholder="Email" autocomplete="email" />
+          <input id="loginPassword" name="password" type="password" placeholder="Paswoord" autocomplete="current-password" />
+          <button type="submit">OK</button>
+          <div class="login-message" id="loginMessage"></div>
+          <button class="json-export" id="exportUsersJson" type="button" title="Prototype: download lokale gebruikers als JSON">JSON</button>
+        </form>
+      </div>
+    </div>
   </main>
-
-  <script src="js/dataStore.js"></script>
-  <script src="js/bubbles.js"></script>
-  <script src="js/account.js"></script>
-  <script src="js/search.js"></script>
-  <script src="js/download.js"></script>
-  <script src="js/upload.js"></script>
-  <script src="js/universe.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

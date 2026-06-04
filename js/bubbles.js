@@ -14,7 +14,7 @@ window.FreeAppSwapBubbles = (() => {
     account: {
       hidden: { x: 62, y: 47, size: "min(20vw, 20vh)", scale: .04, z: 820, opacity: 0, dx: 0, dy: 0, pad: "clamp(10px, 2vw, 22px)" },
       idle: { x: 62, y: 47, size: "min(20vw, 20vh)", scale: 1, z: 900, opacity: .96, dx: 0, dy: 0, pad: "clamp(10px, 2vw, 22px)" },
-      active: { x: 56, y: 48, size: "min(36vw, 36vh)", scale: 1, z: 1200, opacity: 1, dx: 0, dy: 0, pad: "clamp(18px, 4vw, 42px)" },
+      active: { x: 56, y: 48, size: "280px", scale: 1, z: 1200, opacity: 1, dx: 0, dy: 0, pad: "clamp(18px, 4vw, 42px)" },
       background: { x: 84, y: 18, size: "min(12vw, 12vh)", scale: .55, z: -260, opacity: .68, dx: 0, dy: 0, pad: "10px" }
     },
     download: {
@@ -98,3 +98,34 @@ window.FreeAppSwapBubbles = (() => {
 
   return { initClosed, showHome, showStartBubbles, focus, showLoggedInUniverse, applyState };
 })();
+account: {
+  idle: {
+    x: 62, y: 47,
+    size: "280px",
+    scale: .62,
+    z: 900,
+    opacity: .96,
+    dx: 0, dy: 0,
+    pad: "18px"
+  },
+
+  active: {
+    x: 72, y: 50,
+    size: "280px",
+    scale: 1,
+    z: 2000,
+    opacity: 1,
+    dx: 0, dy: 0,
+    pad: "18px"
+  },
+
+  background: {
+    x: 84, y: 18,
+    size: "280px",
+    scale: .22,
+    z: -260,
+    opacity: .68,
+    dx: 0, dy: 0,
+    pad: "18px"
+  }
+}
