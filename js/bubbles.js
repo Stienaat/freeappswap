@@ -1,15 +1,18 @@
 window.FreeAppSwapBubbles = (() => {
   const states = {
     home: {
+      closed: { x: 50, y: 50, size: "min(100vh, 100vw)", scale: 0.02, z: 0, opacity: 0, dx: 0, dy: 0, pad: "0px" },
       active: { x: 50, y: 50, size: "min(100vh, 100vw)", scale: 1, z: 0, opacity: 1, dx: 0, dy: 0, pad: "0px" },
       background: { x: 50, y: 50, size: "min(100vh, 100vw)", scale: .92, z: -180, opacity: .85, dx: 0, dy: 0, pad: "0px" }
     },
     search: {
+      hidden: { x: 8, y: 23, size: "70px", scale: .08, z: 650, opacity: 0, dx: 0, dy: 0, pad: "9px" },
       idle: { x: 8, y: 23, size: "70px", scale: 1, z: 800, opacity: .96, dx: 0, dy: 0, pad: "9px" },
       active: { x: 22, y: 34, size: "min(42vw, 42vh)", scale: 1, z: 1100, opacity: .98, dx: 0, dy: 0, pad: "clamp(18px, 4vw, 46px)" },
       background: { x: 8, y: 23, size: "70px", scale: .88, z: 650, opacity: .88, dx: 0, dy: 0, pad: "9px" }
     },
     account: {
+      hidden: { x: 62, y: 47, size: "min(20vw, 20vh)", scale: .04, z: 820, opacity: 0, dx: 0, dy: 0, pad: "clamp(10px, 2vw, 22px)" },
       idle: { x: 62, y: 47, size: "min(20vw, 20vh)", scale: 1, z: 900, opacity: .96, dx: 0, dy: 0, pad: "clamp(10px, 2vw, 22px)" },
       active: { x: 56, y: 48, size: "min(36vw, 36vh)", scale: 1, z: 1200, opacity: 1, dx: 0, dy: 0, pad: "clamp(18px, 4vw, 42px)" },
       background: { x: 84, y: 18, size: "min(12vw, 12vh)", scale: .55, z: -260, opacity: .68, dx: 0, dy: 0, pad: "10px" }
@@ -60,27 +63,38 @@ window.FreeAppSwapBubbles = (() => {
         applyState(name, "hidden", "3200ms");
         continue;
       }
-      if (name === id) applyState(name, "active", "3800ms");
-      else if (name === "home") applyState(name, "background", "4200ms");
-      else applyState(name, isLoggedIn && visibleAfterLogin.has(name) ? "background" : "idle", "3600ms");
+      if (name === id) applyState(name, "active", "4200ms");
+      else if (name === "home") applyState(name, "background", "4600ms");
+      else applyState(name, isLoggedIn && visibleAfterLogin.has(name) ? "background" : "idle", "4000ms");
     }
   }
 
   function showLoggedInUniverse() {
-    applyState("home", "background", "4200ms");
-    applyState("account", "background", "4200ms");
+    applyState("home", "background", "5200ms");
+    applyState("account", "background", "5200ms");
     applyState("search", "idle", "4200ms");
-    applyState("download", "idle", "5200ms");
-    applyState("upload", "idle", "5200ms");
+    applyState("download", "idle", "6200ms");
+    applyState("upload", "idle", "6200ms");
   }
 
-  function init() {
-    applyState("home", "active", "10ms");
-    applyState("search", "idle", "10ms");
-    applyState("account", "active", "10ms");
+  function initClosed() {
+    applyState("home", "closed", "10ms");
+    applyState("search", "hidden", "10ms");
+    applyState("account", "hidden", "10ms");
     applyState("download", "hidden", "10ms");
     applyState("upload", "hidden", "10ms");
   }
 
-  return { init, focus, showLoggedInUniverse, applyState };
+  function showHome() {
+    applyState("home", "active", "5600ms");
+  }
+
+  function showStartBubbles() {
+    applyState("search", "idle", "4200ms");
+    applyState("account", "active", "4600ms");
+    applyState("download", "hidden", "10ms");
+    applyState("upload", "hidden", "10ms");
+  }
+
+  return { initClosed, showHome, showStartBubbles, focus, showLoggedInUniverse, applyState };
 })();

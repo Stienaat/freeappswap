@@ -173,3 +173,37 @@ body::before {
   .bubble-title { font-size: clamp(.9rem, 4vw, 1.8rem); }
   .bubble-text, .bubble-list, .bubble-form { font-size: clamp(.62rem, 3vw, .9rem); }
 }
+
+
+/* Open flow: 3 -> 2 -> 1, world grows, then account waits for input */
+.countdown {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 9000;
+  pointer-events: none;
+  font-size: clamp(7rem, 23vw, 22rem);
+  font-weight: 950;
+  color: rgba(255,255,255,.94);
+  text-shadow: 0 8px 30px rgba(0,0,0,.20), 0 0 40px rgba(255,255,255,.80);
+  opacity: 0;
+  transform: scale(.72);
+  transition: opacity 450ms ease, transform 780ms var(--ease);
+}
+.countdown.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* tijdens de startflow mag niets bruusk springen */
+.bubble {
+  will-change: transform, opacity, width, height, left, top;
+}
+
+.account .bubble-content,
+.search .bubble-content,
+.download .bubble-content,
+.upload .bubble-content {
+  transform-origin: center;
+}

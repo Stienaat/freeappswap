@@ -5,6 +5,10 @@ const componentFallbacks = {
   upload: `<div class="bubble-content"><div class="bubble-title">UPLOAD</div><div class="bubble-list"><button class="planet-button">Nieuwe app</button><button class="planet-button">Upload regels</button><button class="planet-button">Info</button></div></div>`
 };
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function loadComponent(id) {
   const node = document.getElementById(`${id}Bubble`);
   if (!node) return;
@@ -17,14 +21,20 @@ async function loadComponent(id) {
   }
 }
 
-async function startUniverse() {
-  await Promise.all(["account", "search", "download", "upload"].map(loadComponent));
-  FreeAppSwapBubbles.init();
-  FreeAppSwapAccount.init();
-  FreeAppSwapSearch.init();
-  FreeAppSwapDownload.init();
-  FreeAppSwapUpload.init();
+async function showCountdown() {
+  const countdown = document.getElementById("countdown");
+  if (!countdown) return;
 
+  for (const value of ["3", "2", "1"]) {
+    countdown.textContent = value;
+    countdown.classList.add("show");
+    await sleep(780);
+    countdown.classList.remove("show");
+    await sleep(360);
+  }
+}
+
+function bindBubbleBehaviour() {
   document.getElementById("accountBubble")?.addEventListener("mouseenter", () => {
     FreeAppSwapBubbles.focus("account", FreeAppSwapAccount.isLoggedIn());
   });
@@ -37,6 +47,25 @@ async function startUniverse() {
   document.getElementById("uploadBubble")?.addEventListener("mouseenter", () => {
     if (FreeAppSwapAccount.isLoggedIn()) FreeAppSwapBubbles.focus("upload", true);
   });
+}
+
+async function startUniverse() {
+  await Promise.all(["account", "search", "download", "upload"].map(loadComponent));
+
+  FreeAppSwapBubbles.initClosed();
+  FreeAppSwapAccount.init();
+  FreeAppSwapSearch.init();
+  FreeAppSwapDownload.init();
+  FreeAppSwapUpload.init();
+  bindBubbleBehaviour();
+
+  await sleep(160);
+  await showCountdown();
+
+  FreeAppSwapBubbles.showHome();
+  await sleep(5600);
+
+  FreeAppSwapBubbles.showStartBubbles();
 }
 
 startUniverse();
