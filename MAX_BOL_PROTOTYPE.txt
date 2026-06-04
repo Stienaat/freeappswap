@@ -1,0 +1,7 @@
+Prototype FamilieConnect MAX-bol:
+- 85% scherm
+- Screenshot centraal
+- Beschrijving
+- Download APK knop
+- Sluitknop
+- Basis voor alle toekomstige app-bollen

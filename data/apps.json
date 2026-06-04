@@ -1,16 +1,42 @@
 {
+  "platforms": [
+    {
+      "id": "apk",
+      "label": "APK"
+    },
+    {
+      "id": "pwa",
+      "label": "PWA"
+    }
+  ],
+  "categories": [
+    {
+      "id": "games",
+      "label": "GAMES"
+    },
+    {
+      "id": "utilities",
+      "label": "UTILITIES"
+    }
+  ],
   "apps": [
     {
+      "id": "familieconnect",
       "name": "FamilieConnect",
-      "category": "Android"
-    },
-    {
-      "name": "Latin Square",
-      "category": "Game"
-    },
-    {
-      "name": "Intercom",
-      "category": "WebRTC"
+      "platform": "apk",
+      "category": "utilities",
+      "version": "0.1",
+      "author": "Frank Steenhoudt",
+      "status": "Testversie",
+      "description": "Familietracker voor gezinnen, kinderen en mantelzorgers.",
+      "readme": [
+        "Live locatie op de kaart",
+        "SOS-signaal voor noodgevallen",
+        "Eenvoudig voor familiegebruik",
+        "Privacyvriendelijk prototype"
+      ],
+      "download_url": "downloads/familieconnect.apk",
+      "screenshot": "assets/images/familieconnect_screen1.jpg"
     }
   ]
 }

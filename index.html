@@ -104,21 +104,37 @@
           <button class="search-link" type="button" data-target="account">ACCOUNT</button>
           <button class="search-link" type="button" data-target="download">DOWNLOAD</button>
           <button class="search-link" type="button" data-target="upload">UPLOAD</button>
+          <button class="search-link" type="button" data-target="apk">APK</button>
+          <button class="search-link" type="button" data-target="pwa">PWA</button>
+          <button class="search-link" type="button" data-target="games">GAMES</button>
+          <button class="search-link" type="button" data-target="utilities">UTILITIES</button>
+          <button class="search-link" type="button" data-target="familieconnect">FamilieConnect</button>
         </div>
       </div>
     </div>
 
     <div class="bubble account" id="account">
       <div class="account-shell">
-        <form class="account-form" id="accountForm">
-          <div class="account-title">ACCOUNT</div>
-          <input id="loginName" name="name" type="text" placeholder="Naam" autocomplete="name" />
-          <input id="loginEmail" name="email" type="email" placeholder="Email" autocomplete="email" />
-          <input id="loginPassword" name="password" type="password" placeholder="Paswoord" autocomplete="current-password" />
-          <button type="submit">OK</button>
-          <div class="login-message" id="loginMessage"></div>
-          <button class="json-export" id="exportUsersJson" type="button" title="Prototype: download lokale gebruikers als JSON">JSON</button>
-        </form>
+        <div class="account-form" id="accountPanel">
+          <div class="account-title" id="accountTitle">ACCOUNT</div>
+
+          <div class="account-phase account-phase-start" id="accountStart">
+            <button class="account-choice" id="showLogin" type="button">LOGIN</button>
+            <button class="account-choice" id="showRegister" type="button">REGISTREER</button>
+          </div>
+
+          <form class="account-phase account-phase-form" id="accountForm">
+            <input class="register-only" id="loginName" name="name" type="text" placeholder="Naam" autocomplete="name" />
+            <input id="loginEmail" name="email" type="text" placeholder="Email of naam" autocomplete="username" />
+            <input id="loginPassword" name="password" type="password" placeholder="Paswoord" autocomplete="current-password" />
+            <input class="register-only" id="loginPasswordConfirm" name="passwordConfirm" type="password" placeholder="Paswoord bevestigen" autocomplete="new-password" />
+            <button id="accountSubmit" type="submit">LOGIN</button>
+            <button class="forgot-link" id="forgotPassword" type="button">paswoord vergeten?</button>
+            <button class="back-link" id="backToAccountStart" type="button">terug</button>
+            <div class="login-message" id="loginMessage"></div>
+            <button class="json-export" id="exportUsersJson" type="button" title="Prototype: download lokale gebruikers als JSON">JSON</button>
+          </form>
+        </div>
       </div>
     </div>
   </main>
