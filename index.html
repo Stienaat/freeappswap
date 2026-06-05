@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Free App Swap - Login JSON ready</title>
   <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/account.css" />
+<link rel="stylesheet" href="css/search.css" />
+<link rel="stylesheet" href="css/download.css" />
+<link rel="stylesheet" href="css/upload.css" />
+<link rel="stylesheet" href="css/product.css" />
+<link rel="stylesheet" href="css/responsive.css" />
 </head>
 
 <body>
@@ -93,22 +99,21 @@
         <circle cx="500" cy="500" r="500" fill="url(#searchShade)"/>
         <ellipse cx="285" cy="150" rx="175" ry="55" fill="white" opacity=".72" transform="rotate(-34 285 150)"/>
         <circle cx="290" cy="175" r="120" fill="white" opacity=".24"/>
-        <g fill="none" stroke="#111733" stroke-width="46" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="410" cy="330" r="92"/>
-          <path d="M478 398 L620 540"/>
+        <g class="search-symbol" fill="none" stroke="#111733" stroke-width="38" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="405" cy="300" r="68"/>
+          <path d="M455 350 L555 450"/>
         </g>
-        <text x="500" y="510" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="120" font-weight="950" fill="#111733">ZOEK</text>
+        <text class="search-label" x="500" y="535" text-anchor="middle" font-family="system-ui, Segoe UI, sans-serif" font-size="150" font-weight="950" fill="#111733">ZOEK</text>
       </svg>
       <div class="search-panel" aria-hidden="false">
-        <div class="search-menu">
-          <button class="search-link" type="button" data-target="account">ACCOUNT</button>
-          <button class="search-link" type="button" data-target="download">DOWNLOAD</button>
-          <button class="search-link" type="button" data-target="upload">UPLOAD</button>
-          <button class="search-link" type="button" data-target="apk">APK</button>
-          <button class="search-link" type="button" data-target="pwa">PWA</button>
-          <button class="search-link" type="button" data-target="games">GAMES</button>
-          <button class="search-link" type="button" data-target="utilities">UTILITIES</button>
-          <button class="search-link" type="button" data-target="familieconnect">FamilieConnect</button>
+        <div class="search-menu" aria-label="Sitemap">
+          <button class="search-link sitemap-main" type="button" data-target="account">ACCOUNT</button>
+
+          <button class="search-link sitemap-main" type="button" data-target="download">DOWNLOAD</button>
+          <button class="search-link sitemap-child" type="button" data-target="apk">↳ APK</button>
+          <button class="search-link sitemap-child" type="button" data-target="pwa">↳ PWA</button>
+
+          <button class="search-link sitemap-main" type="button" data-target="upload">UPLOAD</button>
         </div>
       </div>
     </div>

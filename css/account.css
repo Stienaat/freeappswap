@@ -1,0 +1,237 @@
+.account {
+  --x: 72%;
+  --y: 32%;
+  --size: min(18vw, 26vh);
+  --scale: .02;
+  --opacity: 0;
+  --time: 3800ms;
+  z-index: 15;
+  cursor: default;
+  filter: drop-shadow(22px 28px 26px rgba(0,0,0,.20));
+}
+
+.account.open {
+  --scale: 1;
+  --opacity: 1;
+}
+
+.account.focus {
+  --x: 72%;
+  --y: 32%;
+  --size: min(32vw, 55vh);
+  --scale: 1;
+  --opacity: .98;
+  --time: 2800ms;
+  z-index: 40;
+}
+
+.account.dim {
+  --scale: .72;
+  --opacity: .62;
+  z-index: 12;
+}
+
+.account.far {
+  --x: 86%;
+  --y: 22%;
+  --size: min(5vw, 7.5vh);
+  --scale: 1;
+  --time: 3600ms;
+  opacity: .72;
+  z-index: 9;
+  filter: drop-shadow(12px 16px 16px rgba(0,0,0,.14));
+}
+
+.account-shell {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 28% 15%, rgba(255,255,255,1) 0%, rgba(255,255,255,.88) 15%, rgba(255,255,255,.25) 31%, transparent 47%),
+    radial-gradient(circle at 84% 90%, rgba(0,0,0,.24) 0%, rgba(0,0,0,.08) 42%, transparent 70%),
+    linear-gradient(135deg, #ffffff 0%, #ffffff 38%, #f2f3ff 68%, #c6cce2 100%);
+  box-shadow:
+    inset -24px -30px 48px rgba(0,0,0,.13),
+    inset 18px 20px 42px rgba(255,255,255,.72);
+}
+
+.account-shell::before {
+  content: "";
+  position: absolute;
+  left: 16%;
+  top: 8%;
+  width: 34%;
+  height: 12%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.74);
+  transform: rotate(-34deg);
+  pointer-events: none;
+}
+
+.account-form {
+  position: relative;
+  z-index: 2;
+  width: 72%;
+  display: grid;
+  gap: .42em;
+  font-size: calc(var(--size) * .045);
+  text-align: center;
+}
+
+.account:not(.focus) .account-form {
+  gap: .34em;
+  font-size: calc(var(--size) * .048);
+}
+
+.account-title {
+  font-size: 1.65em;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: .02em;
+  margin-bottom: .2em;
+}
+
+.account.focus .account-title {
+  font-size: 1.65em;
+  margin-bottom: .2em;
+}
+
+.account.far .account-title {
+  display: block;
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.account-form input,
+.account-form button {
+  width: 100%;
+  border-radius: 999px;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  min-height: 2.25em;
+}
+
+.account-form input {
+  background: rgba(255,255,255,.92);
+  box-shadow:
+    inset 0 0 0 2px rgba(17,23,51,.18),
+    0 3px 8px rgba(0,0,0,.06);
+  padding: 0 1em;
+  color: #111733;
+  outline: none;
+}
+
+.account-form input::placeholder {
+  color: #7f8298;
+}
+
+.account-form button {
+  background: #0f1a49;
+  color: white;
+  cursor: pointer;
+  font-size: 1.15em;
+  font-weight: 950;
+  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+}
+
+.account-phase {
+  width: 100%;
+}
+
+.account-phase-start {
+  display: grid;
+  gap: .46em;
+}
+
+.account-phase-form {
+  display: none;
+  gap: .42em;
+}
+
+.account-choice {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: .62em .8em;
+  font: inherit;
+  font-weight: 950;
+  color: #111733;
+  background: rgba(255,255,255,.46);
+  box-shadow:
+    inset 0 1px 4px rgba(255,255,255,.55),
+    0 4px 12px rgba(0,0,0,.08);
+  cursor: pointer;
+}
+
+.account-choice:hover {
+  background: rgba(255,255,255,.66);
+}
+
+.account-form .register-only,
+.account:not(.register-mode) .register-only {
+  display: none !important;
+}
+
+.account.register-mode .register-only {
+  display: block !important;
+}
+
+.forgot-link,
+.account .forgot-link,
+.account .back-link {
+  min-height: 0;
+  padding: .15em .35em;
+  background: transparent !important;
+  color: #111733 !important;
+  box-shadow: none !important;
+  text-decoration: underline;
+  opacity: .72;
+}
+
+.account .forgot-link {
+  font-size: .66em !important;
+}
+
+.account .back-link {
+  font-size: .58em !important;
+  opacity: .58;
+}
+
+.login-message {
+  min-height: 1.15em;
+  margin-top: .25em;
+  font-size: 1.54em;
+  font-weight: 850;
+  color: #b00020;
+  text-align: center;
+}
+
+.json-export,
+.account .json-export {
+  display: none !important;
+  background: rgba(17,23,51,.14) !important;
+  color: #111733 !important;
+  font-size: .7em !important;
+  min-height: 1.8em !important;
+  box-shadow: none !important;
+}
+
+.account.focus .json-export {
+  display: block;
+}
+
+.account.far .account-phase-form,
+.account.far .account-phase-start .account-choice,
+.account.far .login-message,
+.account.far .forgot-link,
+.account.far .back-link,
+.account.far .json-export,
+.account.far .account-form input,
+.account.far .account-form button {
+  display: none !important;
+}

@@ -1,0 +1,23 @@
+@media (max-width: 820px) {
+  .home {
+    --size: min(100vw, 100vh);
+    --y: 50%;
+  }
+
+  .search {
+    --x: 12%;
+    --y: 34%;
+    --size: min(12vw, 9vh);
+  }
+
+  .account {
+    --x: 67%;
+    --y: 43%;
+    --size: min(25vw, 20vh);
+  }
+
+  .account.focus {
+    --x: 67%;
+    --y: 43%;
+  }
+}

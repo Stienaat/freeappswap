@@ -1,0 +1,6 @@
+.app-bubble.upload {
+  background:
+    radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+    radial-gradient(circle at 84% 90%, rgba(0,0,0,.24) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+    linear-gradient(135deg, #fff3c5 0%, #ff9fba 48%, #cf5dac 100%);
+}

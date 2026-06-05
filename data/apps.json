@@ -26,17 +26,19 @@
       "platform": "apk",
       "category": "utilities",
       "version": "0.1",
-      "author": "Frank Steenhoudt",
+      "author": "FScreations",
       "status": "Testversie",
       "description": "Familietracker voor gezinnen, kinderen en mantelzorgers.",
       "readme": [
-        "Live locatie op de kaart",
-        "SOS-signaal voor noodgevallen",
-        "Eenvoudig voor familiegebruik",
-        "Privacyvriendelijk prototype"
+        "Live locatie",
+        "SOS functie",
+        "Lage batterijbelasting",
+        "Privacyvriendelijk"
       ],
       "download_url": "downloads/familieconnect.apk",
-      "screenshot": "assets/images/familieconnect_screen1.jpg"
+      "screenshot": "assets/images/FC.jpg",
+      "size": "15.3 MB",
+      "updated_at": "24 mei 2025"
     }
   ]
 }

@@ -1,0 +1,17 @@
+Search aangepast voor volgende stap:
+
+- geen knop-uitstraling meer
+- sitemap-stijl links
+- grotere tekst
+- rustiger uiterlijk
+
+Volgende stap:
+app.js / HTML aanpassen zodat sitemap-items worden:
+ACCOUNT
+DOWNLOAD
+UPLOAD
+APK
+PWA
+GAMES
+UTILITIES
+FAMILIECONNECT

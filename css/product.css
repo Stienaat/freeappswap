@@ -1,0 +1,325 @@
+
+/* ==========================================================
+   PRODUCT / MAX-BOL
+   Layout volgens gekozen referentie:
+   - grote donkere groene bol
+   - linksboven lichter, rechtsonder donkerder
+   - tekst gecentreerd binnen veilige cirkelzone
+   - screenshot links, features midden, meta rechts
+   - grote DOWNLOAD-knop onderaan
+   - sluitknop rechtsboven op de bol
+   ========================================================== */
+
+body.product-modal-open .home,
+body.product-modal-open .search,
+body.product-modal-open .account,
+body.product-modal-open .app-bubble:not(.app-detail) {
+  filter: brightness(.32) saturate(.55) blur(1.1px) !important;
+  animation-play-state: paused !important;
+  pointer-events: none !important;
+}
+
+body.product-modal-open::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 34;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(0, 35, 14, .10), rgba(0,0,0,.72) 75%),
+    rgba(0,0,0,.24);
+}
+
+/* De bol zelf */
+.app-bubble.app-detail {
+  border-radius: 50%;
+  border: 2px solid rgba(230, 254, 76, 0.28);
+  overflow: hidden;
+  cursor: default;
+  animation: none !important;
+
+  background:
+    radial-gradient(circle at 18% 12%,
+      rgba(138,255,92,.72) 0%,
+      rgba(72,160,62,.40) 16%,
+      rgba(28,82,38,.18) 34%,
+      transparent 56%),
+    radial-gradient(circle at 78% 82%,
+      rgba(0,0,0,.86) 0%,
+      rgba(0,0,0,.56) 34%,
+      transparent 66%),
+    linear-gradient(135deg,
+      #4d813f 0%,
+      #224b2b 31%,
+      #0a2415 65%,
+      #010403 100%);
+
+  box-shadow:
+    inset 58px 52px 130px rgba(188,255,170,.14),
+    inset -92px -108px 165px rgba(0,0,0,.80),
+    0 0 46px rgba(54,255,94,.18),
+    0 55px 120px rgba(0,0,0,.50);
+}
+
+.app-bubble.app-detail.focus {
+  --x: 50% !important;
+  --y: 50% !important;
+  --size: min(94vw, 94vh) !important;
+  --scale: 1 !important;
+  --opacity: 1 !important;
+  z-index: 120 !important;
+  transition:
+    left 3400ms var(--ease),
+    top 3400ms var(--ease),
+    width 3400ms var(--ease),
+    height 3400ms var(--ease),
+    transform 3400ms var(--ease),
+    opacity 900ms ease,
+    filter 900ms ease !important;
+}
+
+/* Sluitknop op de bolrand */
+.detail-close {
+  position: absolute;
+  right: 23%;
+  top: 10%;
+  z-index: 5;
+
+  width: min(5.8vw, 5.8vh);
+  height: min(5.8vw, 5.8vh);
+  min-width: 44px;
+  min-height: 44px;
+    
+  border-radius: 50%;
+  border: 1px solid rgba(180,255,190,.28);
+  color: white;
+  font-size: clamp(1.55rem, 2.9vw, 3.2rem);
+  font-weight: 950;
+  line-height: 1;
+  cursor: pointer;
+
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255,255,255,.34), transparent 35%),
+    linear-gradient(135deg, rgba(58,255,92,.55), rgba(3,35,13,.96));
+  box-shadow: 0 0 24px rgba(60,255,110,.34);
+}
+
+/* Veilige inhoudszone: kleiner dan de bol, zodat niets buiten de cirkel loopt */
+.product-detail-content {
+  position: relative;
+  z-index: 2;
+
+  width: 68%;
+  height: 72%;
+  margin: 10.5% auto 0;
+
+  color: white;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: clamp(6px, .9vh, 12px);
+
+  text-align: left;
+  font-size: clamp(.50rem, .72vw, .82rem);
+  overflow: visible;
+}
+
+/* Kop */
+.product-header {
+  text-align: center;
+}
+
+.product-title {
+  font-size: clamp(1.4rem, 3vw, 3.95rem);
+  line-height: .92;
+  font-weight: 950;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  text-shadow:
+    0 0 14px rgba(160,255,176,.30),
+    0 4px 10px rgba(0,0,0,.65);
+}
+
+.product-subtitle {
+  margin: .38em auto 0;
+  color: #73ff86;
+  font-size: clamp(.72rem, 1.02vw, 1.14rem);
+  line-height: 1.18;
+  font-weight: 850;
+  text-align: center;
+  max-width: 84%;
+}
+
+/* Middenlayout exact als gekozen richting:
+   screenshot links, features midden, meta rechts */
+.product-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 29% 39% 25%;
+  gap: clamp(9px, 1.5vw, 20px);
+  align-items: center;
+}
+
+.screenshot-frame {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  gap: 5px;
+}
+
+.screenshot-frame img {
+  max-width: 100%;
+  max-height: 33vh;
+  border-radius: 16px;
+  border: 3px solid rgba(92,255,122,.28);
+  box-shadow:
+    0 0 24px rgba(63,255,111,.20),
+    0 18px 45px rgba(0,0,0,.35);
+  object-fit: contain;
+}
+
+.screenshot-dots {
+  display: none;
+}
+
+.feature-column {
+  min-width: 0;
+}
+
+.product-intro {
+  color: rgba(255,255,255,.92);
+  font-size: clamp(.64rem, .88vw, .96rem);
+  line-height: 1.30;
+  margin: 0 0 .62em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.feature-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .58em;
+  align-items: center;
+  margin: .42em 0;
+}
+
+.feature-icon {
+  width: clamp(30px, 2.65vw, 46px);
+  height: clamp(30px, 2.65vw, 46px);
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+  color: #62ff74;
+  font-weight: 950;
+  font-size: clamp(.56rem, .80vw, .84rem);
+
+  background: rgba(31,255,91,.13);
+  box-shadow:
+    inset 0 0 16px rgba(61,255,103,.32),
+    0 0 16px rgba(50,255,90,.22);
+}
+
+.feature-title {
+  font-weight: 950;
+  font-size: clamp(.66rem, .90vw, .98rem);
+  line-height: 1.10;
+}
+
+.feature-text {
+  color: rgba(255,255,255,.68);
+  font-size: clamp(.48rem, .63vw, .72rem);
+  line-height: 1.20;
+  margin-top: .12em;
+}
+
+/* Rechter meta-kolom */
+.meta-column {
+  border-left: 1px solid rgba(137,255,158,.20);
+  padding-left: clamp(9px, 1.2vw, 17px);
+  display: grid;
+  gap: clamp(5px, .62vh, 9px);
+  align-self: center;
+}
+
+.meta-item span {
+  display: block;
+  color: rgba(255,255,255,.58);
+  font-size: clamp(.43rem, .55vw, .62rem);
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.meta-item strong {
+  display: block;
+  color: #fff;
+  margin-top: .1em;
+  font-size: clamp(.52rem, .68vw, .78rem);
+  line-height: 1.1;
+}
+
+/* Grote downloadknop onderaan */
+.product-download {
+  justify-self: center;
+
+  width: min(42vw, 510px);
+  border-radius: 999px;
+ padding: 8px 24px;
+
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
+  color: white;
+  text-decoration: none;
+
+  font-size: 1rem;
+  font-weight: 950;
+  letter-spacing: .055em;
+  transform: translateY(125px) scaleX(0.5);
+  box-shadow:
+    0 0 28px rgba(66,255,105,.42),
+    inset 0 -14px 30px rgba(0,0,0,.25);
+}
+
+.safe-note {
+  justify-self: center;
+  color: rgba(255,255,255,.72);
+  font-size: clamp(.46rem, .62vw, .70rem);
+  font-weight: 750;
+  text-align: center;
+  transform: translateY(50px);
+}
+
+/* Smallere schermen: dezelfde bol, inhoud scrollt inwendig */
+@media (max-width: 900px) {
+  .product-detail-content {
+    width: 72%;
+    height: 72%;
+    margin: 5% auto 0;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+
+.product-grid {
+    transform: translate(-6%, -8%);
+}
+
+  .screenshot-frame img {
+    max-height: 23vh;
+  }
+
+  .meta-column {
+    border-left: 0;
+    padding-left: 0;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+}
+.product-detail-content {
+  transform: translate(-100px, -60px) !important;
+  }

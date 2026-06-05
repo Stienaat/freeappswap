@@ -110,7 +110,7 @@ account: {
   },
 
   active: {
-    x: 72, y: 50,
+    x: 62, y: 52,
     size: "280px",
     scale: 1,
     z: 2000,
@@ -120,7 +120,7 @@ account: {
   },
 
   background: {
-    x: 84, y: 18,
+    x: 62, y: 52,
     size: "280px",
     scale: .22,
     z: -260,

@@ -20,6 +20,9 @@ let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
 let selectedPlatform = null;
+let selectedCategory = null;
+let downloadPhase = "idle";
+let productModalOpen = false;
 
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
 const appData = {
@@ -38,15 +41,17 @@ const appData = {
       platform: "apk",
       category: "utilities",
       version: "0.1",
-      author: "Frank Steenhoudt",
+      author: "FScreations",
       status: "Testversie",
       description: "Familietracker voor gezinnen, kinderen en mantelzorgers.",
       screenshot: "assets/images/familieconnect_screen1.jpg",
+      size: "15.3 MB",
+      updated_at: "24 mei 2025",
       readme: [
-        "Live locatie op de kaart",
-        "SOS-signaal voor noodgevallen",
-        "Eenvoudig voor familiegebruik",
-        "Privacyvriendelijk prototype"
+        "Live locatie",
+        "SOS functie",
+        "Lage batterijbelasting",
+        "Privacyvriendelijk"
       ],
       download_url: "downloads/familieconnect.apk"
     }
@@ -219,8 +224,21 @@ function finishLogin(user) {
 }
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
-account.addEventListener("click", () => focusBubble("account"));
-search.addEventListener("mouseenter", () => focusBubble("search"));
+search.addEventListener("click", () => {
+  if (!loggedIn) {
+    setAccountMode("login");
+    focusBubble("account");
+    showLoginError("inloggen is vereist");
+    return;
+  }
+
+  if (!appBubblesCreated) createDownloadUpload();
+  focusBubble("search");
+});
+search.addEventListener("mouseenter", () => {
+  if (!loggedIn) return;
+  focusBubble("search");
+});
 
 showLogin.addEventListener("click", event => {
   event.stopPropagation();
@@ -255,35 +273,38 @@ function handleNavigationTarget(target) {
     return;
   }
 
-  if (!loggedIn) {
-    focusBubble("account");
-    showLoginError("eerst inloggen");
-    return;
-  }
+if (!loggedIn) {
+  setAccountMode("login");
+  focusBubble("account");
+  showLoginError("inloggen is vereist");
+  return;
+}
 
   if (!appBubblesCreated) createDownloadUpload();
 
-  if (target === "download" || target === "upload") {
-    focusBubble(target);
+  if (target === "download") {
+    openDownloadPlatforms();
+    return;
+  }
+
+  if (target === "upload") {
+    focusBubble("upload");
     return;
   }
 
   if (platformMap[target]) {
-    setDownloadPlatform(target);
-    focusBubble("download");
+    showDownloadCategories(target);
     return;
   }
 
   if (categoryMap[target]) {
-    if (!selectedPlatform) setDownloadPlatform("apk");
-    createCategoryBubble(target);
-    focusBubble(target);
+    if (!selectedPlatform) selectedPlatform = "apk";
+    showDownloadApps(target);
     return;
   }
 
   if (appMap[target]) {
-    createAppDetailBubble(target);
-    focusBubble(target);
+    openProductFromDownload(target);
   }
 }
 
@@ -371,7 +392,7 @@ function createAppBubble(kind) {
   el.dataset.kind = kind;
 
   if (kind === "download") {
-    renderDownloadStart(el);
+    renderDownloadIdle(el);
   } else {
     el.innerHTML = `
       <div class="planet-content">
@@ -396,167 +417,246 @@ function getDownloadBubble() {
   return document.querySelector('.app-bubble[data-kind="download"]');
 }
 
-function renderDownloadStart(el = getDownloadBubble()) {
+function setDownloadPhase(el, phase) {
+  if (!el) return;
+  downloadPhase = phase;
+  el.classList.remove("phase-idle", "phase-platforms", "phase-categories", "phase-apps");
+  el.classList.add(`phase-${phase}`);
+  el.dataset.phase = phase;
+}
+
+function renderDownloadIdle(el = getDownloadBubble()) {
   if (!el) return;
   selectedPlatform = null;
+  selectedCategory = null;
+  setDownloadPhase(el, "idle");
+  el.classList.remove("focus", "dim");
   el.innerHTML = `
-    <div class="planet-content">
+    <div class="download-content download-idle">
       <div class="planet-title">DOWNLOAD</div>
-      <div class="planet-list">
+    </div>
+  `;
+}
+
+function openDownloadPlatforms(el = getDownloadBubble()) {
+  if (!el) return;
+  selectedPlatform = null;
+  selectedCategory = null;
+  setDownloadPhase(el, "platforms");
+  el.innerHTML = `
+    <div class="download-content">
+      <div class="planet-title">DOWNLOAD</div>
+      <div class="download-platforms">
         ${appData.platforms.map(platform => `
-          <button class="category-link" type="button" data-platform="${platform.id}">${platform.label}</button>
+          <button class="download-choice" type="button" data-platform="${platform.id}">${platform.label}</button>
         `).join("")}
       </div>
     </div>
   `;
+
   el.querySelectorAll("[data-platform]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      setDownloadPlatform(button.dataset.platform);
-      focusBubble("download");
+      showDownloadCategories(button.dataset.platform);
     });
   });
+
+  focusBubble("download");
 }
 
-function setDownloadPlatform(platformId) {
-  selectedPlatform = platformId;
+function showDownloadCategories(platformId) {
   const el = getDownloadBubble();
   if (!el) return;
+
+  selectedPlatform = platformId;
+  selectedCategory = null;
+  setDownloadPhase(el, "categories");
+
   const platform = platformMap[platformId];
   const categories = appData.categories.filter(category => {
     return appData.apps.some(app => app.platform === platformId && app.category === category.id);
   });
 
   el.innerHTML = `
-    <div class="planet-content">
+    <div class="download-content">
       <div class="planet-title">${platform ? platform.label : platformId}</div>
-      <div class="planet-list">
+      <div class="download-list download-category-list">
         ${categories.length ? categories.map(category => `
-          <button class="category-link" type="button" data-category="${category.id}">${category.label}</button>
-        `).join("") : `<div>nog geen apps</div>`}
-        <button class="category-link soft-link" type="button" data-back-platforms="1">terug</button>
+          <button class="download-choice" type="button" data-category="${category.id}">${category.label}</button>
+        `).join("") : `<div class="download-empty">nog geen apps</div>`}
       </div>
+      <button class="download-back" type="button" data-back-platforms="1">terug</button>
     </div>
   `;
+
   el.querySelectorAll("[data-category]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      createCategoryBubble(button.dataset.category);
-      focusBubble(button.dataset.category);
+      showDownloadApps(button.dataset.category);
     });
   });
+
   const back = el.querySelector("[data-back-platforms]");
   if (back) {
     back.addEventListener("click", event => {
       event.stopPropagation();
-      renderDownloadStart(el);
-      focusBubble("download");
+      openDownloadPlatforms(el);
     });
   }
+
+  focusBubble("download");
 }
 
-function createCategoryBubble(categoryId) {
-  const category = categoryMap[categoryId];
-  if (!category) return;
+function showDownloadApps(categoryId) {
+  const el = getDownloadBubble();
+  if (!el) return;
 
-  const existing = document.querySelector(`.app-bubble[data-kind="${categoryId}"]`);
-  if (existing) {
-    renderCategoryBubble(existing, categoryId);
-    return;
-  }
+  selectedCategory = categoryId;
+  setDownloadPhase(el, "apps");
 
-  const el = document.createElement("div");
-  el.className = `app-bubble category ${categoryId}`;
-  el.dataset.kind = categoryId;
-  renderCategoryBubble(el, categoryId);
-
-  const fallbackPositions = {
-    games: { x: randomBetween(17, 29), y: randomBetween(37, 55) },
-    utilities: { x: randomBetween(70, 84), y: randomBetween(35, 55) }
-  };
-  const pos = fallbackPositions[categoryId] || { x: randomBetween(25, 78), y: randomBetween(35, 82) };
-
-  preparePlanetBubble(el, pos.x, pos.y, "min(16vw, 23vh)");
-}
-
-function renderCategoryBubble(el, categoryId) {
   const category = categoryMap[categoryId];
   const platformId = selectedPlatform || "apk";
+  const platform = platformMap[platformId];
+
   const apps = appData.apps.filter(app => app.platform === platformId && app.category === categoryId);
 
   el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">${category.label}</div>
-      <div class="planet-list">
+    <div class="download-content download-apps-content">
+      <div class="planet-title">${category ? category.label : categoryId}</div>
+      <div class="download-subtitle">${platform ? platform.label : platformId}</div>
+      <div class="download-app-scroll">
         ${apps.length ? apps.map(app => `
-          <button class="category-link app-link" type="button" data-app="${app.id}">${app.name}</button>
-        `).join("") : `<div>nog geen apps</div>`}
+          <button class="download-app-link" type="button" data-app="${app.id}">
+            <span>${app.name}</span>
+            <small>${app.version ? "v" + app.version : ""}</small>
+          </button>
+        `).join("") : `<div class="download-empty">nog geen apps</div>`}
       </div>
+      <button class="download-back" type="button" data-back-categories="1">terug</button>
     </div>
   `;
+
   el.querySelectorAll("[data-app]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      createAppDetailBubble(button.dataset.app);
-      focusBubble(button.dataset.app);
+      openProductFromDownload(button.dataset.app);
     });
   });
+
+  const back = el.querySelector("[data-back-categories]");
+  if (back) {
+    back.addEventListener("click", event => {
+      event.stopPropagation();
+      showDownloadCategories(platformId);
+    });
+  }
+
+  focusBubble("download");
 }
 
+function openProductFromDownload(appId) {
+  const el = getDownloadBubble();
+  if (el) {
+    renderDownloadIdle(el);
+  }
+  createAppDetailBubble(appId);
+}
 function createAppDetailBubble(appId) {
   const app = appMap[appId];
   if (!app) return;
 
-  const existing = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
-  if (existing) {
-    focusBubble(appId);
-    return;
-  }
+  let el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
+  if (!el) {
+    el = document.createElement("div");
+    el.className = "app-bubble app-detail";
+    el.dataset.kind = appId;
 
-  const el = document.createElement("div");
-  el.className = "app-bubble app-detail max-detail";
-  el.dataset.kind = appId;
-
-  el.innerHTML = `
-    <button class="detail-close" type="button" aria-label="sluiten">×</button>
-    <div class="app-detail-shell">
-      <section class="detail-hero">
-        <img class="detail-screenshot" src="${app.screenshot || ''}" alt="Screenshot van ${app.name}" />
-      </section>
-
-      <section class="detail-info">
-        <div class="detail-kicker">${app.platform.toUpperCase()} • versie ${app.version} • ${app.status}</div>
-        <div class="detail-title">${app.name}</div>
-        <div class="detail-description">${app.description}</div>
-
-        <div class="detail-features">
-          ${app.readme.map(item => `<div>✓ ${item}</div>`).join("")}
+    el.innerHTML = `
+      <button class="detail-close" type="button" aria-label="Sluiten">×</button>
+      <div class="product-detail-content">
+        <div class="product-header">
+          <div class="product-title">${app.name}</div>
+          <div class="product-subtitle">${app.description}</div>
         </div>
 
-        <div class="detail-author">Auteur: ${app.author}</div>
-        <a class="detail-download" href="${app.download_url}" download>⬇ DOWNLOAD APK</a>
-      </section>
-    </div>
-  `;
+        <div class="product-grid">
+          <div class="screenshot-frame">
+            <img src="${app.screenshot || "assets/images/familieconnect_screen1.jpg"}" alt="Screenshot van ${app.name}" />
+            <div class="screenshot-dots"><span class="active"></span><span></span><span></span></div>
+          </div>
 
-  const close = el.querySelector(".detail-close");
-  close.addEventListener("click", event => {
-    event.stopPropagation();
-    closeAppDetailBubble(el);
-  });
+          <div class="feature-column">
+            <p class="product-intro">Blijf altijd verbonden met je familie. Zie live waar je dierbaren zijn en reageer snel in noodsituaties.</p>
+            ${app.readme.map(item => `
+              <div class="feature-row">
+                <div class="feature-icon">${item.toLowerCase().includes("sos") ? "SOS" : "✓"}</div>
+                <div>
+                  <div class="feature-title">${item}</div>
+                  <div class="feature-text">${featureText(item)}</div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
 
-  preparePlanetBubble(el, 50, 51, "min(88vw, 88vh)");
+          <div class="meta-column">
+            <div class="meta-item"><span>VERSIE</span><strong>${app.version}</strong></div>
+            <div class="meta-item"><span>AUTEUR</span><strong>${app.author}</strong></div>
+            <div class="meta-item"><span>STATUS</span><strong>${app.status}</strong></div>
+            <div class="meta-item"><span>LAATSTE UPDATE</span><strong>${app.updated_at || "-"}</strong></div>
+            <div class="meta-item"><span>PLATFORM</span><strong>Android (${app.platform.toUpperCase()})</strong></div>
+            <div class="meta-item"><span>GROOTTE</span><strong>${app.size || "-"}</strong></div>
+          </div>
+        </div>
+
+        <a class="product-download" href="${app.download_url}" download>⬇ DOWNLOAD</a>
+        <div class="safe-note">100% veilig gescand — Geen virussen of malware</div>
+      </div>
+    `;
+
+    const closeButton = el.querySelector(".detail-close");
+    closeButton.addEventListener("click", event => {
+      event.stopPropagation();
+      closeProductModal(appId);
+    });
+
+    const downloadButton = el.querySelector(".product-download");
+    downloadButton.addEventListener("click", () => {
+      setTimeout(() => closeProductModal(appId), 300);
+    });
+
+    preparePlanetBubble(el, 50, 51, "min(94vw, 94vh)");
+  }
+
+  openProductModal(appId);
 }
 
-function closeAppDetailBubble(el) {
-  el.style.setProperty("--scale", ".03");
-  el.style.setProperty("--opacity", "0");
-  el.style.pointerEvents = "none";
-  setTimeout(() => el.remove(), 1700);
-  if (selectedPlatform) {
-    const activeCategory = document.querySelector(".app-bubble.category.utilities") || document.querySelector(".app-bubble.category");
-    if (activeCategory) focusBubble(activeCategory.dataset.kind);
+function featureText(title) {
+  const key = title.toLowerCase();
+  if (key.includes("locatie")) return "Bekijk de realtime locatie op een duidelijke kaart.";
+  if (key.includes("sos")) return "Stuur direct een noodsignaal naar vertrouwde contacten.";
+  if (key.includes("batterij")) return "Ontvang meldingen bij een lage batterij.";
+  if (key.includes("privacy")) return "Jouw privacy en die van je familie staan voorop.";
+  return "Onderdeel van de app-functionaliteit.";
+}
+
+function openProductModal(appId) {
+  productModalOpen = true;
+  document.body.classList.add("product-modal-open");
+  focusBubble(appId);
+}
+
+function closeProductModal(appId) {
+  productModalOpen = false;
+  document.body.classList.remove("product-modal-open");
+  const el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
+  if (el) {
+    el.classList.remove("focus", "dim");
+    el.style.setProperty("--scale", ".03");
+    el.style.setProperty("--opacity", "0");
+    setTimeout(() => el.remove(), 900);
   }
+  renderDownloadIdle();
+  clearFocusStates();
 }
 
 function preparePlanetBubble(el, finalX, finalY, size) {
@@ -569,8 +669,20 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   el.style.setProperty("--float-y", `${randomBetween(6, 15).toFixed(1)}px`);
   el.style.setProperty("--float-time", `${randomBetween(28, 46).toFixed(1)}s`);
 
-  el.addEventListener("mouseenter", () => focusBubble(el.dataset.kind));
-  el.addEventListener("click", () => focusBubble(el.dataset.kind));
+  el.addEventListener("mouseenter", () => {
+    if (productModalOpen && !el.classList.contains("app-detail")) return;
+    if (el.dataset.kind === "download" && downloadPhase === "idle") return;
+    focusBubble(el.dataset.kind);
+  });
+  el.addEventListener("click", () => {
+    if (productModalOpen && !el.classList.contains("app-detail")) return;
+    if (el.dataset.kind === "download") {
+      if (downloadPhase === "idle") openDownloadPlatforms(el);
+      else focusBubble("download");
+      return;
+    }
+    focusBubble(el.dataset.kind);
+  });
 
   document.querySelector(".space").appendChild(el);
 
@@ -591,6 +703,7 @@ function clearFocusStates() {
 }
 
 function focusBubble(kind) {
+  if (productModalOpen && !appMap[kind]) return;
   const activeIsSearch = kind === "search";
   const activeIsAccount = kind === "account";
 
@@ -618,10 +731,11 @@ function focusBubble(kind) {
 }
 
 search.addEventListener("click", () => {
-  if (!loggedIn) {
-    focusBubble("account");
-    return;
-  }
+if (!loggedIn) {
+  focusBubble("account");
+  showLoginError("inloggen vereist!");
+  return;
+}
   if (!appBubblesCreated) createDownloadUpload();
   focusBubble("search");
 });
