@@ -1,175 +1,190 @@
+.home.explode {
+      --scale: 1.22;
+      --opacity: 0;
+      --time: 1800ms;
+      filter: blur(10px) drop-shadow(0 0 80px rgba(66,180,255,.55));
+      pointer-events: none;
+    }
+
+    .app-bubble {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(var(--scale));
+      opacity: var(--opacity);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #111733;
+      font-weight: 950;
+      font-size: calc(var(--size) * .105);
+      letter-spacing: .02em;
+      transition:
+        left 5200ms var(--ease),
+        top 5200ms var(--ease),
+        transform 5200ms var(--ease),
+        opacity 1500ms ease;
+      filter: drop-shadow(22px 30px 26px rgba(0,0,0,.18));
+      z-index: 14;
+      animation: floatPlanet var(--float-time) ease-in-out infinite alternate;
+    }
+
+    .app-bubble.download {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #e9ffff 0%, #62d6ff 45%, #1778d4 100%);
+    }
+
+    .app-bubble.upload {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.24) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #fff3c5 0%, #ff9fba 48%, #cf5dac 100%);
+    }
+
+
+    .app-bubble.category {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #fff78b 0%, #ffa646 48%, #ca641f 100%);
+    }
+
+    .app-bubble.category.utilities {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #c6fbff 0%, #8a90ff 52%, #4c4eaf 100%);
+    }
+
+    .app-bubble.category.android {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #d1ff9d 0%, #3be073 48%, #139447 100%);
+    }
+
+    .category-link {
+      border: 0;
+      border-radius: 999px;
+      padding: .35em .8em;
+      background: rgba(255,255,255,.34);
+      box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
+      white-space: nowrap;
+      font: inherit;
+      font-weight: 900;
+      color: #111733;
+      cursor: pointer;
+    }
+
+    .category-link:hover {
+      background: rgba(255,255,255,.58);
+    }
+
+    @keyframes floatPlanet {
+      from { margin-left: calc(var(--float-x) * -1); margin-top: calc(var(--float-y) * .5); }
+      to   { margin-left: var(--float-x); margin-top: var(--float-y); }
+    }
+
+
+    .login-message {
+      min-height: 1.15em;
+      margin: 0em;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #b00020;
+      text-align: center;
+    }
+
+    .app-bubble {
+      cursor: pointer;
+      padding: calc(var(--size) * .12);
+      overflow: hidden;
+    }
+
+    .planet-content {
+      width: 100%;
+      max-width: 86%;
+      display: grid;
+      gap: .45em;
+      place-items: center;
+      font-size: calc(var(--size) * .09);
+      line-height: 1.05;
+    }
+
+    .planet-title {
+      font-size: 1em;
+      font-weight: 950;
+      letter-spacing: .03em;
+    }
+
+    .planet-list {
+      display: grid;
+      gap: .35em;
+      font-size: .45em;
+      font-weight: 850;
+      line-height: 1.12;
+    }
+
+    .planet-list div {
+      padding: .35em .8em;
+      border-radius: 999px;
+      background: rgba(255,255,255,.34);
+      box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
+      white-space: nowrap;
+    }
+
+    .app-bubble.focus {
+      --x: 50% !important;
+      --y: 51% !important;
+      --size: min(38vw, 58vh) !important;
+      --scale: 1 !important;
+      --opacity: .98 !important;
+      z-index: 40;
+    }
+
+    .app-bubble.dim {
+      --scale: .72 !important;
+      opacity: .62 !important;
+      z-index: 12;
+    }
+
+
 /* ==========================================================
-   DOWNLOAD-BOL
-   Fase 1: idle        = kleine bol, enkel DOWNLOAD
-   Fase 2: platforms   = zelfde plek, APK/PWA
-   Fase 3: categories  = centrum, groter, categorieën
-   Fase 4: apps        = centrum, MAX, apps met scroll
+   DOWNLOAD FASE 3: APK/PWA -> alle categorieën
    ========================================================== */
-
-.app-bubble.download {
-  background:
-    radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
-    radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
-    linear-gradient(135deg, #e9ffff 0%, #62d6ff 45%, #1778d4 100%);
-}
-
-.app-bubble.download.phase-idle {
-  /* gebruikt de normale kleine app-bubble positie/grootte */
-}
-
-.app-bubble.download.phase-platforms.focus {
-  --size: min(30vw, 36vh) !important;
-}
 
 .app-bubble.download.phase-categories.focus {
   --x: 50% !important;
   --y: 50% !important;
-  --size: min(48vw, 58vh) !important;
+  --size: min(52vw, 62vh) !important;
 }
 
-.app-bubble.download.phase-apps.focus {
-  --x: 50% !important;
-  --y: 50% !important;
-  --size: min(76vw, 82vh) !important;
+.download-category-list {
+  width: 88%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65em .8em;
+  place-items: center;
 }
 
-.download-content {
+.download-category-list .download-choice {
   width: 100%;
-  height: 76%;
-
-  display: grid;
-  align-content: center;
-
-  justify-items: start;
-  text-align: left;
-
-  gap: .75em;
+  max-width: 12em;
+  padding: .45em .85em;
+  font-size: .72em;
+  text-align: center;
 }
 
-.download-idle {
-  height: auto;
+.app-bubble.download.phase-categories .planet-title {
+  font-size: .95em;
+  margin-bottom: .15em;
 }
 
-.download-platforms {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  gap: 1em;
-
-  justify-items: start;
-}
-
-.download-list {
-  display: grid;
-  gap: .55em;
-  width: 82%;
-}
-
-.download-choice,
-.download-back,
-.category-link {
-  border: 0;
-  border-radius: 999px;
-  padding: .35em .75em;
-  background: rgba(255,255,255,.34);
-  box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
-  white-space: nowrap;
-     font-size: .70em;
-  font-weight: 950;
-  color: #111733;
-  cursor: pointer;
-}
-
-.download-choice:hover,
-.download-back:hover,
-.category-link:hover {
-  background: rgba(255,255,255,.60);
-}
-
-.download-back {
-  font-size: .45em;
-  padding: .35em .9em;
-  opacity: .75;
-}
-
-.download-subtitle {
-  font-size: .42em;
-  font-weight: 900;
-  opacity: .75;
-  margin-top: -.75em;
-}
-
-.download-apps-content {
-  width: 70%;
-  max-width: 70%;
-  height: 70%;
-  align-content: stretch;
-  grid-template-rows: auto auto 1fr auto;
-}
-
-.download-app-scroll {
-  width: 100%;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: none;
-  display: grid;
-  align-content: start;
-  gap: .55em;
-  padding: .4em .2em;
-  mask-image: linear-gradient(to bottom, transparent, black 7%, black 93%, transparent);
-}
-
-.download-app-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.download-app-link {
-  width: 100%;
-  border: 0;
-  border-radius: 999px;
-  padding: .62em 1em;
-  background: rgba(255,255,255,.36);
-  color: #111733;
-  font: inherit;
-  font-size: .48em;
-  font-weight: 950;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1em;
-  align-items: center;
-  text-align: left;
-  cursor: pointer;
-  box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
-}
-
-.download-app-link:hover {
-  background: rgba(255,255,255,.62);
-}
-
-.download-app-link small {
-  font-size: .75em;
-  opacity: .7;
-}
-
-.download-empty {
-  font-size: .55em;
-  font-weight: 850;
-  opacity: .75;
-}
-
-/* Categorie-bollen blijven voorlopig beschikbaar, maar de nieuwe flow gebruikt ze niet meer als aparte stap. */
-.app-bubble.category {
-  background:
-    radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
-    radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
-    linear-gradient(135deg, #fff78b 0%, #ffa646 48%, #ca641f 100%);
-}
-
-.app-bubble.category.utilities {
-  background:
-    radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
-    radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
-    linear-gradient(135deg, #c6fbff 0%, #8a90ff 52%, #4c4eaf 100%);
+.app-bubble.download.phase-categories .download-back {
+  margin-top: .2em;
 }

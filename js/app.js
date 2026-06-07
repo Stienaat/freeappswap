@@ -20,8 +20,6 @@ let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
 let selectedPlatform = null;
-let selectedCategory = null;
-let downloadPhase = "idle";
 let productModalOpen = false;
 
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
@@ -31,10 +29,68 @@ const appData = {
     { id: "pwa", label: "PWA" }
   ],
   categories: [
-    { id: "games", label: "GAMES" },
-    { id: "utilities", label: "UTILITIES" }
+    { id: "games", label: "GAMES", planet: "assets/images/planet-games.png" },
+    { id: "utilities", label: "UTILITIES", planet: "assets/images/planet-utilities.png" },
+    { id: "tools", label: "TOOLS", planet: "assets/images/planet-tools.png" }
   ],
   apps: [
+    {
+      id: "10letterwoord",
+      name: "10LetterWoord",
+      platform: "apk",
+      category: "games",
+      version: "0.1",
+      author: "FScreations",
+      status: "Testversie",
+      description: "Woordspel met woorden van tien letters.",
+      screenshot: "assets/images/LSw.jpg",
+      size: "-",
+      updated_at: "-",
+      readme: [
+        "Woordspel",
+        "Puzzel",
+        "Nederlandstalig"
+      ],
+      download_url: "downloads/10letterwoord.apk"
+    },
+    {
+      id: "latinsquare",
+      name: "LatinSquare",
+      platform: "apk",
+      category: "games",
+      version: "0.1",
+      author: "FScreations",
+      status: "Testversie",
+      description: "Logisch kleurenspel gebaseerd op een Latin square.",
+      screenshot: "assets/images/LS.jpg",
+      size: "-",
+      updated_at: "-",
+      readme: [
+        "Logisch spel",
+        "Kleurenpuzzel",
+        "Meerdere levels"
+      ],
+      download_url: "downloads/latinsquare.apk"
+    },
+    {
+      id: "letterwissel",
+      name: "LetterWissel",
+      platform: "apk",
+      category: "games",
+      version: "0.1",
+      author: "FScreations",
+      status: "Testversie",
+      description: "Letterspel waarbij je letters wisselt om woorden te maken.",
+      screenshot: "assets/images/LW.jpg",
+      size: "-",
+      updated_at: "-",
+      readme: [
+        "Letterspel",
+        "Woordpuzzel",
+        "Rustige gameplay"
+      ],
+      download_url: "downloads/letterwissel.apk"
+    },
     {
       id: "familieconnect",
       name: "FamilieConnect",
@@ -44,7 +100,7 @@ const appData = {
       author: "FScreations",
       status: "Testversie",
       description: "Familietracker voor gezinnen, kinderen en mantelzorgers.",
-      screenshot: "assets/images/familieconnect_screen1.jpg",
+      screenshot: "assets/images/FC.jpg",
       size: "15.3 MB",
       updated_at: "24 mei 2025",
       readme: [
@@ -54,6 +110,25 @@ const appData = {
         "Privacyvriendelijk"
       ],
       download_url: "downloads/familieconnect.apk"
+    },
+    {
+      id: "mini-intercom",
+      name: "Mini-Intercom",
+      platform: "apk",
+      category: "utilities",
+      version: "0.1",
+      author: "FScreations",
+      status: "Testversie",
+      description: "Eenvoudige intercom-app voor snelle spraakverbinding.",
+      screenshot: "assets/images/FC.jpg",
+      size: "-",
+      updated_at: "-",
+      readme: [
+        "Spraakverbinding",
+        "Kamer met PIN",
+        "Eenvoudig gebruik"
+      ],
+      download_url: "downloads/mini-intercom.apk"
     }
   ]
 };
@@ -224,17 +299,7 @@ function finishLogin(user) {
 }
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
-search.addEventListener("click", () => {
-  if (!loggedIn) {
-    setAccountMode("login");
-    focusBubble("account");
-    showLoginError("inloggen is vereist");
-    return;
-  }
-
-  if (!appBubblesCreated) createDownloadUpload();
-  focusBubble("search");
-});
+account.addEventListener("click", () => focusBubble("account"));
 search.addEventListener("mouseenter", () => {
   if (!loggedIn) return;
   focusBubble("search");
@@ -257,7 +322,7 @@ backToAccountStart.addEventListener("click", event => {
 
 forgotPassword.addEventListener("click", event => {
   event.stopPropagation();
-  showLoginError("paswoord vergeten komt later via Supabase");
+  showLoginError("paswoord vergeten!");
 });
 
 document.querySelectorAll(".search-link").forEach(button => {
@@ -273,38 +338,35 @@ function handleNavigationTarget(target) {
     return;
   }
 
-if (!loggedIn) {
-  setAccountMode("login");
-  focusBubble("account");
-  showLoginError("inloggen is vereist");
-  return;
-}
-
-  if (!appBubblesCreated) createDownloadUpload();
-
-  if (target === "download") {
-    openDownloadPlatforms();
+  if (!loggedIn) {
+    focusBubble("account");
+    showLoginError("Inloggen vereist");
     return;
   }
 
-  if (target === "upload") {
-    focusBubble("upload");
+  if (!appBubblesCreated) createDownload();
+
+  if (target === "download" || target === "upload") {
+    focusBubble(target);
     return;
   }
 
   if (platformMap[target]) {
-    showDownloadCategories(target);
+    setDownloadPlatform(target);
+    focusBubble("download");
     return;
   }
 
   if (categoryMap[target]) {
-    if (!selectedPlatform) selectedPlatform = "apk";
-    showDownloadApps(target);
+    if (!selectedPlatform) setDownloadPlatform("apk");
+    createCategoryBubble(target);
+    focusBubble(target);
     return;
   }
 
   if (appMap[target]) {
-    openProductFromDownload(target);
+    createAppDetailBubble(target);
+    focusBubble(target);
   }
 }
 
@@ -321,7 +383,7 @@ accountForm.addEventListener("submit", async event => {
   const passwordConfirm = passwordConfirmInput.value;
 
   if (!loginOrEmail || !password) {
-    showLoginError("email/naam en paswoord nodig");
+    showLoginError("Vul alle velden in!");
     return;
   }
 
@@ -390,9 +452,12 @@ function createAppBubble(kind) {
   const el = document.createElement("div");
   el.className = `app-bubble ${kind}`;
   el.dataset.kind = kind;
+  // Bewegingsstatus:
+  // 0 = normaal/stil, 1 = klein rustig zwevend, 2 = middelklein rustig zwevend, 3 = max/eindbol stil
+  el.dataset.motionStatus = "2";
 
   if (kind === "download") {
-    renderDownloadIdle(el);
+    renderDownloadStart(el);
   } else {
     el.innerHTML = `
       <div class="planet-content">
@@ -417,150 +482,114 @@ function getDownloadBubble() {
   return document.querySelector('.app-bubble[data-kind="download"]');
 }
 
-function setDownloadPhase(el, phase) {
-  if (!el) return;
-  downloadPhase = phase;
-  el.classList.remove("phase-idle", "phase-platforms", "phase-categories", "phase-apps");
-  el.classList.add(`phase-${phase}`);
-  el.dataset.phase = phase;
-}
-
-function renderDownloadIdle(el = getDownloadBubble()) {
+function renderDownloadStart(el = getDownloadBubble()) {
   if (!el) return;
   selectedPlatform = null;
-  selectedCategory = null;
-  setDownloadPhase(el, "idle");
-  el.classList.remove("focus", "dim");
   el.innerHTML = `
-    <div class="download-content download-idle">
+    <div class="planet-content">
       <div class="planet-title">DOWNLOAD</div>
-    </div>
-  `;
-}
-
-function openDownloadPlatforms(el = getDownloadBubble()) {
-  if (!el) return;
-  selectedPlatform = null;
-  selectedCategory = null;
-  setDownloadPhase(el, "platforms");
-  el.innerHTML = `
-    <div class="download-content">
-      <div class="planet-title">DOWNLOAD</div>
-      <div class="download-platforms">
+      <div class="planet-list">
         ${appData.platforms.map(platform => `
-          <button class="download-choice" type="button" data-platform="${platform.id}">${platform.label}</button>
+          <button class="category-link" type="button" data-platform="${platform.id}">${platform.label}</button>
         `).join("")}
       </div>
     </div>
   `;
-
   el.querySelectorAll("[data-platform]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      showDownloadCategories(button.dataset.platform);
+      setDownloadPlatform(button.dataset.platform);
+      focusBubble("download");
     });
   });
-
-  focusBubble("download");
 }
 
-function showDownloadCategories(platformId) {
+function setDownloadPlatform(platformId) {
+  selectedPlatform = platformId;
   const el = getDownloadBubble();
   if (!el) return;
-
-  selectedPlatform = platformId;
-  selectedCategory = null;
-  setDownloadPhase(el, "categories");
-
   const platform = platformMap[platformId];
-  const categories = appData.categories.filter(category => {
-    return appData.apps.some(app => app.platform === platformId && app.category === category.id);
-  });
+  // Fase 3: toon alle categorieën voor dit platform.
+  // Later mag dit rechtstreeks uit de DB komen.
+  const categories = appData.categories;
 
   el.innerHTML = `
-    <div class="download-content">
+    <div class="planet-content">
       <div class="planet-title">${platform ? platform.label : platformId}</div>
-      <div class="download-list download-category-list">
+      <div class="planet-list">
         ${categories.length ? categories.map(category => `
-          <button class="download-choice" type="button" data-category="${category.id}">${category.label}</button>
-        `).join("") : `<div class="download-empty">nog geen apps</div>`}
+          <button class="category-link" type="button" data-category="${category.id}">${category.label}</button>
+        `).join("") : `<div>nog geen apps</div>`}
+        <button class="category-link soft-link" type="button" data-back-platforms="1">terug</button>
       </div>
-      <button class="download-back" type="button" data-back-platforms="1">terug</button>
     </div>
   `;
-
   el.querySelectorAll("[data-category]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      showDownloadApps(button.dataset.category);
+      createCategoryBubble(button.dataset.category);
+      focusBubble(button.dataset.category);
     });
   });
-
   const back = el.querySelector("[data-back-platforms]");
   if (back) {
     back.addEventListener("click", event => {
       event.stopPropagation();
-      openDownloadPlatforms(el);
+      renderDownloadStart(el);
+      focusBubble("download");
     });
   }
-
-  focusBubble("download");
 }
 
-function showDownloadApps(categoryId) {
-  const el = getDownloadBubble();
-  if (!el) return;
+function createCategoryBubble(categoryId) {
+  const category = categoryMap[categoryId];
+  if (!category) return;
 
-  selectedCategory = categoryId;
-  setDownloadPhase(el, "apps");
+  const existing = document.querySelector(`.app-bubble[data-kind="${categoryId}"]`);
+  if (existing) {
+    renderCategoryBubble(existing, categoryId);
+    return;
+  }
 
+  const el = document.createElement("div");
+  el.className = `app-bubble category ${categoryId}`;
+  el.dataset.kind = categoryId;
+  el.dataset.motionStatus = "1";
+  renderCategoryBubble(el, categoryId);
+
+  const fallbackPositions = {
+    games: { x: randomBetween(17, 29), y: randomBetween(37, 55) },
+    utilities: { x: randomBetween(70, 84), y: randomBetween(35, 55) }
+  };
+  const pos = fallbackPositions[categoryId] || { x: randomBetween(25, 78), y: randomBetween(35, 82) };
+
+  preparePlanetBubble(el, pos.x, pos.y, "min(16vw, 23vh)");
+}
+
+function renderCategoryBubble(el, categoryId) {
   const category = categoryMap[categoryId];
   const platformId = selectedPlatform || "apk";
-  const platform = platformMap[platformId];
-
   const apps = appData.apps.filter(app => app.platform === platformId && app.category === categoryId);
 
   el.innerHTML = `
-    <div class="download-content download-apps-content">
-      <div class="planet-title">${category ? category.label : categoryId}</div>
-      <div class="download-subtitle">${platform ? platform.label : platformId}</div>
-      <div class="download-app-scroll">
+    <div class="planet-content">
+      <div class="planet-title">${category.label}</div>
+      <div class="planet-list">
         ${apps.length ? apps.map(app => `
-          <button class="download-app-link" type="button" data-app="${app.id}">
-            <span>${app.name}</span>
-            <small>${app.version ? "v" + app.version : ""}</small>
-          </button>
-        `).join("") : `<div class="download-empty">nog geen apps</div>`}
+          <button class="category-link app-link" type="button" data-app="${app.id}">${app.name}</button>
+        `).join("") : `<div>nog geen apps</div>`}
       </div>
-      <button class="download-back" type="button" data-back-categories="1">terug</button>
     </div>
   `;
-
   el.querySelectorAll("[data-app]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      openProductFromDownload(button.dataset.app);
+      createAppDetailBubble(button.dataset.app);
+      focusBubble(button.dataset.app);
     });
   });
-
-  const back = el.querySelector("[data-back-categories]");
-  if (back) {
-    back.addEventListener("click", event => {
-      event.stopPropagation();
-      showDownloadCategories(platformId);
-    });
-  }
-
-  focusBubble("download");
 }
 
-function openProductFromDownload(appId) {
-  const el = getDownloadBubble();
-  if (el) {
-    renderDownloadIdle(el);
-  }
-  createAppDetailBubble(appId);
-}
 function createAppDetailBubble(appId) {
   const app = appMap[appId];
   if (!app) return;
@@ -570,6 +599,11 @@ function createAppDetailBubble(appId) {
     el = document.createElement("div");
     el.className = "app-bubble app-detail";
     el.dataset.kind = appId;
+    el.dataset.motionStatus = "3";
+
+    const category = categoryMap[app.category];
+    const planetImage = category?.planet || "assets/images/planet-default.png";
+    el.style.setProperty("--planet-image", `url("../${planetImage}")`);
 
     el.innerHTML = `
       <button class="detail-close" type="button" aria-label="Sluiten">×</button>
@@ -655,8 +689,7 @@ function closeProductModal(appId) {
     el.style.setProperty("--opacity", "0");
     setTimeout(() => el.remove(), 900);
   }
-  renderDownloadIdle();
-  clearFocusStates();
+  focusBubble("utilities");
 }
 
 function preparePlanetBubble(el, finalX, finalY, size) {
@@ -665,24 +698,14 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   el.style.setProperty("--size", size);
   el.style.setProperty("--scale", ".03");
   el.style.setProperty("--opacity", "0");
-  el.style.setProperty("--float-x", `${randomBetween(8, 18).toFixed(1)}px`);
-  el.style.setProperty("--float-y", `${randomBetween(6, 15).toFixed(1)}px`);
-  el.style.setProperty("--float-time", `${randomBetween(28, 46).toFixed(1)}s`);
+  // Vrije zweefbeweging gebeurt niet meer met CSS heen-en-terug animatie.
+  // Status 1 en 2 krijgen straks een vaste richting en verschijnen aan de andere kant terug.
+  el.style.setProperty("--float-x", "0px");
+  el.style.setProperty("--float-y", "0px");
+  el.style.setProperty("--float-time", "1s");
 
-  el.addEventListener("mouseenter", () => {
-    if (productModalOpen && !el.classList.contains("app-detail")) return;
-    if (el.dataset.kind === "download" && downloadPhase === "idle") return;
-    focusBubble(el.dataset.kind);
-  });
-  el.addEventListener("click", () => {
-    if (productModalOpen && !el.classList.contains("app-detail")) return;
-    if (el.dataset.kind === "download") {
-      if (downloadPhase === "idle") openDownloadPlatforms(el);
-      else focusBubble("download");
-      return;
-    }
-    focusBubble(el.dataset.kind);
-  });
+  el.addEventListener("mouseenter", () => { if (!productModalOpen || el.classList.contains("app-detail")) focusBubble(el.dataset.kind); });
+  el.addEventListener("click", () => { if (!productModalOpen || el.classList.contains("app-detail")) focusBubble(el.dataset.kind); });
 
   document.querySelector(".space").appendChild(el);
 
@@ -691,7 +714,68 @@ function preparePlanetBubble(el, finalX, finalY, size) {
     el.style.setProperty("--y", `${finalY}%`);
     el.style.setProperty("--scale", "1");
     el.style.setProperty("--opacity", ".96");
+
+    // Laat eerst de bol rustig binnenkomen, daarna begint de vrije wrap-beweging.
+    setTimeout(() => startWrapMotion(el, finalX, finalY), 5400);
   });
+}
+
+function startWrapMotion(el, startX, startY) {
+  const motionStatus = Number(el.dataset.motionStatus || "0");
+  if (motionStatus !== 1 && motionStatus !== 2) return;
+  if (el._wrapMotionStarted) return;
+  el._wrapMotionStarted = true;
+
+  // Snelheid in schermpercentage per seconde.
+  // Status 1 = klein en rustiger. Status 2 = middelklein en duidelijker zichtbaar.
+  const speed = motionStatus === 1
+    ? randomBetween(1.2, 2.2)
+  : randomBetween(0.6, 1.2);
+
+  const angle = randomBetween(0, Math.PI * 2);
+  const vx = Math.cos(angle) * speed;
+  const vy = Math.sin(angle) * speed;
+
+  const motion = {
+    x: startX,
+    y: startY,
+    vx,
+    vy,
+    lastTime: performance.now()
+  };
+  el._wrapMotion = motion;
+  el.classList.add("wrap-motion");
+
+  function step(now) {
+    if (!el.isConnected) return;
+
+    if (productModalOpen || el.classList.contains("focus") || el.dataset.motionStatus === "0" || el.dataset.motionStatus === "3") {
+      motion.lastTime = now;
+      requestAnimationFrame(step);
+      return;
+    }
+
+    const dt = Math.min((now - motion.lastTime) / 1000, 0.08);
+    motion.lastTime = now;
+
+    motion.x += motion.vx * dt;
+    motion.y += motion.vy * dt;
+
+    // Wrap-around: links eruit = rechts terug, rechts eruit = links terug,
+    // boven eruit = onder terug, onder eruit = boven terug.
+    const margin = 12;
+    if (motion.x < -margin) motion.x = 100 + margin;
+    if (motion.x > 100 + margin) motion.x = -margin;
+    if (motion.y < -margin) motion.y = 100 + margin;
+    if (motion.y > 100 + margin) motion.y = -margin;
+
+    el.style.setProperty("--x", `${motion.x}%`);
+    el.style.setProperty("--y", `${motion.y}%`);
+
+    requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
 }
 
 function clearFocusStates() {
@@ -730,12 +814,16 @@ function focusBubble(kind) {
   });
 }
 
-search.addEventListener("click", () => {
-if (!loggedIn) {
-  focusBubble("account");
-  showLoginError("inloggen vereist!");
-  return;
-}
+search.addEventListener("click", event => {
+  event.stopPropagation();
+
+  if (!loggedIn) {
+    setAccountMode("login");
+    focusBubble("account");
+    showLoginError("login vereist!");
+    return;
+  }
+
   if (!appBubblesCreated) createDownloadUpload();
   focusBubble("search");
 });

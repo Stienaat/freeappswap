@@ -204,9 +204,9 @@
 
 .login-message {
   min-height: 1.15em;
-  margin-top: .25em;
-  font-size: 1.54em;
-  font-weight: 850;
+  margin-top: 0em;
+  font-size: 1.5em;
+  font-weight: 600;
   color: #b00020;
   text-align: center;
 }

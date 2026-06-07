@@ -30,36 +30,57 @@ body.product-modal-open::after {
     rgba(0,0,0,.24);
 }
 
-/* De bol zelf */
+/* De bol zelf: eindfase/productbol als echte planeet.
+   De ruimte-background blijft van de site; enkel deze bol krijgt een image-texture. */
 .app-bubble.app-detail {
+  position: absolute;
   border-radius: 50%;
-  border: 2px solid rgba(230, 254, 76, 0.28);
+  border: 2px solid rgba(190, 255, 112, 0.42);
   overflow: hidden;
   cursor: default;
   animation: none !important;
 
-  background:
-    radial-gradient(circle at 18% 12%,
-      rgba(138,255,92,.72) 0%,
-      rgba(72,160,62,.40) 16%,
-      rgba(28,82,38,.18) 34%,
-      transparent 56%),
-    radial-gradient(circle at 78% 82%,
-      rgba(0,0,0,.86) 0%,
-      rgba(0,0,0,.56) 34%,
-      transparent 66%),
-    linear-gradient(135deg,
-      #4d813f 0%,
-      #224b2b 31%,
-      #0a2415 65%,
-      #010403 100%);
+  background: #031107;
 
   box-shadow:
-    inset 58px 52px 130px rgba(188,255,170,.14),
-    inset -92px -108px 165px rgba(0,0,0,.80),
-    0 0 46px rgba(54,255,94,.18),
-    0 55px 120px rgba(0,0,0,.50);
+    inset 46px 36px 100px rgba(207,255,176,.13),
+    inset -105px -120px 190px rgba(0,0,0,.86),
+    0 0 24px rgba(145,255,111,.36),
+    0 0 78px rgba(70,255,110,.24),
+    0 58px 140px rgba(0,0,0,.58);
 }
+
+.app-bubble.app-detail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background-image: var(--planet-image, url("../assets/images/planet-utilities.png"));
+  background-size: cover;
+  background-position: center;
+
+  opacity: .98;
+  filter: saturate(1.18) contrast(1.05) brightness(.92);
+}
+
+.app-bubble.app-detail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+
+  /* alleen zachte leesbaarheid-overlay; geen CSS-kraters meer */
+  background:
+    radial-gradient(circle at 22% 15%, rgba(255,255,255,.10), transparent 30%),
+    radial-gradient(circle at 50% 55%, rgba(0,0,0,.18), rgba(0,0,0,.48) 78%),
+    linear-gradient(135deg, rgba(60,255,100,.06), rgba(0,0,0,.22));
+}
+
 
 .app-bubble.app-detail.focus {
   --x: 50% !important;
