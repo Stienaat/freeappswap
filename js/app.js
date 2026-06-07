@@ -290,20 +290,25 @@ async function createUserRecord({ name, email, password }) {
 
 function finishLogin(user) {
   loggedIn = true;
+
   saveCurrentUser(user);
+
   clearFocusStates();
+
   account.classList.remove("focus", "dim");
   account.classList.add("far");
+
   home.classList.add("explode");
+
+  account.dataset.motionStatus = "1";
+  startWrapMotion(account, 84, 18);
+
   setTimeout(createDownloadUpload, 900);
 }
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
 account.addEventListener("click", () => focusBubble("account"));
-search.addEventListener("mouseenter", () => {
-  if (!loggedIn) return;
-  focusBubble("search");
-});
+
 
 showLogin.addEventListener("click", event => {
   event.stopPropagation();
@@ -554,7 +559,7 @@ function createCategoryBubble(categoryId) {
   const el = document.createElement("div");
   el.className = `app-bubble category ${categoryId}`;
   el.dataset.kind = categoryId;
-  el.dataset.motionStatus = "1";
+  el.dataset.motionStatus = "0";
   renderCategoryBubble(el, categoryId);
 
   const fallbackPositions = {
@@ -704,7 +709,6 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   el.style.setProperty("--float-y", "0px");
   el.style.setProperty("--float-time", "1s");
 
-  el.addEventListener("mouseenter", () => { if (!productModalOpen || el.classList.contains("app-detail")) focusBubble(el.dataset.kind); });
   el.addEventListener("click", () => { if (!productModalOpen || el.classList.contains("app-detail")) focusBubble(el.dataset.kind); });
 
   document.querySelector(".space").appendChild(el);
@@ -729,8 +733,8 @@ function startWrapMotion(el, startX, startY) {
   // Snelheid in schermpercentage per seconde.
   // Status 1 = klein en rustiger. Status 2 = middelklein en duidelijker zichtbaar.
   const speed = motionStatus === 1
-    ? randomBetween(1.2, 2.2)
-  : randomBetween(0.6, 1.2);
+ ? randomBetween(1.0, 1.8)
+  : randomBetween(1.8, 3.0);
 
   const angle = randomBetween(0, Math.PI * 2);
   const vx = Math.cos(angle) * speed;
@@ -763,11 +767,28 @@ function startWrapMotion(el, startX, startY) {
 
     // Wrap-around: links eruit = rechts terug, rechts eruit = links terug,
     // boven eruit = onder terug, onder eruit = boven terug.
-    const margin = 12;
-    if (motion.x < -margin) motion.x = 100 + margin;
-    if (motion.x > 100 + margin) motion.x = -margin;
-    if (motion.y < -margin) motion.y = 100 + margin;
-    if (motion.y > 100 + margin) motion.y = -margin;
+    const margin = 8;
+
+
+if (motion.x < margin) {
+  motion.x = margin;
+  motion.vx *= -1;
+}
+
+if (motion.x > 100 - margin) {
+  motion.x = 100 - margin;
+  motion.vx *= -1;
+}
+
+if (motion.y < margin) {
+  motion.y = margin;
+  motion.vy *= -1;
+}
+
+if (motion.y > 100 - margin) {
+  motion.y = 100 - margin;
+  motion.vy *= -1;
+}
 
     el.style.setProperty("--x", `${motion.x}%`);
     el.style.setProperty("--y", `${motion.y}%`);
@@ -838,5 +859,6 @@ exportUsersJson.addEventListener("click", event => {
   a.click();
   URL.revokeObjectURL(url);
 });
+
 
 startLayout();

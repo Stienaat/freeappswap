@@ -44,7 +44,7 @@ body.product-modal-open::after {
 
   box-shadow:
     inset 46px 36px 100px rgba(207,255,176,.13),
-    inset -105px -120px 190px rgba(0,0,0,.86),
+    inset -60px -60px 120px rgba(0,0,0,.45)
     0 0 24px rgba(145,255,111,.36),
     0 0 78px rgba(70,255,110,.24),
     0 58px 140px rgba(0,0,0,.58);
@@ -58,12 +58,12 @@ body.product-modal-open::after {
   border-radius: 50%;
   pointer-events: none;
 
-  background-image: var(--planet-image, url("../assets/images/planet-utilities.png"));
+  background-image: var(--planet-image, url("../assets/images/planet-product.png"));
   background-size: cover;
   background-position: center;
 
   opacity: .98;
-  filter: saturate(1.18) contrast(1.05) brightness(.92);
+  filter: saturate(1.10) contrast(1.00) brightness(1.15);
 }
 
 .app-bubble.app-detail::after {
