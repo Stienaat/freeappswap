@@ -14,20 +14,11 @@ body.product-modal-open .home,
 body.product-modal-open .search,
 body.product-modal-open .account,
 body.product-modal-open .app-bubble:not(.app-detail) {
-  filter: brightness(.32) saturate(.55) blur(1.1px) !important;
-  animation-play-state: paused !important;
-  pointer-events: none !important;
+  filter: none !important;
 }
 
 body.product-modal-open::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 34;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(0, 35, 14, .10), rgba(0,0,0,.72) 75%),
-    rgba(0,0,0,.24);
+  display: none !important;
 }
 
 /* De bol zelf: eindfase/productbol als echte planeet.
@@ -39,8 +30,6 @@ body.product-modal-open::after {
   overflow: hidden;
   cursor: default;
   animation: none !important;
-
-  background: #031107;
 
   box-shadow:
     inset 46px 36px 100px rgba(207,255,176,.13),
@@ -85,8 +74,8 @@ body.product-modal-open::after {
 .app-bubble.app-detail.focus {
   --x: 50% !important;
   --y: 50% !important;
-  --size: min(94vw, 94vh) !important;
-  --scale: 1 !important;
+     width: 46vw !important;
+    height: 46vw !important;
   --opacity: 1 !important;
   z-index: 120 !important;
   transition:

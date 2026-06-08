@@ -144,15 +144,55 @@ function sleep(ms) {
 function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
+function createIntroStars() {
+  const layer = document.getElementById("introStars");
+  if (!layer) return;
 
+  layer.innerHTML = "";
+
+  for (let i = 0; i < 260; i++) {
+    const star = document.createElement("span");
+    star.className = "intro-star";
+    star.style.setProperty("--x", `${Math.random() * 100}%`);
+    star.style.setProperty("--y", `${Math.random() * 100}%`);
+    star.style.setProperty("--s", `${Math.random() * 2.4 + 0.6}px`);
+    star.style.setProperty("--o", `${Math.random() * 0.75 + 0.25}`);
+    layer.appendChild(star);
+  }
+}
 async function startLayout() {
-  await sleep(350);
-  home.classList.add("open");
 
-  await sleep(5450);
-  search.classList.add("open");
-  account.classList.add("open");
-  setAccountMode("start");
+  createIntroStars();
+
+  const intro = document.getElementById("introBirth");
+
+  await sleep(400);
+
+  intro?.classList.add("run");
+
+  setTimeout(() => {
+    document.querySelector(".intro-title")?.classList.add("show");
+  }, 11000);
+
+  setTimeout(() => {
+    document.querySelector(".intro-text-top")?.classList.add("show");
+  }, 13000);
+
+  setTimeout(() => {
+    document.querySelector(".intro-text-bottom")?.classList.add("show");
+  }, 15000);
+
+  setTimeout(() => {
+    document.querySelector(".intro-title")?.classList.add("hide");
+    document.querySelector(".intro-text-top")?.classList.add("hide");
+    document.querySelector(".intro-text-bottom")?.classList.add("hide");
+  }, 18500);
+
+  setTimeout(() => {
+    search.classList.add("open");
+    account.classList.add("open");
+    setAccountMode("start");
+  }, 20500);
 }
 
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
@@ -294,7 +334,7 @@ function finishLogin(user) {
   saveCurrentUser(user);
 
   clearFocusStates();
-
+document.body.classList.add("day-open");
   account.classList.remove("focus", "dim");
   account.classList.add("far");
 
@@ -687,14 +727,17 @@ function openProductModal(appId) {
 function closeProductModal(appId) {
   productModalOpen = false;
   document.body.classList.remove("product-modal-open");
+
   const el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
+
   if (el) {
     el.classList.remove("focus", "dim");
     el.style.setProperty("--scale", ".03");
     el.style.setProperty("--opacity", "0");
     setTimeout(() => el.remove(), 900);
   }
-  focusBubble("utilities");
+
+
 }
 
 function preparePlanetBubble(el, finalX, finalY, size) {
@@ -753,7 +796,12 @@ function startWrapMotion(el, startX, startY) {
   function step(now) {
     if (!el.isConnected) return;
 
-    if (productModalOpen || el.classList.contains("focus") || el.dataset.motionStatus === "0" || el.dataset.motionStatus === "3") {
+if (
+    el.classList.contains("focus") ||
+    el.dataset.motionStatus === "0" ||
+    el.dataset.motionStatus === "3"
+)
+ {
       motion.lastTime = now;
       requestAnimationFrame(step);
       return;

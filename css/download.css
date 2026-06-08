@@ -147,11 +147,7 @@
       z-index: 40;
     }
 
-    .app-bubble.dim {
-      --scale: .72 !important;
-      opacity: .62 !important;
-      z-index: 12;
-    }
+
 
 
 /* ==========================================================

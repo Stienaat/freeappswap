@@ -4,23 +4,39 @@
   display: none !important;
 }
 
+body {
+  background-image: url("../assets/images/day-space.png") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+body::before {
+  display: none !important;
+}
+
 .intro-birth {
-  background-image: url("../assets/images/day-space.jpg");
-  background-size: cover;
-  background-position: center;
+  position: fixed;
+  inset: 0;
+  background: transparent !important;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .intro-birth::before {
   content: "";
   position: absolute;
   inset: 0;
-  
+  z-index: 0;
+
   background-image: url("../assets/images/intro-space.png");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+
   opacity: 1;
   transition: opacity 5s ease;
-  z-index: 0;
 }
 
 body.day-open .intro-birth::before {
@@ -54,7 +70,7 @@ body.day-open .intro-birth::before {
   transform: translate(-50%, -50%) scale(.01);
   opacity: 0;
 
-  background-image: url("../assets/images/intro-earth.png");
+  background-image: url("../assets/images/intro-world.png");
   background-size: cover;
   background-position: center;
 
@@ -90,7 +106,7 @@ body.day-open .intro-birth::before {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 5;
 
   color: rgba(255,255,255,.92);
   text-align: center;
@@ -111,8 +127,9 @@ body.day-open .intro-birth::before {
 }
 
 .intro-title {
-  top: 135%;
+  top: 45%;
   font-size: clamp(1.4rem, 3vw, 2.6rem);
+  font-color: yellow;
   font-weight: 950;
   letter-spacing: .12em;
   white-space: nowrap;
@@ -149,4 +166,8 @@ body.day-open .intro-birth::before {
 #account.open {
   opacity: 1 !important;
   pointer-events: auto !important;
+}
+
+#home {
+  display: none !important;
 }
