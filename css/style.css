@@ -154,7 +154,12 @@ svg {
   opacity: .62 !important;
   z-index: 12;
 }
-
+body.product-modal-open .app-bubble.dim,
+body.product-modal-open .app-bubble.wrap-motion.dim,
+body.product-modal-open .app-bubble:not(.app-detail) {
+  opacity: 0 !important;
+  display: none !important;
+}
 .planet-content {
   width: 100%;
   max-width: 86%;
@@ -166,6 +171,9 @@ svg {
 }
 
 .planet-title {
+  width: 100%;
+  text-align: left;
+
   font-size: 1em;
   font-weight: 950;
   letter-spacing: .03em;
@@ -190,4 +198,39 @@ svg {
 @keyframes floatPlanet {
   from { margin-left: calc(var(--float-x) * -1); margin-top: calc(var(--float-y) * .5); }
   to   { margin-left: var(--float-x); margin-top: var(--float-y); }
+}
+
+/* ==========================================================
+   BOLLEN-BEWEGING / STATUSSEN
+   0 = stil/normaal
+   1 = klein, rustig doorzwevend met wrap-around
+   2 = middelklein, iets sneller doorzwevend met wrap-around
+   3 = max/eindbol, stil
+   
+   De echte beweging gebeurt in app.js.
+   Geen heen-en-terug CSS-animatie meer.
+   ========================================================== */
+.app-bubble {
+  animation: none !important;
+}
+
+.app-bubble.wrap-motion {
+  /* Tijdens vrije zweefbeweging mogen left/top direct volgen.
+     De inkomende animatie gebeurt eerst; daarna schakelt JS deze klasse aan. */
+  transition:
+    width 5200ms var(--ease),
+    height 5200ms var(--ease),
+    transform 1200ms ease,
+    opacity 1500ms ease;
+}
+
+.app-bubble[data-motion-status="0"],
+.app-bubble[data-motion-status="3"],
+.app-bubble.focus,
+.app-bubble.app-detail {
+  animation: none !important;
+}
+
+body.product-modal-open .app-bubble:not(.app-detail) {
+  animation-play-state: paused !important;
 }
