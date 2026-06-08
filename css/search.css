@@ -8,7 +8,7 @@
   cursor: pointer;
     --x: 2%;
     --y: 5%;
-    --size: min(24vw, 18vh);
+    --size: min(12vw, 9vh);
   }
 
 /* Kleine zoekbol: icoon kleiner, tekst iets groter */

@@ -11,17 +11,33 @@
 <link rel="stylesheet" href="css/upload.css" />
 <link rel="stylesheet" href="css/product.css" />
 <link rel="stylesheet" href="css/responsive.css" />
+<link rel="stylesheet" href="css/intro.css">
 </head>
 
 <body>
   <main class="space">
-    <div class="countdown" id="countdown">
-      <span>3</span><span>2</span><span>1</span>
-    </div>
-    <div class="dotrow" id="dotrow">
+
+    
       <span></span><span></span><span></span><span></span><span></span>
     </div>
+    <div id="introBirth" class="intro-birth">
+      <div class="intro-stars" id="introStars"></div>
+      <div class="intro-earth"></div>
 
+        <div class="intro-text intro-text-top"><div>voor hobbyontwerpers</div><div>Gratis apps door hobby ontwerpers</div>
+        <div class="intro-title"> FREE APP EXCHANGE </div>        
+        <div class="intro-small">100 % gratis - geen advertenties - geen abonnementen !</div>
+        </div>
+
+
+<div class="intro-text intro-text-bottom">
+  <div>Gratis download - gratis upload</div>
+  <div>Niets verborgen alles open en met respect voor privacy.</div>
+  <div>Maak een account en U krijgt toegang!</div>
+</div>
+      <div class="intro-title">
+      <div>FREE APP EXCHANGE</div>
+    </div>
     <div class="bubble home" id="home">
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-label="Free App Swap wereldbol">
         <defs>
@@ -135,8 +151,9 @@
             <input class="register-only" id="loginPasswordConfirm" name="passwordConfirm" type="password" placeholder="Paswoord bevestigen" autocomplete="new-password" />
             <button id="accountSubmit" type="submit">LOGIN</button>
             <button class="forgot-link" id="forgotPassword" type="button">paswoord vergeten?</button>
-            <button class="back-link" id="backToAccountStart" type="button">terug</button>
+           
             <div class="login-message" id="loginMessage"></div>
+            <button class="back-link" id="backToAccountStart" type="button">terug</button>
             <button class="json-export" id="exportUsersJson" type="button" title="Prototype: download lokale gebruikers als JSON">JSON</button>
           </form>
         </div>

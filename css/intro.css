@@ -1,0 +1,152 @@
+#home,
+#account {z-index: 50 !important;},
+#dotrow {
+  display: none !important;
+}
+
+.intro-birth {
+  background-image: url("../assets/images/day-space.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.intro-birth::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  
+  background-image: url("../assets/images/intro-space.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  transition: opacity 5s ease;
+  z-index: 0;
+}
+
+body.day-open .intro-birth::before {
+  opacity: 0;
+}
+.intro-title.hide,
+.intro-text.hide {
+  opacity: 0;
+}
+.intro-stars {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  opacity: var(--o);
+  width: var(--s);
+  height: var(--s);
+  left: var(--x);
+  top: var(--y);
+  box-shadow: 0 0 8px rgba(180,220,255,.9);
+}
+
+.intro-earth {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: min(100vw, 100vh);
+  height: min(100vw, 100vh);
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%) scale(.01);
+  opacity: 0;
+
+  background-image: url("../assets/images/intro-earth.png");
+  background-size: cover;
+  background-position: center;
+
+  box-shadow:
+     none;
+}
+
+.intro-birth.run .intro-earth {
+  animation: earthBirth 10s cubic-bezier(.12,.78,.16,1) forwards;
+}
+
+@keyframes earthBirth {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.001);
+    filter: blur(12px) brightness(3);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(.02);
+    filter: blur(10px) brightness(2.4);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+.intro-title,
+.intro-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+
+  color: rgba(255,255,255,.92);
+  text-align: center;
+  opacity: 0;
+
+  text-shadow:
+    0 0 8px rgba(255,255,255,.55),
+    0 0 22px rgba(80,150,255,.55),
+    0 3px 10px rgba(0,0,0,.75);
+
+  transition: opacity 2.4s ease;
+  pointer-events: none;
+}
+
+.intro-text.show,
+.intro-title.show {
+  opacity: 1;
+}
+
+.intro-title {
+  top: 135%;
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+  font-weight: 950;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+.intro-text {
+  width: min(76vw, 850px);
+  font-size: clamp(.95rem, 1.65vw, 1.8rem);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.intro-text-top {
+  top: 25%;
+}
+
+.intro-text-bottom {
+  top: 57%;
+  font-size: clamp(.85rem, 1.45vw, 1.5rem);
+}
+
+.intro-small {
+  margin-top: .55em;
+  font-size: .78em;
+}
+#search:not(.open),
+#account:not(.open) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(.02) !important;
+}
+
+#search.open,
+#account.open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
