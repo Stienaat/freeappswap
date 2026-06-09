@@ -127,7 +127,7 @@ body.day-open .intro-birth::before {
 }
 
 .intro-title {
-  top: 45%;
+  top: 65%;
   font-size: clamp(1.4rem, 3vw, 2.6rem);
   font-color: yellow;
   font-weight: 950;

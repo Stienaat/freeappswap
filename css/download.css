@@ -1,12 +1,4 @@
-.home.explode {
-      --scale: 1.22;
-      --opacity: 0;
-      --time: 1800ms;
-      filter: blur(10px) drop-shadow(0 0 80px rgba(66,180,255,.55));
-      pointer-events: none;
-    }
-
-    .app-bubble {
+.app-bubble {
       position: absolute;
       left: var(--x);
       top: var(--y);

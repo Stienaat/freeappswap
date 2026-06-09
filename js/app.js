@@ -338,8 +338,6 @@ document.body.classList.add("day-open");
   account.classList.remove("focus", "dim");
   account.classList.add("far");
 
-  home.classList.add("explode");
-
   account.dataset.motionStatus = "1";
   startWrapMotion(account, 84, 18);
 
