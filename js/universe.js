@@ -21,19 +21,6 @@ async function loadComponent(id) {
   }
 }
 
-async function showCountdown() {
-  const countdown = document.getElementById("countdown");
-  if (!countdown) return;
-
-  for (const value of ["3", "2", "1"]) {
-    countdown.textContent = value;
-    countdown.classList.add("show");
-    await sleep(780);
-    countdown.classList.remove("show");
-    await sleep(360);
-  }
-}
-
 function bindBubbleBehaviour() {
   document.getElementById("accountBubble")?.addEventListener("mouseenter", () => {
     FreeAppSwapBubbles.focus("account", FreeAppSwapAccount.isLoggedIn());
@@ -60,7 +47,6 @@ async function startUniverse() {
   bindBubbleBehaviour();
 
   await sleep(160);
-  await showCountdown();
 
   FreeAppSwapBubbles.showHome();
   await sleep(5600);

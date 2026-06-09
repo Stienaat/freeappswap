@@ -658,7 +658,7 @@ function createAppDetailBubble(appId) {
 
         <div class="product-grid">
           <div class="screenshot-frame">
-            <img src="${app.screenshot || "assets/images/familieconnect_screen1.jpg"}" alt="Screenshot van ${app.name}" />
+            <img src="${app.screenshot || "assets/images/no-screenshot.jpg"}" alt="Screenshot van ${app.name}" />
             <div class="screenshot-dots"><span class="active"></span><span></span><span></span></div>
           </div>
 

@@ -1,13 +1,11 @@
 #home,
-#account {z-index: 50 !important;},
-#dotrow {
-  display: none !important;
-}
+#account {z-index: 50 !important;}
 
 body {
   background-image: url("../assets/images/day-space.png") !important;
   background-size: cover !important;
-  background-position: center !important;
+background-position: center 31% !important;
+
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
 }
@@ -127,7 +125,7 @@ body.day-open .intro-birth::before {
 }
 
 .intro-title {
-  top: 65%;
+  top: 45%;
   font-size: clamp(1.4rem, 3vw, 2.6rem);
   font-color: yellow;
   font-weight: 950;
@@ -168,6 +166,3 @@ body.day-open .intro-birth::before {
   pointer-events: auto !important;
 }
 
-#home {
-  display: none !important;
-}

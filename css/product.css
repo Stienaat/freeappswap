@@ -70,11 +70,12 @@ body.product-modal-open::after {
     linear-gradient(135deg, rgba(60,255,100,.06), rgba(0,0,0,.22));
 }
 
+/* Productbol gecentreerd op wereldbol */
 
 .app-bubble.app-detail.focus {
-  --x: 50% !important;
-  --y: 50% !important;
-     width: 46vw !important;
+  --x: 49% !important;
+  --y: 48.7% !important;
+    width: 46vw !important;
     height: 46vw !important;
   --opacity: 1 !important;
   z-index: 120 !important;
@@ -333,3 +334,5 @@ body.product-modal-open::after {
 .product-detail-content {
   transform: translate(-100px, -60px) !important;
   }
+
+  
