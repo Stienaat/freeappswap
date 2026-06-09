@@ -253,7 +253,7 @@ function setAccountMode(mode) {
 
   nameInput.required = isRegister;
   passwordConfirmInput.required = isRegister;
-  emailInput.placeholder = isRegister ? "Email" : "Email of naam";
+  emailInput.placeholder = "Email";
   passwordInput.autocomplete = isRegister ? "new-password" : "current-password";
 
   if (isStart) {
@@ -330,18 +330,24 @@ async function createUserRecord({ name, email, password }) {
 
 function finishLogin(user) {
   loggedIn = true;
-
+  
   saveCurrentUser(user);
 
   clearFocusStates();
-document.body.classList.add("day-open");
+  document.body.classList.add("day-open");
   account.classList.remove("focus", "dim");
   account.classList.add("far");
 
   account.dataset.motionStatus = "1";
   startWrapMotion(account, 84, 18);
 
-  setTimeout(createDownloadUpload, 900);
+  setTimeout(() => {
+  createDownloadUpload();
+
+  if (user.role === "admin") {
+    createAdminBubble();
+  }
+}, 900);
 }
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
@@ -449,7 +455,8 @@ accountForm.addEventListener("submit", async event => {
       showLoginError("paswoorden verschillen");
       return;
     }
-    const existing = db.users.find(user => normalize(user.email) === email || normalize(user.name) === normalize(name));
+    const existing = db.users.find(user => normalize(user.email) === email
+   );
     if (existing) {
       showLoginError("account bestaat al");
       return;
@@ -489,6 +496,35 @@ function createDownloadUpload() {
   appBubblesCreated = true;
   createAppBubble("download");
   createAppBubble("upload");
+}
+
+function createAdminBubble() {
+  if (document.querySelector('.app-bubble[data-kind="admin"]')) return;
+
+  const el = document.createElement("div");
+  el.className = "app-bubble admin";
+  el.dataset.kind = "admin";
+  el.dataset.motionStatus = "2";
+  el.style.background = `
+radial-gradient(circle at 30% 20%,
+#ffffff 0%,
+#ffe89a 20%,
+#ffb52e 60%,
+#cc7700 100%)
+`;
+
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">BEHEER</div>
+      <div class="planet-list">
+        <div>apps</div>
+        <div>uploads</div>
+        <div>gebruikers</div>
+      </div>
+    </div>
+  `;
+
+  preparePlanetBubble(el, randomBetween(43, 57), randomBetween(70, 82), "min(17vw, 24vh)");
 }
 
 function createAppBubble(kind) {
