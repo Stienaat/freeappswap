@@ -199,7 +199,7 @@ setTimeout(async () => {
 
   account.classList.add("open");
   setAccountMode("start");
-}, 20500);
+}, 10000);
 }
 
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
@@ -339,6 +339,12 @@ function finishLogin(user) {
   loggedIn = true;
   
   saveCurrentUser(user);
+  const welcome = document.getElementById("welcomeUser");
+
+if (welcome) {
+  welcome.textContent = `Welkom ${user.name}`;
+  welcome.classList.add("show");
+}
 
   clearFocusStates();
   document.body.classList.add("day-open");

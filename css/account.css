@@ -89,6 +89,30 @@
   font-size: calc(var(--size) * .048);
 }
 
+.account-label {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  z-index: 80;
+
+  color: white;
+  font-weight: 950;
+  font-size: clamp(14px, 1.4vw, 24px);
+  letter-spacing: .08em;
+
+  text-shadow:
+    0 0 5px rgba(0,0,0,.95),
+    0 0 14px rgba(0,0,0,.9);
+
+  pointer-events: none;
+}
+
+.account.focus .account-label,
+.account.logged-in-moon .account-label {
+  display: none;
+}
+
 .account-title {
   font-size: 1.65em;
   line-height: 1;

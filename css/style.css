@@ -218,3 +218,24 @@ body.product-modal-open .app-bubble:not(.app-detail) {
   animation-play-state: paused !important;
 }
 
+.welcome-user {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(38px, 2vw, 52px);
+  font-weight: 800;
+   color: yellow;
+
+  text-shadow:
+    0 0 8px rgba(0,0,0,.9),
+    0 0 18px rgba(0,0,0,.7);
+
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+
+.welcome-user.show {
+  opacity: 1;
+}
