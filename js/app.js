@@ -15,6 +15,12 @@ const nameInput = document.getElementById("loginName");
 const emailInput = document.getElementById("loginEmail");
 const passwordInput = document.getElementById("loginPassword");
 const passwordConfirmInput = document.getElementById("loginPasswordConfirm");
+const SUPABASE_URL = "https://njefjypajmbolkufgkgd.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qZWZqeXBham1ib2xrdWZna2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDQyNjksImV4cCI6MjA5NjYyMDI2OX0.mUZSAB8mxExzXQM3OK55mfYnGZVhl1QmyLNwv64V-Mo";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+console.log("SUPABASE URL =", SUPABASE_URL);
+console.log("KEY =", SUPABASE_ANON_KEY.substring(0, 20));
 
 let loggedIn = false;
 let appBubblesCreated = false;
@@ -426,69 +432,86 @@ accountForm.addEventListener("submit", async event => {
   clearLoginError();
 
   const name = nameInput.value.trim();
-  const loginOrEmail = emailInput.value.trim();
-  const email = normalize(loginOrEmail);
+  const email = normalize(emailInput.value);
   const password = passwordInput.value;
   const passwordConfirm = passwordConfirmInput.value;
 
-  if (!loginOrEmail || !password) {
-    showLoginError("Vul alle velden in!");
+  if (!email || !password) {
+    showLoginError("Vul email en paswoord in!");
     return;
   }
 
-  const db = readDatabase();
+  if (!email.includes("@")) {
+    showLoginError("geldig emailadres nodig");
+    return;
+  }
 
   if (accountMode === "register") {
     if (!name) {
       showLoginError("naam nodig");
       return;
     }
-    if (!email.includes("@")) {
-      showLoginError("geldig emailadres nodig");
-      return;
-    }
-    if (password.length < 4) {
+
+    if (password.length < 6) {
       showLoginError("paswoord is te kort");
       return;
     }
+
     if (password !== passwordConfirm) {
       showLoginError("paswoorden verschillen");
       return;
     }
-    const existing = db.users.find(user => normalize(user.email) === email
-   );
-    if (existing) {
-      showLoginError("account bestaat al");
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password
+    });
+
+    if (error) {
+      showLoginError(error.message);
       return;
     }
 
-    const newUser = await createUserRecord({ name, email, password });
-    db.users.push(newUser);
-    saveDatabase(db);
-    finishLogin(newUser);
+    const user = data.user;
+
+    if (user) {
+      await supabaseClient.from("profiles").insert({
+        id: user.id,
+        name,
+        email,
+        role: "member"
+      });
+    }
+
+    showLoginError("Account gemaakt. Log nu in.");
+    setAccountMode("login");
     return;
   }
 
-  const existing = db.users.find(user => normalize(user.email) === email || normalize(user.name) === email);
-  if (!existing) {
-    showLoginError("account niet gevonden");
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showLoginError("email of paswoord klopt niet");
     return;
   }
-  const ok = await verifyPassword(password, existing);
-  if (!ok) {
-    showLoginError("paswoord klopt niet");
-    return;
-  }
-  existing.last_login_at = new Date().toISOString();
-  existing.updated_at = existing.last_login_at;
 
-  if (existing.password_plain_for_prototype) {
-    existing.password = await hashPassword(password);
-    delete existing.password_plain_for_prototype;
-  }
+  const authUser = data.user;
 
-  saveDatabase(db);
-  finishLogin(existing);
+  const { data: profile } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", authUser.id)
+    .single();
+
+  finishLogin({
+    id: authUser.id,
+    name: profile?.name || email,
+    email,
+    role: profile?.role || "member"
+  });
 });
 
 function createDownloadUpload() {
