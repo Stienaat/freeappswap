@@ -9,38 +9,40 @@
   cursor: default;
   filter: drop-shadow(22px 28px 26px rgba(0,0,0,.20));
 }
-
+.account {
+  background-image: url("../assets/images/planet-account.PNG");
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  overflow: hidden;
+}
 .account.open {
   --scale: 1;
   --opacity: 1;
 }
+.account:not(.focus) .account-shell {
+  opacity: 0;
+}
 
+.account.focus .account-shell {
+  opacity: 1;
+}
 .account.focus {
   --x: 72%;
   --y: 32%;
   --size: min(32vw, 55vh);
   --scale: 1;
-  --opacity: .98;
+
   --time: 2800ms;
   z-index: 40;
 }
 
 .account.dim {
   --scale: .72;
-  --opacity: .62;
+ 
   z-index: 12;
 }
 
-.account.far {
-  --x: 86%;
-  --y: 22%;
-  --size: min(5vw, 7.5vh);
-  --scale: 1;
-  --time: 3600ms;
-  opacity: .72;
-  z-index: 9;
-  filter: drop-shadow(12px 16px 16px rgba(0,0,0,.14));
-}
 
 .account-shell {
   width: 100%;
@@ -190,7 +192,7 @@
   color: #111733 !important;
   box-shadow: none !important;
   text-decoration: underline;
-  opacity: .72;
+
 }
 
 .account .forgot-link {
@@ -199,7 +201,7 @@
 
 .account .back-link {
   font-size: .58em !important;
-  opacity: .58;
+  
 }
 
 .login-message {
@@ -234,4 +236,67 @@
 .account.far .account-form input,
 .account.far .account-form button {
   display: none !important;
+}
+
+.account.logged-in-moon {
+  pointer-events: none !important;
+  cursor: default !important;
+
+  width: min(6vw, 6vh) !important;
+  height: min(6vw, 6vh) !important;
+
+  animation: moonOrbit 100s linear infinite !important;
+}
+
+@keyframes moonOrbit {
+  0% {
+    left: 84%;
+    top: 18%;
+   
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    left: 84%;
+    top: 18%;
+   
+    transform: translate(-50%, -50%) scale(1);
+  }
+}@keyframes moonOrbit {
+  0% {
+    left: 74%;
+    top: 18%;
+   
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  25% {
+    left: 28%;
+    top: 18%;
+  
+    transform: translate(-50%, -50%) scale(.75);
+  }
+
+  50% {
+    left: 74%;
+    top: 18%;
+  
+    transform: translate(-50%, -50%) scale(.55);
+  }
+
+  75% {
+    left: 28%;
+    top: 18%;
+
+    transform: translate(-50%, -50%) scale(.7);
+  }
+
+  100% {
+    left: 7%;
+    top: 18%;
+
+    transform: translate(-50%, -50%) scale(1);
+  }
+}.account.logged-in-moon {
+  animation: moonOrbit 90s linear infinite !important;
 }

@@ -29,7 +29,17 @@ body {
 
 * { box-sizing: border-box; }
 
+.planet-title,
+.search-label,
+.download-label,
+.upload-label {
+  color: white;
 
+  text-shadow:
+    0 0 4px rgba(0,0,0,.8),
+    0 0 12px rgba(0,0,0,.7),
+    2px 2px 6px rgba(0,0,0,.8);
+}
 
 
 
@@ -123,13 +133,13 @@ svg {
   --y: 51% !important;
   --size: min(38vw, 58vh) !important;
   --scale: 1 !important;
-  --opacity: .98 !important;
+
   z-index: 40;
 }
 
 .app-bubble.dim {
   --scale: .72 !important;
-  opacity: .62 !important;
+ 
   z-index: 12;
 }
 

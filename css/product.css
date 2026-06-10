@@ -51,7 +51,6 @@ body.product-modal-open::after {
   background-size: cover;
   background-position: center;
 
-  opacity: .98;
   filter: saturate(1.10) contrast(1.00) brightness(1.15);
 }
 
@@ -73,8 +72,8 @@ body.product-modal-open::after {
 /* Productbol gecentreerd op wereldbol */
 
 .app-bubble.app-detail.focus {
-  --x: 49% !important;
-  --y: 48.7% !important;
+  --x: 50% !important;
+  --y: 49.4% !important;
     width: 46vw !important;
     height: 46vw !important;
   --opacity: 1 !important;

@@ -4,6 +4,19 @@
    Fase 2: focus = sitemap, geen groot icoon/tekst
    ========================================================== */
 
+.search svg circle,
+.search svg ellipse {
+  opacity: 0;
+}
+
+
+.search {
+  background-image: url("../assets/images/planet-search.PNG");
+  background-size: cover;
+  background-position: center;
+}
+
+
 .search {
   cursor: pointer;
     --x: 2%;
@@ -12,7 +25,7 @@
   }
 
 /* Kleine zoekbol: icoon kleiner, tekst iets groter */
-.search-symbol,
+
 .search-label {
   transition:
     opacity 1100ms ease,
@@ -20,8 +33,15 @@
   transform-origin: 50% 50%;
 }
 
+.search-label {
+  fill: white !important;
+  text-shadow:
+    0 0 4px rgba(0,0,0,.9),
+    0 0 12px rgba(0,0,0,.8);
+}
+
 .search-symbol {
-  transform: translateY(-28px) scale(.82);
+  stroke: white !important;
 }
 
 .search-label {
@@ -38,7 +58,7 @@
   --time: 4200ms;
   z-index: 80;
 }
-.search.focus .search-symbol,
+
 .search.focus .search-label {
   opacity: 0;
   transform: scale(.65);
@@ -54,7 +74,15 @@
   pointer-events: none;
   z-index: 3;
 }
+#search {
+  opacity: 0;
+  pointer-events: none;
+}
 
+body.day-open #search {
+  opacity: 1;
+  pointer-events: auto;
+}
 .search-menu {
   width: 62%;
   display: none;

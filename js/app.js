@@ -194,11 +194,12 @@ async function startLayout() {
     document.querySelector(".intro-text-bottom")?.classList.add("hide");
   }, 18500);
 
-  setTimeout(() => {
-    search.classList.add("open");
-    account.classList.add("open");
-    setAccountMode("start");
-  }, 20500);
+setTimeout(async () => {
+  await sleep(5450);
+
+  account.classList.add("open");
+  setAccountMode("start");
+}, 20500);
 }
 
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
@@ -342,19 +343,18 @@ function finishLogin(user) {
   clearFocusStates();
   document.body.classList.add("day-open");
   account.classList.remove("focus", "dim");
-  account.classList.add("far");
-
-  account.dataset.motionStatus = "1";
-  startWrapMotion(account, 84, 18);
-
+  account.classList.remove("focus", "dim", "far");
+  account.classList.add("logged-in-moon");
   setTimeout(() => {
   createDownloadUpload();
+  search.classList.add("open");
 
   if (user.role === "admin") {
     createAdminBubble();
   }
 }, 900);
 }
+
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
 account.addEventListener("click", () => focusBubble("account"));
@@ -930,6 +930,7 @@ function clearFocusStates() {
 }
 
 function focusBubble(kind) {
+  if (kind === "account" && loggedIn) return;
   if (productModalOpen && !appMap[kind]) return;
   const activeIsSearch = kind === "search";
   const activeIsAccount = kind === "account";

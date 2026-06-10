@@ -25,10 +25,11 @@
     }
 
     .app-bubble.download {
-      background:
-        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
-        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
-        linear-gradient(135deg, #e9ffff 0%, #62d6ff 45%, #1778d4 100%);
+      background-image: url("../assets/images/planet-download.PNG");
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     .app-bubble.upload {
@@ -135,7 +136,7 @@
       --y: 51% !important;
       --size: min(38vw, 58vh) !important;
       --scale: 1 !important;
-      --opacity: .98 !important;
+   
       z-index: 40;
     }
 

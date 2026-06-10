@@ -104,7 +104,7 @@ account: {
     size: "280px",
     scale: .62,
     z: 900,
-    opacity: .96,
+   
     dx: 0, dy: 0,
     pad: "18px"
   },
@@ -124,8 +124,24 @@ account: {
     size: "280px",
     scale: .22,
     z: -260,
-    opacity: .68,
+   
     dx: 0, dy: 0,
     pad: "18px"
   }
+}
+.search::after,
+.account::after,
+.app-bubble.download::after,
+.app-bubble.upload::after,
+.app-bubble.admin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 28% 18%,
+      rgba(255,255,255,.45),
+      rgba(255,255,255,.18) 16%,
+      transparent 34%);
 }
