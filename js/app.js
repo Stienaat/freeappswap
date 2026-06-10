@@ -375,9 +375,26 @@ backToAccountStart.addEventListener("click", event => {
   setAccountMode("start");
 });
 
-forgotPassword.addEventListener("click", event => {
+forgotPassword.addEventListener("click", async event => {
   event.stopPropagation();
-  showLoginError("paswoord vergeten!");
+  
+  const email = normalize(emailInput.value);
+
+  if (!email || !email.includes("@")) {
+    showLoginError("vul eerst je emailadres in");
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin
+  });
+
+  if (error) {
+    showLoginError(error.message);
+    return;
+  }
+
+  showLoginError("Controleer je mailbox om je paswoord te wijzigen.");
 });
 
 document.querySelectorAll(".search-link").forEach(button => {
