@@ -272,55 +272,84 @@
   animation: moonOrbit 100s linear infinite !important;
 }
 
+
 @keyframes moonOrbit {
   0% {
-    left: 84%;
+    left: 72%;
     top: 18%;
-   
     transform: translate(-50%, -50%) scale(1);
+  }
+    8.3% {
+    left: 64%;
+    top: 15.8%;
+    transform: translate(-50%, -50%) scale(0.8);
   }
 
-  100% {
-    left: 84%;
-    top: 18%;
-   
-    transform: translate(-50%, -50%) scale(1);
-  }
-}@keyframes moonOrbit {
-  0% {
-    left: 74%;
-    top: 18%;
-   
-    transform: translate(-50%, -50%) scale(1);
+  16.6% {
+    left: 56%;
+    top: 15.4%;
+    transform: translate(-50%, -50%) scale(0.6);
   }
 
   25% {
-    left: 28%;
-    top: 18%;
+    left: 48%;
+    top: 15%;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
   
-    transform: translate(-50%, -50%) scale(.75);
+  33.3% {
+    left: 40%;
+    top: 15.4%;
+    transform: translate(-50%, -50%) scale(0.6);
   }
 
+  41.6% {
+    left: 32%;
+    top: 15.8%;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
   50% {
-    left: 74%;
+    left: 24%;
     top: 18%;
-  
-    transform: translate(-50%, -50%) scale(.55);
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  58.3% {
+    left: 32%;
+    top: 21.2%;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  66.6% {
+    left: 40%;
+    top: 21.6%;
+    transform: translate(-50%, -50%) scale(1.8);
   }
 
   75% {
-    left: 28%;
-    top: 18%;
+    left: 48%;
+    top: 23%;
+    transform: translate(-50%, -50%) scale(2);
+  }
 
-    transform: translate(-50%, -50%) scale(.7);
+  83.3% {
+    left: 56%;
+    top: 21.6%;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+
+  91.6% {
+    left: 64%;    
+    top: 21.2%;
+    transform: translate(-50%, -50%) scale(1.5);
   }
 
   100% {
-    left: 7%;
+    left: 72%;    
     top: 18%;
-
     transform: translate(-50%, -50%) scale(1);
   }
-}.account.logged-in-moon {
-  animation: moonOrbit 90s linear infinite !important;
+}
+
+.account.logged-in-moon {
+  animation: moonOrbit 60s linear infinite !important;
 }
