@@ -351,8 +351,7 @@
     top: 18%;
     transform: translate(-50%, -50%) scale(1);
   }
-}git status
-
+}
 
 .account.logged-in-moon {
   animation: moonOrbit 80s linear infinite !important;
@@ -363,7 +362,7 @@
   height: 70px !important;
   border-radius: 50% !important;
   background: rgb(112, 105, 105) !important;
-  opacity: 0.8!important;
+  opacity: 0.!important;
   z-index:10!important;
   pointer-events: none !important;
 
