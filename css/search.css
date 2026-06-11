@@ -51,8 +51,8 @@
 /* Focus: de bol wordt sitemap. Grote icon/ZOEK verdwijnen rustig. */
 .search.focus {
   --x: 24%;
-  --y: 48%;
-  --size: min(38vw, 58vh);
+  --y: 28%;
+  --size: min(38vw, 38vh);
   --scale: 1;
   --opacity: .98;
   --time: 4200ms;
@@ -77,11 +77,19 @@
 #search {
   opacity: 0;
   pointer-events: none;
+
+  transition:
+    opacity 3000ms ease,
+    transform 4000ms cubic-bezier(.12,.78,.16,1);
+
+  transform: scale(.05);
 }
 
 body.day-open #search {
   opacity: 1;
   pointer-events: auto;
+
+  transform: scale(1.5);
 }
 .search-menu {
   width: 62%;

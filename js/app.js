@@ -351,6 +351,7 @@ if (welcome) {
   account.classList.remove("focus", "dim");
   account.classList.remove("focus", "dim", "far");
   account.classList.add("logged-in-moon");
+  createMoonShadow();
   setTimeout(() => {
   createDownloadUpload();
   search.classList.add("open");
@@ -360,7 +361,14 @@ if (welcome) {
   }
 }, 900);
 }
+function createMoonShadow() {
+  if (document.querySelector(".moon-shadow")) return;
 
+  const shadow = document.createElement("div");
+  shadow.className = "moon-shadow";
+
+  document.querySelector(".space").appendChild(shadow);
+}
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
 account.addEventListener("click", () => focusBubble("account"));

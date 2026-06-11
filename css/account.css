@@ -351,8 +351,53 @@
     top: 18%;
     transform: translate(-50%, -50%) scale(1);
   }
-}
+}git status
+
 
 .account.logged-in-moon {
-  animation: moonOrbit 90s linear infinite !important;
+  animation: moonOrbit 80s linear infinite !important;
+}
+.moon-shadow {
+  position: absolute !important;
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 50% !important;
+  background: rgb(112, 105, 105) !important;
+  opacity: 0.8!important;
+  z-index:10!important;
+  pointer-events: none !important;
+
+  animation: moonShadowOnEarth 85s linear infinite !important;
+}
+
+@keyframes moonShadowOnEarth {
+  0% {
+    left: 68%;
+    top: 22%;
+    transform: translate(-50%, -50%) scale(0.01);
+  }
+
+  25% {
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%, -50%) scale(0.01);
+  }
+
+  50% {
+    left: 32%;
+    top: 22%;
+    transform: translate(-50%, -50%) scale(0.01);
+  }
+
+  75% {
+    left: 50%;
+    top: 26%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  100% {
+    left: 68%;
+    top: 22%;
+    transform: translate(-50%, -50%) scale(0.01);
+  }
 }
