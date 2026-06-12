@@ -506,12 +506,20 @@ accountForm.addEventListener("submit", async event => {
     const user = data.user;
 
     if (user) {
-      await supabaseClient.from("profiles").insert({
-        id: user.id,
-        name,
-        email,
-        role: "member"
-      });
+      const { error: memberError } = await supabaseClient
+        .from("members")
+        .insert({
+          id: user.id,
+          name,
+          email,
+          role: "member"
+        });
+
+      if (memberError) {
+        console.error(memberError);
+        showLoginError("Account gemaakt, maar member niet opgeslagen.");
+        return;
+      }
     }
 
     showLoginError("Account gemaakt. Log nu in.");
@@ -531,11 +539,15 @@ accountForm.addEventListener("submit", async event => {
 
   const authUser = data.user;
 
-  const { data: profile } = await supabaseClient
-    .from("profiles")
+  const { data: profile, error: profileError } = await supabaseClient
+    .from("members")
     .select("*")
     .eq("id", authUser.id)
     .single();
+
+  if (profileError) {
+    console.error(profileError);
+  }
 
   finishLogin({
     id: authUser.id,
@@ -544,6 +556,8 @@ accountForm.addEventListener("submit", async event => {
     role: profile?.role || "member"
   });
 });
+  
+ 
 
 function createDownloadUpload() {
   if (appBubblesCreated) return;
@@ -567,17 +581,20 @@ radial-gradient(circle at 30% 20%,
 #cc7700 100%)
 `;
 
-  el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">BEHEER</div>
-      <div class="planet-list">
-        <div>apps</div>
-        <div>uploads</div>
-        <div>gebruikers</div>
-      </div>
+el.innerHTML = `
+  <div class="planet-content">
+    <div class="planet-title">BEHEER</div>
+    <div class="planet-list">
+      <div>apps</div>
+      <div>uploads</div>
+      <div id="btnUsers">gebruikers</div>
     </div>
-  `;
+  </div>
+`;
 
+el.querySelector("#btnUsers").onclick = () => {
+  showAdminUsers();
+};
   preparePlanetBubble(el, randomBetween(43, 57), randomBetween(70, 82), "min(17vw, 24vh)");
 }
 
@@ -997,5 +1014,254 @@ exportUsersJson.addEventListener("click", event => {
   URL.revokeObjectURL(url);
 });
 
+async function showAdminUsers() {
+  const admin = document.querySelector('.app-bubble.admin');
+  if (!admin) return;
 
+  admin.classList.add("admin-phase-3");
+
+  admin.innerHTML = `
+    <div class="admin-members-panel">
+
+      <div class="admin-members-title">LEDEN</div>
+
+      <div class="admin-toolbar">
+        <button id="btnAdminBack">exit</button>
+        <button id="btnEditMember">edit</button>
+        <button id="btnDeleteMember">delete</button>
+        <button id="btnExportMembers">export</button>
+        <button id="btnSaveMember">save</button>
+      </div>
+
+      <div class="members-table-wrap">
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Naam</th>
+              <th>Email</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody id="membersBody">
+            <tr><td colspan="4">laden...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="membersStatus" class="members-status"></div>
+
+    </div>
+  `;
+
+  document.getElementById("btnAdminBack").onclick = () => {
+    admin.classList.remove("admin-phase-3");
+    showAdminMenu();
+  };
+
+  document.getElementById("btnEditMember").onclick = enableMemberEdit;
+  document.getElementById("btnDeleteMember").onclick = deleteSelectedMember;
+  document.getElementById("btnExportMembers").onclick = exportMembersExcel;
+  document.getElementById("btnSaveMember").onclick = saveSelectedMember;
+
+  await loadMembers();
+}
+
+function showAdminMenu() {
+  const admin = document.querySelector('.app-bubble.admin');
+  if (!admin) return;
+
+  admin.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">BEHEER</div>
+      <div class="planet-list">
+        <div>apps</div>
+        <div>uploads</div>
+        <div id="btnUsers">gebruikers</div>
+      </div>
+    </div>
+  `;
+
+  admin.querySelector("#btnUsers").onclick = () => {
+    showAdminUsers();
+  };
+}
+
+async function loadMembers() {
+  const body = document.getElementById("membersBody");
+  if (!body) return;
+
+  const { data, error } = await supabaseClient
+    .from("members")
+    .select("id, email, name, role")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    body.innerHTML = `<tr><td colspan="4">Fout bij laden</td></tr>`;
+    return;
+  }
+
+  window.currentMembers = data || [];
+
+  if (!data || data.length === 0) {
+    body.innerHTML = `<tr><td colspan="4">Geen leden gevonden</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = data.map(m => `
+    <tr data-id="${m.id}">
+      <td><input type="radio" name="selectedMember" value="${m.id}"></td>
+      <td><input class="member-input" data-field="name" value="${m.name || ""}" disabled></td>
+      <td><input class="member-input" data-field="email" value="${m.email || ""}" disabled></td>
+      <td>
+        <select class="member-input" data-field="role" disabled>
+          <option value="member" ${m.role === "member" ? "selected" : ""}>member</option>
+          <option value="admin" ${m.role === "admin" ? "selected" : ""}>admin</option>
+        </select>
+      </td>
+    </tr>
+  `).join("");
+}
+function getSelectedMemberRow() {
+  const selected = document.querySelector('input[name="selectedMember"]:checked');
+  if (!selected) return null;
+
+  return document.querySelector(`tr[data-id="${selected.value}"]`);
+}
+
+function setMembersStatus(text) {
+  const status = document.getElementById("membersStatus");
+  if (status) status.textContent = text;
+}
+
+function enableMemberEdit() {
+  const row = getSelectedMemberRow();
+
+  if (!row) {
+    setMembersStatus("Selecteer eerst een lid.");
+    return;
+  }
+
+  row.querySelectorAll(".member-input").forEach(input => {
+    input.disabled = false;
+  });
+
+  setMembersStatus("Edit actief. Pas aan en druk op save.");
+}
+
+async function saveSelectedMember() {
+  const row = getSelectedMemberRow();
+
+  if (!row) {
+    setMembersStatus("Selecteer eerst een lid.");
+    return;
+  }
+
+  const id = row.dataset.id;
+  const name = row.querySelector('[data-field="name"]').value.trim();
+  const email = row.querySelector('[data-field="email"]').value.trim().toLowerCase();
+  const role = row.querySelector('[data-field="role"]').value.trim().toLowerCase();
+
+  const { error } = await supabaseClient
+    .from("members")
+    .update({
+      name,
+      email,
+      role
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    setMembersStatus("Opslaan mislukt.");
+    return;
+  }
+
+  setMembersStatus("Opgeslagen.");
+  await loadMembers();
+}
+
+async function deleteSelectedMember() {
+  const row = getSelectedMemberRow();
+
+  if (!row) {
+    setMembersStatus("Selecteer eerst een lid.");
+    return;
+  }
+
+  const id = row.dataset.id;
+  const name = row.querySelector('[data-field="name"]').value.trim();
+
+  if (!confirm(`Lid "${name}" verwijderen uit members?`)) return;
+
+  const { error } = await supabaseClient
+    .from("members")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    setMembersStatus("Verwijderen mislukt.");
+    return;
+  }
+
+  setMembersStatus("Verwijderd.");
+  await loadMembers();
+}
+
+function exportMembersExcel() {
+  const rows = window.currentMembers || [];
+
+  if (!rows.length) {
+    setMembersStatus("Geen leden om te exporteren.");
+    return;
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Naam</th>
+          <th>Email</th>
+          <th>Rol</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  rows.forEach(m => {
+    html += `
+      <tr>
+        <td>${m.id || ""}</td>
+        <td>${m.name || ""}</td>
+        <td>${m.email || ""}</td>
+        <td>${m.role || ""}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  const blob = new Blob([html], {
+    type: "application/vnd.ms-excel"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  const date = new Date().toISOString().slice(0, 10);
+
+  a.href = url;
+  a.download = `leden-export-${date}.xls`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  setMembersStatus("Excel export gemaakt.");
+}
 startLayout();

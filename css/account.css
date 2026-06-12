@@ -407,7 +407,7 @@
   z-index:10!important;
   pointer-events: none !important;
 
-  animation: moonShadowOnEarth 78s linear infinite !important;
+  animation: moonShadowOnEarth 80s linear infinite !important;
 }
 
 @keyframes moonShadowOnEarth {

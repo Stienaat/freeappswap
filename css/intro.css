@@ -87,9 +87,9 @@ body.day-open .intro-birth::before {
     filter: blur(12px) brightness(3);
   }
 
-  35% {
+  20% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(.03);
+    transform: translate(-50%, -50%) scale(.05);
     filter: blur(10px) brightness(2.4);
   }
 

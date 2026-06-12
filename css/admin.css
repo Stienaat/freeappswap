@@ -5,3 +5,112 @@
   background-repeat: no-repeat !important;
   background-color: transparent !important;
 }
+
+.app-bubble.admin.admin-phase-3 {
+  width: 103vmin !important;
+  height: 103vmin !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 200 !important;
+}
+
+.users-content {
+  width: 75%;
+  height: 90%;
+  margin: auto;
+  font-size: 2rem;
+}
+
+
+.members-table th,
+.members-table td {
+  padding: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  text-align: left;
+}
+
+.planet-back,
+#btnUsers {
+  cursor: pointer;
+}
+
+.admin-members-panel {
+  width: 82%;
+  height: 87%;
+  margin: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.7rem;
+}
+
+.admin-members-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  margin-top: -5%;
+  margin-bottom: 2%;
+}
+
+.admin-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-toolbar button {
+  font-size: 1rem;
+  padding: 0.22rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.45);
+  background: rgba(23, 23, 23, 0.25);
+  color: white;
+  cursor: pointer;
+}
+
+.members-table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border-radius: 1rem;
+  background: rgba(23, 23, 23, 0.5);
+}
+
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.members-table th,
+.members-table td {
+  padding: 0.22rem;
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+  text-align: left;
+}
+
+.member-input {
+  width: 100%;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 0.25rem;
+  padding: 0.15rem;
+}
+
+.member-input:disabled {
+  border-color: transparent;
+  background: transparent;
+}
+
+.members-status {
+  min-height: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.9;
+}
