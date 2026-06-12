@@ -557,7 +557,30 @@ accountForm.addEventListener("submit", async event => {
   });
 });
   
- 
+ function renderAdminMenu(admin) {
+  admin.classList.remove("admin-phase-3");
+
+  admin.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">BEHEER</div>
+      <div class="planet-list">
+        <div id="btnApps">apps</div>
+        <div>uploads</div>
+        <div id="btnUsers">gebruikers</div>
+      </div>
+    </div>
+  `;
+
+admin.querySelector("#btnApps").onclick = event => {
+  event.stopPropagation();
+  showAdminApps();
+};
+
+  admin.querySelector("#btnUsers").onclick = event => {
+    event.stopPropagation();
+    showAdminUsers();
+  };
+}
 
 function createDownloadUpload() {
   if (appBubblesCreated) return;
@@ -581,20 +604,8 @@ radial-gradient(circle at 30% 20%,
 #cc7700 100%)
 `;
 
-el.innerHTML = `
-  <div class="planet-content">
-    <div class="planet-title">BEHEER</div>
-    <div class="planet-list">
-      <div>apps</div>
-      <div>uploads</div>
-      <div id="btnUsers">gebruikers</div>
-    </div>
-  </div>
-`;
+renderAdminMenu(el);
 
-el.querySelector("#btnUsers").onclick = () => {
-  showAdminUsers();
-};
   preparePlanetBubble(el, randomBetween(43, 57), randomBetween(70, 82), "min(17vw, 24vh)");
 }
 
@@ -1071,20 +1082,7 @@ function showAdminMenu() {
   const admin = document.querySelector('.app-bubble.admin');
   if (!admin) return;
 
-  admin.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">BEHEER</div>
-      <div class="planet-list">
-        <div>apps</div>
-        <div>uploads</div>
-        <div id="btnUsers">gebruikers</div>
-      </div>
-    </div>
-  `;
-
-  admin.querySelector("#btnUsers").onclick = () => {
-    showAdminUsers();
-  };
+  renderAdminMenu(admin);
 }
 
 async function loadMembers() {
@@ -1263,5 +1261,284 @@ function exportMembersExcel() {
   URL.revokeObjectURL(url);
 
   setMembersStatus("Excel export gemaakt.");
+}
+
+async function showAdminApps() {
+  const admin = document.querySelector('.app-bubble.admin');
+  if (!admin) return;
+
+  admin.classList.add("admin-phase-3");
+
+  admin.innerHTML = `
+    <div class="admin-members-panel">
+
+      <div class="admin-members-title">APPS</div>
+
+      <div class="admin-toolbar">
+        <button id="btnAdminBack">exit</button>
+        <button id="btnNewApp">new</button>
+        <button id="btnEditApp">edit</button>
+        <button id="btnDeleteApp">delete</button>
+        <button id="btnExportApps">export</button>
+        <button id="btnSaveApp">save</button>
+      </div>
+
+      <div class="members-table-wrap">
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Naam</th>
+              <th>Platform</th>
+              <th>Categorie</th>
+              <th>Versie</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="appsBody">
+            <tr><td colspan="6">laden...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="appsStatus" class="members-status"></div>
+
+    </div>
+  `;
+
+  document.getElementById("btnAdminBack").onclick = () => {
+    showAdminMenu();
+  };
+
+  document.getElementById("btnNewApp").onclick = newAppRow;
+  document.getElementById("btnEditApp").onclick = enableAppEdit;
+  document.getElementById("btnDeleteApp").onclick = deleteSelectedApp;
+  document.getElementById("btnExportApps").onclick = exportAppsExcel;
+  document.getElementById("btnSaveApp").onclick = saveSelectedApp;
+
+  await loadApps();
+}
+function appRowHtml(app, isNew = false) {
+  return `
+    <tr data-id="${app.id || "new"}" data-new="${isNew ? "1" : "0"}">
+      <td>
+        <input type="radio" name="selectedApp" value="${app.id || "new"}" ${isNew ? "checked" : ""}>
+      </td>
+
+      <td>
+        <input class="app-input" data-field="name" value="${app.name || ""}" ${isNew ? "" : "disabled"}>
+      </td>
+
+      <td>
+        <input class="app-input" data-field="platform" value="${app.platform || "apk"}" ${isNew ? "" : "disabled"}>
+      </td>
+
+      <td>
+        <input class="app-input" data-field="category" value="${app.category || ""}" ${isNew ? "" : "disabled"}>
+      </td>
+
+      <td>
+        <input class="app-input" data-field="version" value="${app.version || "0.1"}" ${isNew ? "" : "disabled"}>
+      </td>
+
+      <td>
+        <input class="app-input" data-field="status" value="${app.status || "test"}" ${isNew ? "" : "disabled"}>
+      </td>
+    </tr>
+  `;
+}
+
+function newAppRow() {
+  const body = document.getElementById("appsBody");
+  if (!body) return;
+
+  body.insertAdjacentHTML("afterbegin", appRowHtml({
+    name: "",
+    platform: "apk",
+    category: "",
+    version: "0.1",
+    status: "test"
+  }, true));
+
+  setAppsStatus("Nieuwe app. Vul in en druk op save.");
+}
+
+function setAppsStatus(text) {
+  const status = document.getElementById("appsStatus");
+  if (status) status.textContent = text;
+}
+function getSelectedAppRow() {
+  const selected = document.querySelector('input[name="selectedApp"]:checked');
+  if (!selected) return null;
+
+  return document.querySelector(`tr[data-id="${selected.value}"]`);
+}
+
+function enableAppEdit() {
+  const row = getSelectedAppRow();
+
+  if (!row) {
+    setAppsStatus("Selecteer eerst een app.");
+    return;
+  }
+
+  row.querySelectorAll(".app-input").forEach(input => {
+    input.disabled = false;
+  });
+
+  setAppsStatus("Edit actief. Pas aan en druk op save.");
+}
+
+async function deleteSelectedApp() {
+  const row = getSelectedAppRow();
+
+  if (!row) {
+    setAppsStatus("Selecteer eerst een app.");
+    return;
+  }
+
+  if (row.dataset.new === "1") {
+    row.remove();
+    setAppsStatus("Nieuwe rij verwijderd.");
+    return;
+  }
+
+  const name = row.querySelector('[data-field="name"]').value.trim();
+
+  if (!confirm(`App "${name}" verwijderen?`)) return;
+
+  const { error } = await supabaseClient
+    .from("apps")
+    .delete()
+    .eq("id", row.dataset.id);
+
+  if (error) {
+    console.error(error);
+    setAppsStatus("Verwijderen mislukt.");
+    return;
+  }
+
+  setAppsStatus("Verwijderd.");
+  await loadApps();
+}
+
+function exportAppsExcel() {
+  const rows = window.currentApps || [];
+
+  if (!rows.length) {
+    setAppsStatus("Geen apps om te exporteren.");
+    return;
+  }
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Naam</th>
+          <th>Platform</th>
+          <th>Categorie</th>
+          <th>Versie</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  rows.forEach(app => {
+    html += `
+      <tr>
+        <td>${app.id || ""}</td>
+        <td>${app.name || ""}</td>
+        <td>${app.platform || ""}</td>
+        <td>${app.category || ""}</td>
+        <td>${app.version || ""}</td>
+        <td>${app.status || ""}</td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+
+  const blob = new Blob([html], {
+    type: "application/vnd.ms-excel"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const date = new Date().toISOString().slice(0, 10);
+
+  a.href = url;
+  a.download = `apps-export-${date}.xls`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+  setAppsStatus("Excel export gemaakt.");
+}
+async function saveSelectedApp() {
+  const row = getSelectedAppRow();
+
+  if (!row) {
+    setAppsStatus("Selecteer eerst een app.");
+    return;
+  }
+
+  const app = {};
+
+  row.querySelectorAll(".app-input").forEach(input => {
+    app[input.dataset.field] = input.value.trim();
+  });
+
+  if (!app.name) {
+    setAppsStatus("Naam is verplicht.");
+    return;
+  }
+
+  let result;
+
+  if (row.dataset.new === "1") {
+    result = await supabaseClient
+      .from("apps")
+      .insert(app);
+  } else {
+    result = await supabaseClient
+      .from("apps")
+      .update(app)
+      .eq("id", row.dataset.id);
+  }
+
+  if (result.error) {
+    console.error(result.error);
+    setAppsStatus("Opslaan mislukt.");
+    return;
+  }
+
+  setAppsStatus("Opgeslagen.");
+  await loadApps();
+}
+
+async function loadApps() {
+  const body = document.getElementById("appsBody");
+  if (!body) return;
+
+  const { data, error } = await supabaseClient
+    .from("apps")
+    .select("*")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    body.innerHTML = `<tr><td colspan="6">Fout bij laden</td></tr>`;
+    return;
+  }
+
+  window.currentApps = data || [];
+
+  if (!data || data.length === 0) {
+    body.innerHTML = `<tr><td colspan="6">Geen apps gevonden</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = data.map(app => appRowHtml(app)).join("");
 }
 startLayout();
