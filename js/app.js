@@ -19,14 +19,14 @@ const SUPABASE_URL = "https://njefjypajmbolkufgkgd.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qZWZqeXBham1ib2xrdWZna2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDQyNjksImV4cCI6MjA5NjYyMDI2OX0.mUZSAB8mxExzXQM3OK55mfYnGZVhl1QmyLNwv64V-Mo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-console.log("SUPABASE URL =", SUPABASE_URL);
-console.log("KEY =", SUPABASE_ANON_KEY.substring(0, 20));
-
 let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
 let selectedPlatform = null;
 let productModalOpen = false;
+let dbApps = [];
+let selectedUploadPlatform = null;
+let selectedUploadCategory = null;
 
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
 const appData = {
@@ -445,8 +445,8 @@ function handleNavigationTarget(target) {
 
   if (categoryMap[target]) {
     if (!selectedPlatform) setDownloadPlatform("apk");
-    createCategoryBubble(target);
-    focusBubble(target);
+    renderDownloadCategory(target);
+    focusBubble("download");
     return;
   }
 
@@ -567,6 +567,7 @@ accountForm.addEventListener("submit", async event => {
         <div id="btnApps">apps</div>
         <div>uploads</div>
         <div id="btnUsers">gebruikers</div>
+        <div id="btnStats">stats</div>
       </div>
     </div>
   `;
@@ -614,23 +615,12 @@ function createAppBubble(kind) {
   const el = document.createElement("div");
   el.className = `app-bubble ${kind}`;
   el.dataset.kind = kind;
-  // Bewegingsstatus:
-  // 0 = normaal/stil, 1 = klein rustig zwevend, 2 = middelklein rustig zwevend, 3 = max/eindbol stil
   el.dataset.motionStatus = "2";
 
   if (kind === "download") {
     renderDownloadStart(el);
-  } else {
-    el.innerHTML = `
-      <div class="planet-content">
-        <div class="planet-title">UPLOAD</div>
-        <div class="planet-list">
-          <div>nieuwe app</div>
-          <div>screenshots</div>
-          <div>beschrijving</div>
-        </div>
-      </div>
-    `;
+  } else if (kind === "upload") {
+    renderUploadStart(el);
   }
 
   const finalX = kind === "download" ? randomBetween(23, 34) : randomBetween(64, 77);
@@ -645,6 +635,7 @@ function getDownloadBubble() {
 }
 
 function renderDownloadStart(el = getDownloadBubble()) {
+  loadDownloadAppsFromDb();
   if (!el) return;
   selectedPlatform = null;
   el.innerHTML = `
@@ -666,7 +657,10 @@ function renderDownloadStart(el = getDownloadBubble()) {
   });
 }
 
-function setDownloadPlatform(platformId) {
+async function setDownloadPlatform(platformId) {
+
+  await loadDownloadAppsFromDb();
+
   selectedPlatform = platformId;
   const el = getDownloadBubble();
   if (!el) return;
@@ -689,8 +683,8 @@ function setDownloadPlatform(platformId) {
   el.querySelectorAll("[data-category]").forEach(button => {
     button.addEventListener("click", event => {
       event.stopPropagation();
-      createCategoryBubble(button.dataset.category);
-      focusBubble(button.dataset.category);
+    renderDownloadCategory(button.dataset.category);
+    focusBubble("download");
     });
   });
   const back = el.querySelector("[data-back-platforms]");
@@ -743,18 +737,29 @@ function renderCategoryBubble(el, categoryId) {
       </div>
     </div>
   `;
-  el.querySelectorAll("[data-app]").forEach(button => {
-    button.addEventListener("click", event => {
-      event.stopPropagation();
-      createAppDetailBubble(button.dataset.app);
-      focusBubble(button.dataset.app);
-    });
+el.querySelectorAll("[data-app]").forEach(button => {
+  button.addEventListener("click", event => {
+    event.stopPropagation();
+
+    createDbAppDetailBubble(button.dataset.app);
+    focusBubble(button.dataset.app);
+
+    // Mars terug naar fase 1
+    setTimeout(() => {
+      renderDownloadStart();
+    }, 300);
   });
+});
 }
 
-function createAppDetailBubble(appId) {
-  const app = appMap[appId];
+function createAppDetailBubble(appOrId) {
+  const app = typeof appOrId === "object"
+    ? appOrId
+    : appMap[appOrId];
+
   if (!app) return;
+
+  const appId = app.id;
 
   let el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
   if (!el) {
@@ -777,13 +782,13 @@ function createAppDetailBubble(appId) {
 
         <div class="product-grid">
           <div class="screenshot-frame">
-            <img src="${app.screenshot || "assets/images/no-screenshot.jpg"}" alt="Screenshot van ${app.name}" />
+            <img src="${app.screenshot || app.screenshot_url || "assets/images/no-screenshot.jpg"}"
             <div class="screenshot-dots"><span class="active"></span><span></span><span></span></div>
           </div>
 
           <div class="feature-column">
             <p class="product-intro">Blijf altijd verbonden met je familie. Zie live waar je dierbaren zijn en reageer snel in noodsituaties.</p>
-            ${app.readme.map(item => `
+            ${(app.readme || []).map(item => `
               <div class="feature-row">
                 <div class="feature-icon">${item.toLowerCase().includes("sos") ? "SOS" : "✓"}</div>
                 <div>
@@ -845,16 +850,17 @@ function closeProductModal(appId) {
   productModalOpen = false;
   document.body.classList.remove("product-modal-open");
 
-  const el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
+  renderDownloadStart();
 
+  const el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
   if (el) {
     el.classList.remove("focus", "dim");
     el.style.setProperty("--scale", ".03");
     el.style.setProperty("--opacity", "0");
     setTimeout(() => el.remove(), 900);
   }
-
-
+document.querySelector('.app-bubble[data-kind="upload"]')?.classList.remove("focus", "dim");
+  clearFocusStates();
 }
 
 function preparePlanetBubble(el, finalX, finalY, size) {
@@ -1542,4 +1548,258 @@ async function loadApps() {
 
   body.innerHTML = data.map(app => appRowHtml(app)).join("");
 }
+function renderDownloadCategory(categoryId) {
+
+  const el = getDownloadBubble();
+  if (!el) return;
+
+  const category = categoryMap[categoryId];
+  const platformId = selectedPlatform || "apk";
+
+const apps = dbApps.filter(app =>
+  String(app.platform || "").trim().toLowerCase() === String(platformId || "").trim().toLowerCase() &&
+  String(app.category || "").trim().toLowerCase() === String(categoryId || "").trim().toLowerCase()
+);
+
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">${category?.label || categoryId}</div>
+
+      <div class="planet-list">
+        ${
+          apps.length
+            ? apps.map(app => `
+                <button class="category-link app-link" type="button" data-app="${app.id}">
+                  ${app.name}
+                </button>
+              `).join("")
+            : `<div>nog geen apps</div>`
+        }
+
+        <button class="category-link soft-link" type="button" data-back-categories="1">
+          terug
+        </button>
+      </div>
+    </div>
+  `;
+
+el.querySelectorAll("[data-app]").forEach(button => {
+  button.addEventListener("click", event => {
+    event.stopPropagation();
+
+const mars = getDownloadBubble();
+if (mars) {
+  mars.classList.remove("focus", "dim");
+  mars.style.setProperty("--scale", "1");
+}
+
+renderDownloadStart();
+
+    createDbAppDetailBubble(button.dataset.app);
+    focusBubble(button.dataset.app);
+
+  });
+});
+
+  el.querySelector("[data-back-categories]")?.addEventListener("click", event => {
+    event.stopPropagation();
+    setDownloadPlatform(platformId);
+    focusBubble("download");
+  });
+}
+async function loadDownloadAppsFromDb() {
+  const { data, error } = await supabaseClient
+    .from("apps")
+    .select("*")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  dbApps = data || [];
+  return dbApps;
+}
+function createDbAppDetailBubble(appId) {
+  const app = dbApps.find(item => item.id === appId);
+  if (!app) return;
+
+  createAppDetailBubble({
+    id: app.id,
+    name: app.name,
+    description: app.description || "Nog geen beschrijving.",
+    category: String(app.category || "").toLowerCase(),
+    platform: app.platform || "apk",
+    version: app.version || "-",
+    author: app.author || "-",
+    status: app.status || "-",
+    updated_at: app.updated_at || app.created_at || "-",
+    size: app.size || "-",
+    screenshot: app.screenshot_url || app.screenshot || "assets/images/no-screenshot.jpg",
+    download_url: app.download_url || "#",
+    readme: app.readme || []
+  });
+}
+
+function renderUploadStart() {
+  const el = document.querySelector('.app-bubble[data-kind="upload"]');
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">UPLOAD</div>
+
+      <div class="planet-list">
+        <button class="category-link" data-upload-platform="apk">APK</button>
+        <button class="category-link" data-upload-platform="pwa">PWA</button>
+      </div>
+    </div>
+  `;
+
+  el.querySelectorAll("[data-upload-platform]").forEach(btn => {
+    btn.addEventListener("click", event => {
+      event.stopPropagation();
+      setUploadPlatform(btn.dataset.uploadPlatform);
+      focusBubble("upload");
+    });
+  });
+}
+
+function renderUploadStart(el = document.querySelector('.app-bubble[data-kind="upload"]')) {
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">UPLOAD</div>
+
+      <div class="planet-list">
+        <button class="category-link" type="button" data-upload-platform="apk">APK</button>
+        <button class="category-link" type="button" data-upload-platform="pwa">PWA</button>
+      </div>
+    </div>
+  `;
+
+  el.querySelectorAll("[data-upload-platform]").forEach(btn => {
+    btn.addEventListener("click", event => {
+      event.stopPropagation();
+      setUploadPlatform(btn.dataset.uploadPlatform);
+      focusBubble("upload");
+    });
+  });
+}
+
+function setUploadPlatform(platformId) {
+  selectedUploadPlatform = platformId;
+
+  const el = document.querySelector('.app-bubble[data-kind="upload"]');
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">${platformId.toUpperCase()}</div>
+
+      <div class="planet-list">
+        <button data-upload-category="games">GAMES</button>
+        <button data-upload-category="utilities">UTILITIES</button>
+        <button data-upload-category="tools">TOOLS</button>
+        <button data-upload-back="1">TERUG</button>
+      </div>
+    </div>
+  `;
+
+  el.querySelectorAll("[data-upload-category]").forEach(btn => {
+    btn.addEventListener("click", event => {
+      event.stopPropagation();
+      renderUploadForm(
+        selectedUploadPlatform,
+        btn.dataset.uploadCategory
+      );
+    });
+  });
+
+  el.querySelector("[data-upload-back]")?.addEventListener("click", event => {
+    event.stopPropagation();
+    renderUploadStart();
+  });
+}
+
+function renderUploadForm(platformId, categoryId) {
+
+  selectedUploadPlatform = platformId;
+  selectedUploadCategory = categoryId;
+
+  const el = document.querySelector('.app-bubble[data-kind="upload"]');
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="planet-content">
+
+      <div class="planet-title">
+        NIEUWE APP
+      </div>
+
+      <div class="planet-list">
+
+        <input id="uploadName"
+               placeholder="Naam">
+
+        <input id="uploadVersion"
+               placeholder="Versie">
+
+        <textarea id="uploadDescription"
+                  placeholder="Beschrijving"></textarea>
+
+        <button id="btnUploadSave">
+          OPSLAAN
+        </button>
+
+        <button id="btnUploadBack">
+          TERUG
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("btnUploadSave")
+    ?.addEventListener("click", saveUploadedApp);
+
+  document.getElementById("btnUploadBack")
+    ?.addEventListener("click", () => {
+      setUploadPlatform(platformId);
+    });
+}
+
+async function saveUploadedApp() {
+
+  const app = {
+    name: document.getElementById("uploadName")?.value || "",
+    version: document.getElementById("uploadVersion")?.value || "",
+    description: document.getElementById("uploadDescription")?.value || "",
+
+    platform: selectedUploadPlatform,
+    category: selectedUploadCategory,
+
+    status: "test"
+  };
+
+  const { error } = await supabaseClient
+    .from("apps")
+    .insert(app);
+
+  if (error) {
+    console.error(error);
+    alert(error.message);
+    return;
+  }
+
+  alert("App opgeslagen");
+
+  renderUploadStart();
+}
+
+
+
 startLayout();
