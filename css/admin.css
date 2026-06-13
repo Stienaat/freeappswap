@@ -13,94 +13,27 @@
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
   z-index: 200 !important;
+  overflow: visible !important;
 }
 
-.users-content {
-  width: 75%;
-  height: 90%;
-  margin: auto;
-  font-size: 2rem;
+.app-bubble.admin.admin-phase-3 .admin-members-panel {
+  transform: scale(1.25);
+  transform-origin: center center;
 }
 
-
-.members-table th,
-.members-table td {
-  padding: 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.25);
-  text-align: left;
+.app-bubble.admin.admin-phase-3 .member-input,
+.app-bubble.admin.admin-phase-3 .app-input {
+  font-size: 1.2rem !important;
+  padding: 0.35rem !important;
 }
 
-.planet-back,
-#btnUsers {
-  cursor: pointer;
+.app-bubble.admin.admin-phase-3 .admin-toolbar button {
+  font-size: 2.1rem !important;
 }
 
-.admin-members-panel {
-  width: 82%;
-  height: 87%;
-  margin: auto;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  font-size: 0.7rem;
-}
-
-.admin-members-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  letter-spacing: 0.12em;
-  margin-top: -5%;
-  margin-bottom: 2%;
-}
-
-.admin-toolbar {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.admin-toolbar button {
-  font-size: 1rem;
-  padding: 0.22rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.45);
-  background: rgba(23, 23, 23, 0.25);
-  color: white;
-  cursor: pointer;
-}
-
-.members-table-wrap {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  border-radius: 1rem;
-  background: rgba(23, 23, 23, 0.5);
-}
-
-.members-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1rem;
-}
-
-.members-table th,
-.members-table td {
-  padding: 0.22rem;
-  border-bottom: 1px solid rgba(255,255,255,0.18);
-  text-align: left;
-}
-
-.member-input {
-  width: 100%;
-  font-size: 1rem;
-  background: rgba(255,255,255,0.12);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 0.25rem;
-  padding: 0.15rem;
+.app-bubble.admin.admin-phase-3 .admin-members-title {
+  font-size: 5rem !important;
+  color:yellow;
 }
 
 .member-input:disabled {
@@ -108,9 +41,22 @@
   background: transparent;
 }
 
-.members-status {
-  min-height: 1rem;
-  text-align: center;
-  font-size: 1rem;
-  opacity: 0.9;
+.app-bubble.admin.admin-phase-3 .members-table-wrap {
+  width: 145%;
+  margin-left: -22.5%;
+
+  height: 680px !important;
+  max-height: 780px !important;
+
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+}.app-bubble.admin.admin-phase-3 .members-table,
+
+.app-bubble.admin.admin-phase-3 .members-table td,
+.app-bubble.admin.admin-phase-3 .member-input,
+.app-bubble.admin.admin-phase-3 .app-input,
+.app-bubble.admin.admin-phase-3 select {
+  font-size: 25px !important;
+}
+.app-bubble.admin.admin-phase-3 .members-table th,
 }

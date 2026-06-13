@@ -4,7 +4,7 @@
 body {
   background-image: url("../assets/images/day-space.png") !important;
   background-size: cover !important;
-background-position: center 31% !important;
+  background-position: center 31% !important;
 
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
@@ -126,8 +126,8 @@ body.day-open .intro-birth::before {
 
 .intro-title {
   top: 45%;
-  font-size: clamp(1.4rem, 3vw, 2.6rem);
-  font-color: yellow;
+  font-size: clamp(1.4rem, 3vw, 6.5rem);
+  color: yellow;
   font-weight: 950;
   letter-spacing: .12em;
   white-space: nowrap;
@@ -135,7 +135,7 @@ body.day-open .intro-birth::before {
 
 .intro-text {
   width: min(76vw, 850px);
-  font-size: clamp(.95rem, 1.65vw, 1.8rem);
+  font-size: clamp(.95rem, 1.65vw, 3rem);
   font-weight: 650;
   line-height: 1.35;
 }
@@ -146,7 +146,7 @@ body.day-open .intro-birth::before {
 
 .intro-text-bottom {
   top: 57%;
-  font-size: clamp(.85rem, 1.45vw, 1.5rem);
+  font-size: clamp(.85rem, 1.45vw, 3rem);
 }
 
 .intro-small {

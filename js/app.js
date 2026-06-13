@@ -573,6 +573,7 @@ accountForm.addEventListener("submit", async event => {
 
 admin.querySelector("#btnApps").onclick = event => {
   event.stopPropagation();
+
   showAdminApps();
 };
 
@@ -1270,7 +1271,7 @@ async function showAdminApps() {
   admin.classList.add("admin-phase-3");
 
   admin.innerHTML = `
-    <div class="admin-members-panel">
+    <div class="admin-members-panel apps-panel">
 
       <div class="admin-members-title">APPS</div>
 
