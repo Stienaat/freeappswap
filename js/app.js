@@ -25,8 +25,11 @@ let accountMode = "start";
 let selectedPlatform = null;
 let productModalOpen = false;
 let dbApps = [];
-let selectedUploadPlatform = null;
-let selectedUploadCategory = null;
+
+
+
+let speedFactor = 1;
+
 
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
 const appData = {
@@ -166,6 +169,16 @@ function createIntroStars() {
     layer.appendChild(star);
   }
 }
+
+function createDownloadUpload() {
+  if (appBubblesCreated) return;
+
+  appBubblesCreated = true;
+
+  createAppBubble("download");
+  createAppBubble("upload");
+}
+
 async function startLayout() {
 
   createIntroStars();
@@ -336,6 +349,21 @@ async function createUserRecord({ name, email, password }) {
 }
 
 function finishLogin(user) {
+
+  setTimeout(() => {
+  console.log("na login: bollen maken");
+
+  createAppBubble("download");
+  createAppBubble("upload");
+
+  appBubblesCreated = true;
+
+  search.classList.add("open");
+
+  if (String(user.role || "").trim().toLowerCase() === "admin") {
+    createAdminBubble();
+  }
+}, 900);
   loggedIn = true;
   
   saveCurrentUser(user);
@@ -353,7 +381,7 @@ if (welcome) {
   account.classList.add("logged-in-moon");
   createMoonShadow();
   setTimeout(() => {
-  createDownloadUpload();
+
   search.classList.add("open");
 
   if (user.role === "admin") {
@@ -419,40 +447,55 @@ document.querySelectorAll(".search-link").forEach(button => {
 });
 
 function handleNavigationTarget(target) {
-  if (target === "account") {
-    focusBubble("account");
-    return;
-  }
 
-  if (!loggedIn) {
-    focusBubble("account");
-    showLoginError("Inloggen vereist");
-    return;
-  }
+  if (target === "upload") {
+  renderUploadForm("apk");
+  focusBubble("upload");
+  return;
+}
 
-  if (!appBubblesCreated) createDownload();
-
-  if (target === "download" || target === "upload") {
-    focusBubble(target);
-    return;
-  }
-
-  if (platformMap[target]) {
-    setDownloadPlatform(target);
+  if (target === "download") {
+    renderDownloadStart();
     focusBubble("download");
     return;
   }
 
-  if (categoryMap[target]) {
-    if (!selectedPlatform) setDownloadPlatform("apk");
-    renderDownloadCategory(target);
+  if (target === "download-apk") {
+    setDownloadPlatform("apk");
     focusBubble("download");
     return;
   }
 
-  if (appMap[target]) {
-    createAppDetailBubble(target);
-    focusBubble(target);
+  if (target === "download-pwa") {
+    setDownloadPlatform("pwa");
+    focusBubble("download");
+    return;
+  }
+
+  if (target === "download-games") {
+    selectedPlatform = "apk";
+    renderDownloadCategory("games");
+    focusBubble("download");
+    return;
+  }
+
+  if (target === "download-utilities") {
+    selectedPlatform = "apk";
+    renderDownloadCategory("utilities");
+    focusBubble("download");
+    return;
+  }
+
+  if (target === "download-tools") {
+    selectedPlatform = "apk";
+    renderDownloadCategory("tools");
+    focusBubble("download");
+    return;
+  }
+
+  if (target === "logout") {
+    logoutUser();
+    return;
   }
 }
 
@@ -584,12 +627,6 @@ admin.querySelector("#btnApps").onclick = event => {
   };
 }
 
-function createDownloadUpload() {
-  if (appBubblesCreated) return;
-  appBubblesCreated = true;
-  createAppBubble("download");
-  createAppBubble("upload");
-}
 
 function createAdminBubble() {
   if (document.querySelector('.app-bubble[data-kind="admin"]')) return;
@@ -620,12 +657,23 @@ function createAppBubble(kind) {
   if (kind === "download") {
     renderDownloadStart(el);
   } else if (kind === "upload") {
-    renderUploadStart(el);
+     renderUploadStart(el);
   }
 
   const finalX = kind === "download" ? randomBetween(23, 34) : randomBetween(64, 77);
   const finalY = kind === "download" ? randomBetween(57, 74) : randomBetween(58, 75);
-  const size = "min(17vw, 24vh)";
+
+const baseSize = 180;
+
+const sizeFactors = {
+  search: 0.75,
+  account: 0.85,
+  admin: 0.95,
+  download: 1.00,
+  upload: 1.10
+};
+
+const size = `${baseSize * (sizeFactors[kind] || 1)}px`;
 
   preparePlanetBubble(el, finalX, finalY, size);
 }
@@ -751,6 +799,7 @@ el.querySelectorAll("[data-app]").forEach(button => {
   });
 });
 }
+
 
 function createAppDetailBubble(appOrId) {
   const app = typeof appOrId === "object"
@@ -898,9 +947,21 @@ function startWrapMotion(el, startX, startY) {
 
   // Snelheid in schermpercentage per seconde.
   // Status 1 = klein en rustiger. Status 2 = middelklein en duidelijker zichtbaar.
-  const speed = motionStatus === 1
- ? randomBetween(1.0, 1.8)
+const kind = el.dataset.kind;
+
+let speedFactor = 1;
+
+if (kind === "search") speedFactor = 0.65;
+if (kind === "account") speedFactor = 1.15;
+if (kind === "admin") speedFactor = 0.30;
+if (kind === "download") speedFactor = 1.00;
+if (kind === "upload") speedFactor = 0.80;
+
+const baseSpeed = motionStatus === 1
+  ? randomBetween(1.0, 1.8)
   : randomBetween(1.8, 3.0);
+
+const speed = baseSpeed * speedFactor;
 
   const angle = randomBetween(0, Math.PI * 2);
   const vx = Math.cos(angle) * speed;
@@ -1017,7 +1078,7 @@ search.addEventListener("click", event => {
     return;
   }
 
-  if (!appBubblesCreated) createDownloadUpload();
+
   focusBubble("search");
 });
 
@@ -1642,164 +1703,14 @@ function createDbAppDetailBubble(appId) {
   });
 }
 
-function renderUploadStart() {
-  const el = document.querySelector('.app-bubble[data-kind="upload"]');
-  if (!el) return;
+async function logoutUser() {
+  await supabaseClient.auth.signOut();
 
-  el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">UPLOAD</div>
+  loggedIn = false;
+  appBubblesCreated = false;
 
-      <div class="planet-list">
-        <button class="category-link" data-upload-platform="apk">APK</button>
-        <button class="category-link" data-upload-platform="pwa">PWA</button>
-      </div>
-    </div>
-  `;
-
-  el.querySelectorAll("[data-upload-platform]").forEach(btn => {
-    btn.addEventListener("click", event => {
-      event.stopPropagation();
-      setUploadPlatform(btn.dataset.uploadPlatform);
-      focusBubble("upload");
-    });
-  });
+  location.reload();
 }
-
-function renderUploadStart(el = document.querySelector('.app-bubble[data-kind="upload"]')) {
-  if (!el) return;
-
-  el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">UPLOAD</div>
-
-      <div class="planet-list">
-        <button class="category-link" type="button" data-upload-platform="apk">APK</button>
-        <button class="category-link" type="button" data-upload-platform="pwa">PWA</button>
-      </div>
-    </div>
-  `;
-
-  el.querySelectorAll("[data-upload-platform]").forEach(btn => {
-    btn.addEventListener("click", event => {
-      event.stopPropagation();
-      setUploadPlatform(btn.dataset.uploadPlatform);
-      focusBubble("upload");
-    });
-  });
-}
-
-function setUploadPlatform(platformId) {
-  selectedUploadPlatform = platformId;
-
-  const el = document.querySelector('.app-bubble[data-kind="upload"]');
-  if (!el) return;
-
-  el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">${platformId.toUpperCase()}</div>
-
-      <div class="planet-list">
-        <button data-upload-category="games">GAMES</button>
-        <button data-upload-category="utilities">UTILITIES</button>
-        <button data-upload-category="tools">TOOLS</button>
-        <button data-upload-back="1">TERUG</button>
-      </div>
-    </div>
-  `;
-
-  el.querySelectorAll("[data-upload-category]").forEach(btn => {
-    btn.addEventListener("click", event => {
-      event.stopPropagation();
-      renderUploadForm(
-        selectedUploadPlatform,
-        btn.dataset.uploadCategory
-      );
-    });
-  });
-
-  el.querySelector("[data-upload-back]")?.addEventListener("click", event => {
-    event.stopPropagation();
-    renderUploadStart();
-  });
-}
-
-function renderUploadForm(platformId, categoryId) {
-
-  selectedUploadPlatform = platformId;
-  selectedUploadCategory = categoryId;
-
-  const el = document.querySelector('.app-bubble[data-kind="upload"]');
-  if (!el) return;
-
-  el.innerHTML = `
-    <div class="planet-content">
-
-      <div class="planet-title">
-        NIEUWE APP
-      </div>
-
-      <div class="planet-list">
-
-        <input id="uploadName"
-               placeholder="Naam">
-
-        <input id="uploadVersion"
-               placeholder="Versie">
-
-        <textarea id="uploadDescription"
-                  placeholder="Beschrijving"></textarea>
-
-        <button id="btnUploadSave">
-          OPSLAAN
-        </button>
-
-        <button id="btnUploadBack">
-          TERUG
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  document.getElementById("btnUploadSave")
-    ?.addEventListener("click", saveUploadedApp);
-
-  document.getElementById("btnUploadBack")
-    ?.addEventListener("click", () => {
-      setUploadPlatform(platformId);
-    });
-}
-
-async function saveUploadedApp() {
-
-  const app = {
-    name: document.getElementById("uploadName")?.value || "",
-    version: document.getElementById("uploadVersion")?.value || "",
-    description: document.getElementById("uploadDescription")?.value || "",
-
-    platform: selectedUploadPlatform,
-    category: selectedUploadCategory,
-
-    status: "test"
-  };
-
-  const { error } = await supabaseClient
-    .from("apps")
-    .insert(app);
-
-  if (error) {
-    console.error(error);
-    alert(error.message);
-    return;
-  }
-
-  alert("App opgeslagen");
-
-  renderUploadStart();
-}
-
 
 
 startLayout();

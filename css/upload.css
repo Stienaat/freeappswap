@@ -1,22 +1,91 @@
 .app-bubble.upload {
-  background-image: url("../assets/images/planet-upload.PNG");
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  overflow: hidden;
-}
-.app-bubble.upload input,
-.app-bubble.upload textarea {
-  width: 120%;
-  font-size: 1.5rem;
-  padding: 0.6rem;
-  border-radius: 10px;
-}
-#uploadName,
-#uploadVersion {
-  height: 52px;
+  background-image: url("../assets/images/planet-upload.png") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: transparent !important;
 }
 
-#uploadDescription {
-  height: 220px;
+.app-bubble.upload.focus {
+  --x: 49% !important;
+  --y: 49.4% !important;
+    width: 61vw !important;
+    height: 51vw !important;
+  --opacity: 1 !important;
+  z-index: 120 !important;
+  transition:
+    left 3400ms var(--ease),
+    top 3400ms var(--ease),
+    width 3400ms var(--ease),
+    height 3400ms var(--ease),
+    transform 3400ms var(--ease),
+    opacity 900ms ease,
+    filter 900ms ease !important;
 }
+
+.app-bubble.upload .upload-form input,
+.app-bubble.upload .upload-form select,
+.app-bubble.upload .upload-form textarea {
+  width: 100%;
+  font-size: 2rem;
+  padding: 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.upload-panel{
+  width:70%;
+  height:90%;
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+  gap:.8rem;
+}
+.upload-title{
+  font-size: 5rem !important;
+  color:yellow;
+}
+.upload-toolbar{
+  display:flex;
+  justify-content:center;
+  gap:.5rem;
+  font-size: 2.1rem !important;
+}
+.upload-toolbar button{
+  display:flex;
+  justify-content:center;
+  gap: .5rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.5);
+  background: rgba(0,0,0,0.28);
+  color: white;
+  font-size: 2rem !important;
+}
+.upload-form-wrap{
+  flex:1;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.upload-form-wrap label{
+  font-size:2rem;
+  font-weight:bold;
+}
+.upload-form-wrap input,
+.upload-form-wrap select,
+.upload-form-wrap textarea {
+  background: rgba(80, 80, 80, 0.45);
+  color: white;
+  font-size:2rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 10px;
+
+  padding: 0.6rem;
+}
+
+.upload-form-wrap textarea{
+  min-height:240px;
+}
+

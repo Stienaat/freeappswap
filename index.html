@@ -73,10 +73,19 @@
           <button class="search-link sitemap-main" type="button" data-target="account">ACCOUNT</button>
 
           <button class="search-link sitemap-main" type="button" data-target="download">DOWNLOAD</button>
-          <button class="search-link sitemap-child" type="button" data-target="apk">↳ APK</button>
-          <button class="search-link sitemap-child" type="button" data-target="pwa">↳ PWA</button>
+            <button class="search-link sitemap-child" type="button" data-target="download-apk">↳ APK</button>
+              <button class="search-link sitemap-gchild" type="button" data-target="download-games">↳ GAMES</button>
+              <button class="search-link sitemap-gchild" type="button" data-target="download-utilities">↳ UTILITIES</button>
+              <button class="search-link sitemap-gchild" type="button" data-target="download-tools">↳ TOOLS</button>
+            <button class="search-link sitemap-child" type="button" data-target="download-pwa">↳ PWA</button>
+              <button class="search-link sitemap-gchild" type="button" data-target="download-games">↳ GAMES</button> 
+              <button class="search-link sitemap-gchild" type="button" data-target="download-utilities">↳ UTILITIES</button>
+              <button class="search-link sitemap-gchild" type="button" data-target="download-tools">↳ TOOLS</button>
 
           <button class="search-link sitemap-main" type="button" data-target="upload">UPLOAD</button>
+           
+          <button class="search-link sitemap-main" type="button" data-target="logout">LOGOUT</button>
+
         </div>
       </div>
     </div>
@@ -111,6 +120,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/app.js"></script>
+<script src="js/jupiter-upload.js"></script>
 
 </body>
 </html>

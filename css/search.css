@@ -96,7 +96,7 @@ body.day-open #search {
   display: none;
   gap: .34em;
   text-align: left;
-  font-size: calc(var(--size) * .052);
+  font-size: calc(var(--size) * .032);
   line-height: 1.06;
   color: #111733;
 }
@@ -109,9 +109,23 @@ body.day-open #search {
         transparent
     );
 }
+.search-menu {
+  overflow-y: auto;
+  max-height: 70vh;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* oude Edge */
+}
+
+.search-menu::-webkit-scrollbar {
+  display: none;              /* Chrome */
+}
 
 .search.focus .search-menu {
   display: grid;
+  max-height: 25vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   pointer-events: auto;
   animation: searchSitemapFade 1800ms ease both;
 }
@@ -153,6 +167,12 @@ body.day-open #search {
 
 .sitemap-child {
   margin-left: 1.45em;
+  font-size: .86em;
+  font-weight: 900;
+  opacity: .92;
+}
+.sitemap-gchild {
+  margin-left: 2.65em;
   font-size: .86em;
   font-weight: 900;
   opacity: .92;

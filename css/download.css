@@ -101,16 +101,11 @@
       line-height: 1.05;
     }
 
-    .planet-title {
-      font-size: 0.4em;
-      font-weight: 950;
-      letter-spacing: .03em;
-    }
 
     .planet-list {
       display: grid;
       gap: .35em;
-      font-size: .45em;
+      font-size: 0.5em;
       font-weight: 850;
       line-height: 1.12;
     }
