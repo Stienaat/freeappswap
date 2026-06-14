@@ -33,7 +33,9 @@ body {
 .search-label,
 .download-label,
 .upload-label {
-  margin-left: 50px;
+  display: flex;
+  justify-content: center;
+  
   color: white;
   text-shadow:
     0 0 4px rgba(0,0,0,.8),

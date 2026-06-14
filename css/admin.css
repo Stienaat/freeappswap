@@ -23,16 +23,16 @@
 
 .app-bubble.admin.admin-phase-3 .member-input,
 .app-bubble.admin.admin-phase-3 .app-input {
-  font-size: 1.2rem !important;
+  font-size: 1rem !important;
   padding: 0.35rem !important;
 }
 
 .app-bubble.admin.admin-phase-3 .admin-toolbar button {
-  font-size: 2.1rem !important;
+  font-size: 1rem !important;
 }
 
 .app-bubble.admin.admin-phase-3 .admin-members-title {
-  font-size: 5rem !important;
+  font-size: 2rem !important;
   color:yellow;
 }
 
@@ -45,7 +45,7 @@
   width: 145%;
   margin-left: -22.5%;
 
-  height: 680px !important;
+  height: 380px !important;
   max-height: 780px !important;
 
   overflow-y: auto !important;
@@ -53,12 +53,12 @@
 }
 
 .app-bubble.admin.admin-phase-3 .members-table,
-
 .app-bubble.admin.admin-phase-3 .members-table td,
 .app-bubble.admin.admin-phase-3 .member-input,
 .app-bubble.admin.admin-phase-3 .app-input,
-.app-bubble.admin.admin-phase-3 select {
-  font-size: 25px !important;
+.app-bubble.admin.admin-phase-3 select,
+.app-bubble.admin.admin-phase-3 .members-table th {
+  font-size: 15px !important;
 }
-.app-bubble.admin.admin-phase-3 .members-table th,
-}
+
+

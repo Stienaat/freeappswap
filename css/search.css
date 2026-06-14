@@ -34,6 +34,7 @@
 }
 
 .search-label {
+  margin-top: -100px;
   fill: white !important;
   text-shadow:
     0 0 4px rgba(0,0,0,.9),

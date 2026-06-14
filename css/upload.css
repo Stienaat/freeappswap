@@ -23,34 +23,18 @@
     filter 900ms ease !important;
 }
 
-.app-bubble.upload .upload-form input,
-.app-bubble.upload .upload-form select,
-.app-bubble.upload .upload-form textarea {
-  width: 100%;
-  font-size: 2rem;
-  padding: 0.55rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.4);
-}
-
-.upload-panel{
-  width:70%;
-  height:90%;
-  display:flex;
-  justify-content:center;
-  flex-direction:column;
-  gap:.8rem;
-}
 .upload-title{
-  font-size: 5rem !important;
+  font-size: 2rem !important;
   color:yellow;
+  margin-bottom: 10px;
 }
 .upload-toolbar{
   display:flex;
   justify-content:center;
-  gap:.5rem;
-  font-size: 2.1rem !important;
+  gap: .5rem; 
+  margin-bottom: 10px;
 }
+
 .upload-toolbar button{
   display:flex;
   justify-content:center;
@@ -60,17 +44,18 @@
   border: 1px solid rgba(255,255,255,0.5);
   background: rgba(0,0,0,0.28);
   color: white;
-  font-size: 2rem !important;
+  font-size: 1.5rem !important;
 }
 .upload-form-wrap{
   flex:1;
+  width: 500px;
   overflow-y:auto;
   display:flex;
   flex-direction:column;
   gap:.5rem;
 }
 .upload-form-wrap label{
-  font-size:2rem;
+  font-size:1rem;
   font-weight:bold;
 }
 .upload-form-wrap input,
@@ -78,14 +63,13 @@
 .upload-form-wrap textarea {
   background: rgba(80, 80, 80, 0.45);
   color: white;
-  font-size:2rem;
-  border: 1px solid rgba(255,255,255,0.25);
+  font-size:1.1rem;
+  border: 2px solid rgba(255,255,255,0.25);
   border-radius: 10px;
-
-  padding: 0.6rem;
+  padding: 0.4rem;
 }
 
 .upload-form-wrap textarea{
-  min-height:240px;
+  min-height:100px;
 }
 
