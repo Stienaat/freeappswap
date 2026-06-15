@@ -669,7 +669,7 @@ const sizeFactors = {
   search: 0.75,
   account: 0.85,
   admin: 0.95,
-  download: 1.00,
+  download: 0.9,
   upload: 1.10
 };
 
