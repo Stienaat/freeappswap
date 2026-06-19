@@ -16,27 +16,92 @@ body.product-modal-open .account,
 body.product-modal-open .app-bubble:not(.app-detail) {
   filter: none !important;
 }
+.app-bubble.product-bubble {
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+.app-bubble.product-bubble.focus,
+.app-bubble.product-bubble.app-detail {
+  --size: min(100vw, 100vh) !important;
+  width: min(100vw, 100vh) !important;
+  height: min(100vw, 100vh) !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 35px rgba(0,0,0,.75)) !important;
+}
+.product-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: auto;
+}
+.product-saturn {
+  position: absolute;
+  left: 51.6%;
+  top: 51.7%;
+  width: 214vh;
+  height: 214vh;
+  transform: translate(-50%, -50%);
+  background-image: url("../assets/images/planet-product.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+.product-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 50vw;
+  height: 98vh;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: white;
+  background: rgba(63, 94, 44, 0.42);
+  border-radius: 28px;
+  padding: 2rem;
+}
+
+.product-body {
+  display: grid;
+  grid-template-columns: 42% 1fr;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
+}
+.product-shot {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.product-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+}
+.product-description {
+  white-space: pre-line;
+  
+}
+.product-meta div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.25);
+  padding: .45rem 0;
+}
+
+.product-detail-content {
+  position: relative;
+  z-index: 2;
+}
 
 body.product-modal-open::after {
   display: none !important;
-}
-
-/* De bol zelf: eindfase/productbol als echte planeet.
-   De ruimte-background blijft van de site; enkel deze bol krijgt een image-texture. */
-.app-bubble.app-detail {
-  position: absolute;
-  border-radius: 50%;
-  border: 2px solid rgba(190, 255, 112, 0.42);
-  overflow: hidden;
-  cursor: default;
-  animation: none !important;
-
-  box-shadow:
-    inset 46px 36px 100px rgba(207,255,176,.13),
-    inset -60px -60px 120px rgba(0,0,0,.45)
-    0 0 24px rgba(145,255,111,.36),
-    0 0 78px rgba(70,255,110,.24),
-    0 58px 140px rgba(0,0,0,.58);
 }
 
 .app-bubble.app-detail::before {
@@ -46,7 +111,6 @@ body.product-modal-open::after {
   z-index: 0;
   border-radius: 50%;
   pointer-events: none;
-
   background-image: var(--planet-image, url("../assets/images/planet-product.png"));
   background-size: cover;
   background-position: center;
@@ -54,28 +118,13 @@ body.product-modal-open::after {
   filter: saturate(1.10) contrast(1.00) brightness(1.15);
 }
 
-.app-bubble.app-detail::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: 50%;
-  pointer-events: none;
-
-  /* alleen zachte leesbaarheid-overlay; geen CSS-kraters meer */
-  background:
-    radial-gradient(circle at 22% 15%, rgba(255,255,255,.10), transparent 30%),
-    radial-gradient(circle at 50% 55%, rgba(0,0,0,.18), rgba(0,0,0,.48) 78%),
-    linear-gradient(135deg, rgba(60,255,100,.06), rgba(0,0,0,.22));
-}
-
 /* Productbol gecentreerd op wereldbol */
 
 .app-bubble.app-detail.focus {
   --x: 50% !important;
   --y: 49.4% !important;
-    width: 46vw !important;
-    height: 46vw !important;
+    width: 92vw !important;
+    height: 92vw !important;
   --opacity: 1 !important;
   z-index: 120 !important;
   transition:
@@ -88,17 +137,21 @@ body.product-modal-open::after {
     filter 900ms ease !important;
 }
 
+.app-bubble.product-bubble {
+  overflow: visible !important;
+}
+
 /* Sluitknop op de bolrand */
 .detail-close {
   position: absolute;
-  right: 23%;
-  top: 10%;
+  right: 3%;
+  top: 5%;
   z-index: 5;
 
-  width: min(5.8vw, 5.8vh);
-  height: min(5.8vw, 5.8vh);
-  min-width: 44px;
-  min-height: 44px;
+  width: min(8vw, 8vh);
+  height: min(8vw, 8vh);
+  min-width: 34px;
+  min-height: 34px;
     
   border-radius: 50%;
   border: 1px solid rgba(180,255,190,.28);
@@ -119,7 +172,7 @@ body.product-modal-open::after {
   position: relative;
   z-index: 2;
 
-  width: 68%;
+  width: 58%;
   height: 72%;
   margin: 10.5% auto 0;
 
@@ -131,11 +184,6 @@ body.product-modal-open::after {
   text-align: left;
   font-size: clamp(.50rem, .72vw, .82rem);
   overflow: visible;
-}
-
-/* Kop */
-.product-header {
-  text-align: center;
 }
 
 .product-title {
@@ -150,16 +198,6 @@ body.product-modal-open::after {
   text-shadow:
     0 0 14px rgba(160,255,176,.30),
     0 4px 10px rgba(0,0,0,.65);
-}
-
-.product-subtitle {
-  margin: .38em auto 0;
-  color: #73ff86;
-  font-size: clamp(.72rem, 1.02vw, 1.14rem);
-  line-height: 1.18;
-  font-weight: 850;
-  text-align: center;
-  max-width: 84%;
 }
 
 /* Middenlayout exact als gekozen richting:
@@ -194,56 +232,6 @@ body.product-modal-open::after {
   display: none;
 }
 
-.feature-column {
-  min-width: 0;
-}
-
-.product-intro {
-  color: rgba(255,255,255,.92);
-  font-size: clamp(.64rem, .88vw, .96rem);
-  line-height: 1.30;
-  margin: 0 0 .62em;
-  font-weight: 700;
-  text-align: center;
-}
-
-.feature-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: .58em;
-  align-items: center;
-  margin: .42em 0;
-}
-
-.feature-icon {
-  width: clamp(30px, 2.65vw, 46px);
-  height: clamp(30px, 2.65vw, 46px);
-  border-radius: 50%;
-
-  display: grid;
-  place-items: center;
-  color: #62ff74;
-  font-weight: 950;
-  font-size: clamp(.56rem, .80vw, .84rem);
-
-  background: rgba(31,255,91,.13);
-  box-shadow:
-    inset 0 0 16px rgba(61,255,103,.32),
-    0 0 16px rgba(50,255,90,.22);
-}
-
-.feature-title {
-  font-weight: 950;
-  font-size: clamp(.66rem, .90vw, .98rem);
-  line-height: 1.10;
-}
-
-.feature-text {
-  color: rgba(255,255,255,.68);
-  font-size: clamp(.48rem, .63vw, .72rem);
-  line-height: 1.20;
-  margin-top: .12em;
-}
 
 /* Rechter meta-kolom */
 .meta-column {
@@ -272,19 +260,17 @@ body.product-modal-open::after {
 
 /* Grote downloadknop onderaan */
 .product-download {
-  justify-self: center;
-
-  width: min(42vw, 510px);
+ 
+  width: min(42vw);
   border-radius: 999px;
- padding: 8px 24px;
-
+  margin: 50px;
+  padding: 8px 24px;
   text-align: center;
   background:
     radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
     linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
   color: white;
   text-decoration: none;
-
   font-size: 1rem;
   font-weight: 950;
   letter-spacing: .055em;
@@ -313,25 +299,9 @@ body.product-modal-open::after {
     padding-right: 6px;
   }
 
-
 .product-grid {
-    transform: translate(-6%, -8%);
+    transform: translate(-6%, -8%);.product-header h1 {
+  margin: 0 0 .4rem 0;
+  font-size: 2.2rem;
 }
 
-  .screenshot-frame img {
-    max-height: 23vh;
-  }
-
-  .meta-column {
-    border-left: 0;
-    padding-left: 0;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-
-}
-.product-detail-content {
-  transform: translate(-100px, -60px) !important;
-  }
-
-  

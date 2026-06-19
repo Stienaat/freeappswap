@@ -30,7 +30,7 @@ body {
 * { box-sizing: border-box; }
 
 .planet-title,
-.search-label,
+
 .download-label,
 .upload-label {
   display: flex;

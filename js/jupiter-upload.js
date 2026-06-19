@@ -4,84 +4,85 @@ function getUploadBubble() {
   return document.querySelector('.app-bubble[data-kind="upload"]');
 }
 
-function renderUploadStart(el = getUploadBubble()) {
-  if (!el) return;
 
-  el.innerHTML = `
-    <div class="planet-content upload-start">
-      <div class="planet-title">UPLOAD</div>
-      <div class="planet-list">
-        <button type="button" class="category-link" id="btnOpenUploadForm">
-          nieuwe app
-        </button>
-      </div>
-    </div>
-  `;
-
-  el.querySelector("#btnOpenUploadForm")?.addEventListener("click", event => {
-    event.stopPropagation();
-    renderUploadForm("apk");
-    focusBubble("upload");
-  });
-}
 
 function renderUploadForm(platformId = "apk") {
-  selectedUploadPlatform = platformId;
-
   const el = getUploadBubble();
   if (!el) return;
 
   el.innerHTML = `
-   <div class="upload-panel">
+    <div class="upload-card">
 
-  <div class="upload-title">NIEUWE APP</div>
+      <button id="btnUploadBack" class="upload-close" type="button">×</button>
 
-  <div class="upload-toolbar">
-    <button id="btnUploadBack">exit</button>
-    <button id="btnUploadSave">save</button>
-  </div>
+      <h1 class="upload-title">Nieuwe app</h1>
 
-  <div class="upload-form-wrap">
+      <div class="upload-body">
 
-    <label>Naam</label>
-    <input id="uploadName">
+        <div class="upload-left">
+          <div class="upload-dropzone" id="uploadDropzone">
+            Sleep screenshot hier<br>
+            of klik om te kiezen
+          </div>
 
-    <label>Versie</label>
-    <input id="uploadVersion">
+          <input id="uploadScreenshotFile" type="file" accept="image/*" hidden>
 
-    <label>Platform</label>
-    <select id="uploadPlatform">
-      ...
-    </select>
+          <img id="uploadPreview" class="upload-preview" alt="">
+        </div>
 
-    <label>Categorie</label>
-    <select id="uploadCategory">
-      ...
-    </select>
+        <div class="upload-right">
+          <input id="uploadName" placeholder="Naam app">
 
-    <label>Beschrijving</label>
-    <textarea id="uploadDescription"></textarea>
+          <textarea id="uploadDescription" placeholder="Beschrijving"></textarea>
 
-  </div>
+          <input id="uploadVersion" placeholder="Versie">
 
-  <div id="uploadStatus"></div>
+          <input id="uploadAuthor" placeholder="Auteur">
 
-</div>
+          <select id="uploadPlatform">
+            <option value="apk">APK</option>
+            <option value="pwa">PWA</option>
+          </select>
+
+          <select id="uploadCategory">
+            <option value="games">Games</option>
+            <option value="utilities">Utilities</option>
+            <option value="tools">Tools</option>
+          </select>
+
+          <button id="btnUploadSave" type="button">SAVE</button>
+
+          <div id="uploadStatus" class="upload-status"></div>
+        </div>
+
+      </div>
+    </div>
   `;
 
   document.getElementById("uploadPlatform").value = platformId;
 
-  document.getElementById("btnUploadSave")?.addEventListener("click", saveUploadedApp);
-  document.getElementById("btnUploadBack")?.addEventListener("click", event => {
-  event.stopPropagation();
+  const fileInput = document.getElementById("uploadScreenshotFile");
+  const dropzone = document.getElementById("uploadDropzone");
+  const preview = document.getElementById("uploadPreview");
 
-  const upload = document.querySelector('.app-bubble[data-kind="upload"]');
+  dropzone.addEventListener("click", () => fileInput.click());
 
-  renderUploadStart(upload);
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
 
-  upload?.classList.remove("focus", "dim");
-  upload?.style.setProperty("--scale", "1");
-});
+    const url = URL.createObjectURL(file);
+    preview.src = url;
+    preview.style.display = "block";
+    dropzone.style.display = "none";
+  });
+
+  document.getElementById("btnUploadSave").addEventListener("click", saveUploadedApp);
+
+  document.getElementById("btnUploadBack").addEventListener("click", event => {
+    event.stopPropagation();
+    renderUploadStart();
+  });
 }
 
 
@@ -120,3 +121,77 @@ async function saveUploadedApp() {
     renderUploadStart();
   }, 900);
 }
+let selectedScreenshotFile = null;
+
+function openUploadCard() {
+  document.querySelector(".upload-card-overlay")?.remove();
+
+  const overlay = document.createElement("div");
+  overlay.className = "upload-card-overlay";
+
+  overlay.innerHTML = `
+    <div class="upload-card">
+      <div class="upload-card-header">
+        <h1 class="upload-card-title">NIEUWE APP</h1>
+
+        <div class="upload-card-actions">
+          <button class="upload-card-save" type="button">UPLOAD</button>
+          <button class="upload-card-close" type="button">X</button>
+        </div>
+      </div>
+
+      <div class="upload-card-body">
+        <div class="upload-card-shot" id="uploadShot">
+          <div class="upload-shot-placeholder">
+            📷<br>
+            Klik hier om screenshot te kiezen
+          </div>
+
+          <input id="uploadScreenshot" type="file" accept="image/*" hidden>
+        </div>
+
+        <div class="upload-card-info">
+          <input id="uploadName" type="text" placeholder="Naam app">
+          <input id="uploadVersion" type="text" placeholder="Versie">
+          <input id="uploadPlatform" type="text" value="apk">
+          <input id="uploadCategory" type="text" value="utilities">
+          <textarea id="uploadDescription" placeholder="Beschrijving"></textarea>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const shot = overlay.querySelector("#uploadShot");
+  const fileInput = overlay.querySelector("#uploadScreenshot");
+
+  shot?.addEventListener("click", () => fileInput?.click());
+
+  fileInput?.addEventListener("change", event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    selectedScreenshotFile = file;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      shot.innerHTML = `<img src="${e.target.result}" class="upload-preview">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  overlay.querySelector(".upload-card-close")?.addEventListener("click", () => {
+    overlay.remove();
+
+const admin = document.querySelector('.app-bubble[data-kind="admin"]');
+
+    if (admin) {
+      renderAdminStart(admin);
+
+      if (window.FreeAppSwapBubbles) {
+        FreeAppSwapBubbles.applyState("admin", "idle", "3600ms");
+      }
+    }
+      });
+    }

@@ -9,13 +9,11 @@
   opacity: 0;
 }
 
-
 .search {
   background-image: url("../assets/images/planet-search.PNG");
   background-size: cover;
   background-position: center;
 }
-
 
 .search {
   cursor: pointer;
@@ -34,16 +32,10 @@
 }
 
 .search-label {
-  margin-top: -100px;
-  fill: white !important;
-  text-shadow:
-    0 0 4px rgba(0,0,0,.9),
-    0 0 12px rgba(0,0,0,.8);
+  padding-top: 30%;
+  fill: rgb(5, 5, 5) !important;
 }
 
-.search-symbol {
-  stroke: white !important;
-}
 
 .search-label {
   transform: translateY(194px) scale(1.05);

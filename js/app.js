@@ -351,7 +351,6 @@ async function createUserRecord({ name, email, password }) {
 function finishLogin(user) {
 
   setTimeout(() => {
-  console.log("na login: bollen maken");
 
   createAppBubble("download");
   createAppBubble("upload");
@@ -657,13 +656,17 @@ function createAppBubble(kind) {
   if (kind === "download") {
     renderDownloadStart(el);
   } else if (kind === "upload") {
-     renderUploadStart(el);
-  }
+  el.innerHTML = `
+    <div class="planet-content">
+      <div class="planet-title">UPLOAD</div>
+    </div>
+  `;
+}
 
   const finalX = kind === "download" ? randomBetween(23, 34) : randomBetween(64, 77);
   const finalY = kind === "download" ? randomBetween(57, 74) : randomBetween(58, 75);
 
-const baseSize = 180;
+const baseSize = 180;   // regelt de onderlinge diameter afmetingen 
 
 const sizeFactors = {
   search: 0.75,
@@ -789,8 +792,7 @@ el.querySelectorAll("[data-app]").forEach(button => {
   button.addEventListener("click", event => {
     event.stopPropagation();
 
-    createDbAppDetailBubble(button.dataset.app);
-    focusBubble(button.dataset.app);
+openProductBubble(button.dataset.app);
 
     // Mars terug naar fase 1
     setTimeout(() => {
@@ -800,119 +802,8 @@ el.querySelectorAll("[data-app]").forEach(button => {
 });
 }
 
-
-function createAppDetailBubble(appOrId) {
-  const app = typeof appOrId === "object"
-    ? appOrId
-    : appMap[appOrId];
-
-  if (!app) return;
-
-  const appId = app.id;
-
-  let el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
-  if (!el) {
-    el = document.createElement("div");
-    el.className = "app-bubble app-detail";
-    el.dataset.kind = appId;
-    el.dataset.motionStatus = "3";
-
-    const category = categoryMap[app.category];
-    const planetImage = category?.planet || "assets/images/planet-default.png";
-    el.style.setProperty("--planet-image", `url("../${planetImage}")`);
-
-    el.innerHTML = `
-      <button class="detail-close" type="button" aria-label="Sluiten">×</button>
-      <div class="product-detail-content">
-        <div class="product-header">
-          <div class="product-title">${app.name}</div>
-          <div class="product-subtitle">${app.description}</div>
-        </div>
-
-        <div class="product-grid">
-          <div class="screenshot-frame">
-            <img src="${app.screenshot || app.screenshot_url || "assets/images/no-screenshot.jpg"}"
-            <div class="screenshot-dots"><span class="active"></span><span></span><span></span></div>
-          </div>
-
-          <div class="feature-column">
-            <p class="product-intro">Blijf altijd verbonden met je familie. Zie live waar je dierbaren zijn en reageer snel in noodsituaties.</p>
-            ${(app.readme || []).map(item => `
-              <div class="feature-row">
-                <div class="feature-icon">${item.toLowerCase().includes("sos") ? "SOS" : "✓"}</div>
-                <div>
-                  <div class="feature-title">${item}</div>
-                  <div class="feature-text">${featureText(item)}</div>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-
-          <div class="meta-column">
-            <div class="meta-item"><span>VERSIE</span><strong>${app.version}</strong></div>
-            <div class="meta-item"><span>AUTEUR</span><strong>${app.author}</strong></div>
-            <div class="meta-item"><span>STATUS</span><strong>${app.status}</strong></div>
-            <div class="meta-item"><span>LAATSTE UPDATE</span><strong>${app.updated_at || "-"}</strong></div>
-            <div class="meta-item"><span>PLATFORM</span><strong>Android (${app.platform.toUpperCase()})</strong></div>
-            <div class="meta-item"><span>GROOTTE</span><strong>${app.size || "-"}</strong></div>
-          </div>
-        </div>
-
-        <a class="product-download" href="${app.download_url}" download>⬇ DOWNLOAD</a>
-        <div class="safe-note">100% veilig gescand — Geen virussen of malware</div>
-      </div>
-    `;
-
-    const closeButton = el.querySelector(".detail-close");
-    closeButton.addEventListener("click", event => {
-      event.stopPropagation();
-      closeProductModal(appId);
-    });
-
-    const downloadButton = el.querySelector(".product-download");
-    downloadButton.addEventListener("click", () => {
-      setTimeout(() => closeProductModal(appId), 300);
-    });
-
-    preparePlanetBubble(el, 50, 51, "min(94vw, 94vh)");
-  }
-
-  openProductModal(appId);
-}
-
-function featureText(title) {
-  const key = title.toLowerCase();
-  if (key.includes("locatie")) return "Bekijk de realtime locatie op een duidelijke kaart.";
-  if (key.includes("sos")) return "Stuur direct een noodsignaal naar vertrouwde contacten.";
-  if (key.includes("batterij")) return "Ontvang meldingen bij een lage batterij.";
-  if (key.includes("privacy")) return "Jouw privacy en die van je familie staan voorop.";
-  return "Onderdeel van de app-functionaliteit.";
-}
-
-function openProductModal(appId) {
-  productModalOpen = true;
-  document.body.classList.add("product-modal-open");
-  focusBubble(appId);
-}
-
-function closeProductModal(appId) {
-  productModalOpen = false;
-  document.body.classList.remove("product-modal-open");
-
-  renderDownloadStart();
-
-  const el = document.querySelector(`.app-bubble[data-kind="${appId}"]`);
-  if (el) {
-    el.classList.remove("focus", "dim");
-    el.style.setProperty("--scale", ".03");
-    el.style.setProperty("--opacity", "0");
-    setTimeout(() => el.remove(), 900);
-  }
-document.querySelector('.app-bubble[data-kind="upload"]')?.classList.remove("focus", "dim");
-  clearFocusStates();
-}
-
 function preparePlanetBubble(el, finalX, finalY, size) {
+
   el.style.setProperty("--x", "50%");
   el.style.setProperty("--y", "50%");
   el.style.setProperty("--size", size);
@@ -924,7 +815,18 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   el.style.setProperty("--float-y", "0px");
   el.style.setProperty("--float-time", "1s");
 
-  el.addEventListener("click", () => { if (!productModalOpen || el.classList.contains("app-detail")) focusBubble(el.dataset.kind); });
+  el.addEventListener("click", event => {
+  event.stopPropagation();
+
+  if (el.dataset.kind === "upload") {
+    openUploadCard();
+    return;
+  }
+
+  if (!productModalOpen || el.classList.contains("app-detail")) {
+    focusBubble(el.dataset.kind);
+  }
+});
 
   document.querySelector(".space").appendChild(el);
 
@@ -1656,7 +1558,7 @@ if (mars) {
 
 renderDownloadStart();
 
-    createDbAppDetailBubble(button.dataset.app);
+    openDownloadOverlay(button.dataset.app);
     focusBubble(button.dataset.app);
 
   });
@@ -1681,26 +1583,6 @@ async function loadDownloadAppsFromDb() {
 
   dbApps = data || [];
   return dbApps;
-}
-function createDbAppDetailBubble(appId) {
-  const app = dbApps.find(item => item.id === appId);
-  if (!app) return;
-
-  createAppDetailBubble({
-    id: app.id,
-    name: app.name,
-    description: app.description || "Nog geen beschrijving.",
-    category: String(app.category || "").toLowerCase(),
-    platform: app.platform || "apk",
-    version: app.version || "-",
-    author: app.author || "-",
-    status: app.status || "-",
-    updated_at: app.updated_at || app.created_at || "-",
-    size: app.size || "-",
-    screenshot: app.screenshot_url || app.screenshot || "assets/images/no-screenshot.jpg",
-    download_url: app.download_url || "#",
-    readme: app.readme || []
-  });
 }
 
 async function logoutUser() {

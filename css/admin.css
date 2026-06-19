@@ -1,5 +1,5 @@
 .app-bubble.admin {
-  background-image: url("../assets/images/planet-admin.PNG") !important;
+  background-image: url("../assets/images/venus.PNG") !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -24,7 +24,7 @@
 .app-bubble.admin.admin-phase-3 .member-input,
 .app-bubble.admin.admin-phase-3 .app-input {
   font-size: 1rem !important;
-  padding: 0.35rem !important;
+  padding: 0.15rem !important;
 }
 
 .app-bubble.admin.admin-phase-3 .admin-toolbar button {
@@ -58,7 +58,7 @@
 .app-bubble.admin.admin-phase-3 .app-input,
 .app-bubble.admin.admin-phase-3 select,
 .app-bubble.admin.admin-phase-3 .members-table th {
-  font-size: 15px !important;
+  font-size:10px !important;
 }
 
 
