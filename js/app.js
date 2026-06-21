@@ -625,7 +625,7 @@ admin.querySelector("#btnApps").onclick = event => {
     showAdminUsers();
   };
 }
-
+window.renderAdminMenu = renderAdminMenu;
 
 function createAdminBubble() {
   if (document.querySelector('.app-bubble[data-kind="admin"]')) return;

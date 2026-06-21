@@ -187,7 +187,7 @@ function openUploadCard() {
 const admin = document.querySelector('.app-bubble[data-kind="admin"]');
 
     if (admin) {
-      renderAdminStart(admin);
+   renderAdminMenu(admin);
 
       if (window.FreeAppSwapBubbles) {
         FreeAppSwapBubbles.applyState("admin", "idle", "3600ms");
