@@ -351,14 +351,7 @@ if (welcome) {
   account.classList.remove("focus", "dim", "far");
   account.classList.add("logged-in-moon");
   createMoonShadow();
-  setTimeout(() => {
-
-  search.classList.add("open");
-
-  if (user.role === "admin") {
-    createAdminBubble();
-  }
-}, 900);
+  
 }
 
 
