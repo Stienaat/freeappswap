@@ -10,20 +10,20 @@
   filter: drop-shadow(22px 28px 26px rgba(0,0,0,.20));
 }
 .account {
-  background-image: url("../assets/images/planet-moon.PNG");
+  background-image: url("../assets/images/planet-account.PNG");
   background-size: cover;
   background-position: center;
   border-radius: 50%;
   overflow: hidden;
 }
-.moon.open {
+.account.open {
   --scale: 1;
   --opacity: 1;
   padding-left: 30px;
   padding-top: 30px;
 }
 
-.moon.focus {
+.account.focus {
   --x: 72%;
   --y: 32%;
    --scale: 3;
@@ -33,7 +33,7 @@
 
 }
 
-.moon.focus {
+.account.focus {
   --x: 72%;
   --y: 32%;
   --size: min(34vw, 34vh);
@@ -77,8 +77,8 @@
     0 0 14px rgba(0,0,0,.9);
 }
 
-.moon.focus .account-label,
-.moon.logged-in-moon .account-label {
+.account.focus .account-label,
+.account.logged-in-moon .account-label {
   display: none;
 }
 
@@ -171,7 +171,7 @@
   display: none !important;
 }
 
-.moon.register-mode .register-only {
+.account.register-mode .register-only {
   display: block !important;
 }
 
@@ -209,11 +209,11 @@
   box-shadow: none !important;
 }
 
-.moon.focus .json-export {
+.account.focus .json-export {
   display: block;
 }
 
-.moon.logged-in-moon {
+.account.logged-in-moon {
   pointer-events: none !important;
   cursor: default !important;
 
@@ -345,7 +345,7 @@
   }
 }
 
-.moon.logged-in-moon {
+.account.logged-in-moon {
   animation: moonOrbit 80s linear infinite !important;
 }
 .moon-shadow {
