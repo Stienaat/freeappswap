@@ -1,5 +1,3 @@
-console.log("moon.js loaded - safe placeholder");
-
 window.FreeAppSwapMoon = {};
 console.log("moon module loaded");
 
@@ -39,7 +37,11 @@ function setAccountMode(mode) {
     setTimeout(() => emailInput.focus(), 350);
   }
 }
+function showLoginError(text) {
+  loginMessage.textContent = text;
+}
 
 
 window.createMoonShadow = createMoonShadow;
 window.setAccountMode = setAccountMode;
+window.showLoginError = showLoginError;

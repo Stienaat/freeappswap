@@ -248,9 +248,7 @@ function saveCurrentUser(user) {
   }, null, 2));
 }
 
-function showLoginError(text) {
-  loginMessage.textContent = text;
-}
+
 
 function clearLoginError() {
   loginMessage.textContent = "";
