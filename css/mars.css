@@ -1,0 +1,15 @@
+/* =========================================================
+   MARS - DOWNLOAD PLANEET
+   ========================================================= */
+    .app-bubble.download {
+      background-image: url("../assets/images/mars.PNG");
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+/* FASE 1 - zwevende planeet */
+
+/* FASE 2 - categoriekeuze */
+
+/* FASE 3 - applijst */

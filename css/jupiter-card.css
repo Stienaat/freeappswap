@@ -1,0 +1,129 @@
+.upload-card {
+  width: 82%;
+  height: 82%;
+  position: relative;
+  color: white;
+  background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, rgba(81, 116, 85, 0.9), rgba(10, 10, 10, 0.92));
+  border-radius: 28px;
+  padding: 1.5rem;
+  
+}
+.upload-product{
+  background-image: var(--planet-image, url("../assets/images/saturnus.jpg"));
+}
+
+.upload-title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin: 0 0 1rem 0;
+}
+
+.upload-close {
+  position: absolute;
+  right: 1.4rem;
+  top: 1rem;
+  border-radius: 50%;
+  font-size: 2rem;
+}
+
+.upload-body {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 1.5rem;
+  height: calc(100% - 4rem);
+}
+
+.upload-left,
+.upload-right {
+  min-height: 0;
+}
+
+.upload-dropzone {
+  height: 100%;
+  border: 2px dashed rgba(255,255,255,.45);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 1.2rem;
+  background: rgba(80,80,80,.35);
+  cursor: pointer;
+}
+
+.upload-preview {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+}
+
+.upload-right {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+
+.upload-right input,
+.upload-right select,
+.upload-right textarea {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: .55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(80,80,80,.45);
+  color: white;
+}
+
+.upload-right textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#btnUploadSave {
+  margin-top: auto;
+  padding: .75rem 1.4rem;
+  border-radius: 999px;
+  font-weight: bold;
+}
+.upload-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.upload-card {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 62vw;
+  height: 92vh;
+
+  background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.96), transparent 34%),
+    linear-gradient(180deg, rgba(42, 87, 48, 0.7), rgba(5, 48, 17, 1.2));
+  border-radius: 28px;
+  padding: 2rem;
+  color: white;
+}
+
+.upload-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upload-card-body {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  gap: 2rem;
+}
+
+.upload-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
