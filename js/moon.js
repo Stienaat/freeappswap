@@ -1,0 +1,1 @@
+console.log("moon.js loaded - safe placeholder");
