@@ -1,15 +1,102 @@
 /* =========================================================
    MARS - DOWNLOAD PLANEET
    ========================================================= */
-    .app-bubble.download {
+   /* FASE 1 - zwevende planeet */
+   
+   .app-bubble.download {
       background-image: url("../assets/images/mars.PNG");
       background-size: cover;
       background-position: center;
       border-radius: 50%;
       overflow: hidden;
+      --scale: 1.5 !important;
     }
-/* FASE 1 - zwevende planeet */
+
+
+ /*   .app-bubble.category {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #fff78b 0%, #ffa646 48%, #ca641f 100%);
+    }
+
+    .app-bubble.category.utilities {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #c6fbff 0%, #8a90ff 52%, #4c4eaf 100%);
+    }
+
+    .app-bubble.category.android {
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 24%, transparent 44%),
+        radial-gradient(circle at 84% 90%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.07) 48%, transparent 70%),
+        linear-gradient(135deg, #d1ff9d 0%, #3be073 48%, #139447 100%);
+    }
+*/
 
 /* FASE 2 - categoriekeuze */
 
+    .category-link {
+      border: 0;
+      border-radius: 999px;
+      padding: .35em .8em;
+      background: rgba(255,255,255,.34);
+      box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
+      white-space: nowrap;
+      font: inherit;
+      font-weight: 900;
+      color: #111733;
+      cursor: pointer;
+    }
+
+    .category-link:hover {
+      background: rgba(255,255,255,.58);
+    }
+
+      .app-bubble.focus {
+      --x: 50% !important;
+      --y: 51% !important;
+      --size: min(38vw, 80vh) !important;
+      --scale: 0.8 !important;   
+      z-index: 40;
+    }
+
+/*    
+.app-bubble.download.phase-categories.focus {
+  --x: 50% !important;
+  --y: 50% !important;
+  --size: min(52vw, 62vh) !important;
+}*/
+
 /* FASE 3 - applijst */
+
+/*
+
+.download-category-list {
+  width: 88%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65em .8em;
+  place-items: center;
+}
+
+
+
+.download-category-list .download-choice {
+  width: 100%;
+  max-width: 12em;
+  padding: .45em .85em;
+  font-size: .72em;
+  text-align: center;
+}
+.app-bubble.download.phase-categories .planet-title {
+  font-size: .95em;
+  margin-bottom: .15em;
+}
+
+*/
+
+.app-bubble.download.phase-categories .download-back {
+  margin-top: .2em;
+}

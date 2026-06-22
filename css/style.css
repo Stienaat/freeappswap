@@ -145,15 +145,15 @@ svg {
   z-index: 12;
 }
 
-.planet-content {
-  width: 100%;
-  max-width: 86%;
-  display: grid;
-  gap: .45em;
-  place-items: center;
-  font-size: calc(var(--size) * .09);
-  line-height: 1.05;
-}
+  .planet-content {
+      width: 100%;
+      max-width: 86%;
+      display: grid;
+      gap: .45em;
+      place-items: center;
+      font-size: calc(var(--size) * .09);
+      line-height: 1.05;
+    }
 
 .planet-title {
   width: 100%;

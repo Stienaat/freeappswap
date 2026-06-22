@@ -114,5 +114,25 @@ async function showAdminApps() {
   await loadApps();
 }
 
+function createAdminBubble() {
+  if (document.querySelector('.app-bubble[data-kind="admin"]')) return;
+
+  const el = document.createElement("div");
+  el.className = "app-bubble admin";
+  el.dataset.kind = "admin";
+  el.dataset.motionStatus = "2";
+  el.style.background = `
+radial-gradient(circle at 30% 20%,
+#ffffff 0%,
+#ffe89a 20%,
+#ffb52e 60%,
+#cc7700 100%)
+`;
+
+renderAdminMenu(el);
+
+  preparePlanetBubble(el, randomBetween(43, 57), randomBetween(70, 82), "min(17vw, 24vh)");
+}
+
 window.showAdminApps = showAdminApps;
 window.showAdminUsers = showAdminUsers;
