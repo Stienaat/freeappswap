@@ -213,18 +213,7 @@ setTimeout(async () => {
 }
 
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
-const CURRENT_USER_KEY = "freeAppSwap_current_user";
 
-
-function saveCurrentUser(user) {
-  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    login_at: new Date().toISOString()
-  }, null, 2));
-}
 
 function clearLoginError() {
   loginMessage.textContent = "";
@@ -311,7 +300,7 @@ function finishLogin(user) {
 }, 900);
   loggedIn = true;
   
-  saveCurrentUser(user);
+
   const welcome = document.getElementById("welcomeUser");
 
 if (welcome) {
