@@ -218,6 +218,7 @@ setTimeout(async () => {
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
 const CURRENT_USER_KEY = "freeAppSwap_current_user";
 
+/*
 function emptyDatabase() {
   return {
     schema: "free_app_swap_prototype_users_v2",
@@ -237,7 +238,7 @@ function readDatabase() {
 function saveDatabase(db) {
   localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(db, null, 2));
 }
-
+*/
 function saveCurrentUser(user) {
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({
     id: user.id,
@@ -629,34 +630,7 @@ const size = `${baseSize * (sizeFactors[kind] || 1)}px`;
 
 
 
-function renderCategoryBubble(el, categoryId) {
-  const category = categoryMap[categoryId];
-  const platformId = selectedPlatform || "apk";
-  const apps = appData.apps.filter(app => app.platform === platformId && app.category === categoryId);
 
-  el.innerHTML = `
-    <div class="planet-content">
-      <div class="planet-title">${category.label}</div>
-      <div class="planet-list">
-        ${apps.length ? apps.map(app => `
-          <button class="category-link app-link" type="button" data-app="${app.id}">${app.name}</button>
-        `).join("") : `<div>nog geen apps</div>`}
-      </div>
-    </div>
-  `;
-el.querySelectorAll("[data-app]").forEach(button => {
-  button.addEventListener("click", event => {
-    event.stopPropagation();
-
-openProductBubble(button.dataset.app);
-
-    // Mars terug naar fase 1
-    setTimeout(() => {
-      renderDownloadStart();
-    }, 300);
-  });
-});
-}
 
 function preparePlanetBubble(el, finalX, finalY, size) {
 
