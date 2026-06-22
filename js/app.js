@@ -627,30 +627,7 @@ const size = `${baseSize * (sizeFactors[kind] || 1)}px`;
 
 
 
-function createCategoryBubble(categoryId) {
-  const category = categoryMap[categoryId];
-  if (!category) return;
 
-  const existing = document.querySelector(`.app-bubble[data-kind="${categoryId}"]`);
-  if (existing) {
-    renderCategoryBubble(existing, categoryId);
-    return;
-  }
-
-  const el = document.createElement("div");
-  el.className = `app-bubble category ${categoryId}`;
-  el.dataset.kind = categoryId;
-  el.dataset.motionStatus = "0";
-  renderCategoryBubble(el, categoryId);
-
-  const fallbackPositions = {
-    games: { x: randomBetween(17, 29), y: randomBetween(37, 55) },
-    utilities: { x: randomBetween(70, 84), y: randomBetween(35, 55) }
-  };
-  const pos = fallbackPositions[categoryId] || { x: randomBetween(25, 78), y: randomBetween(35, 82) };
-
-  preparePlanetBubble(el, pos.x, pos.y, "min(16vw, 23vh)");
-}
 
 function renderCategoryBubble(el, categoryId) {
   const category = categoryMap[categoryId];
