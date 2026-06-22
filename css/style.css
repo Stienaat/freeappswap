@@ -30,20 +30,16 @@ body {
 * { box-sizing: border-box; }
 
 .planet-title,
-
 .download-label,
 .upload-label {
   display: flex;
-  justify-content: center;
-  
+  justify-content: center;  
   color: white;
   text-shadow:
     0 0 4px rgba(0,0,0,.8),
     0 0 12px rgba(0,0,0,.7),
     2px 2px 6px rgba(0,0,0,.8);
 }
-
-
 
 .space {
   position: relative;
@@ -243,76 +239,3 @@ body.product-modal-open .app-bubble:not(.app-detail) {
 }
 
 
-.admin-members-title {
-  text-align: center;
-  font-size: 3rem;
-  font-weight: bold;
-  letter-spacing: 0.18em;
-  margin-bottom: 0.4rem;
-}
-
-.admin-toolbar {
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
-  margin-bottom: 0.45rem;
-}
-
-.admin-toolbar button {
-  font-size: 0.85rem;
-  padding: 0.25rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.5);
-  background: rgba(0,0,0,0.28);
-  color: white;
-  cursor: pointer;
-}
-
-.members-table-wrap {
-  width: 100%;
-  height: 64%;
-  overflow: auto;
-  border-radius: 14px;
-  background: rgba(0, 45, 90, 0.55);
-}
-
-.members-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1.15rem;
-  color: white;
-}
-
-.members-table th,
-.members-table td {
-  font-size: 2.15rem !important;
-  padding: 0.35rem 0.55rem;
-  border-bottom: 1px solid rgba(255,255,255,0.18);
-  text-align: left;
-}
-
-.member-input,
-.app-input {
-  width: 100%;
-  font-size: 1.1rem;
-  background: rgba(255,255,255,0.18);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 0.25rem;
-  padding: 0.35rem;
-}
-
-.member-input:disabled,
-.app-input:disabled {
-  border-color: transparent;
-  background: transparent;
-  color: white;
-}
-
-.members-status {
-  min-height: 1rem;
-  text-align: center;
-  font-size: 0.75rem;
-  opacity: 0.95;
-  margin-top: 0.35rem;
-}

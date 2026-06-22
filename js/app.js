@@ -26,10 +26,7 @@ let selectedPlatform = null;
 let productModalOpen = false;
 let dbApps = [];
 
-
-
 let speedFactor = 1;
-
 
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
 const appData = {
@@ -218,27 +215,7 @@ setTimeout(async () => {
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
 const CURRENT_USER_KEY = "freeAppSwap_current_user";
 
-/*
-function emptyDatabase() {
-  return {
-    schema: "free_app_swap_prototype_users_v2",
-    note: "Prototype JSON in localStorage. Later om te zetten naar Supabase. Paswoorden zijn lokaal gehasht met PBKDF2-SHA256 + salt.",
-    users: []
-  };
-}
 
-function readDatabase() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || "null");
-    if (parsed && Array.isArray(parsed.users)) return parsed;
-  } catch {}
-  return emptyDatabase();
-}
-
-function saveDatabase(db) {
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(db, null, 2));
-}
-*/
 function saveCurrentUser(user) {
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({
     id: user.id,
@@ -249,13 +226,9 @@ function saveCurrentUser(user) {
   }, null, 2));
 }
 
-
-
 function clearLoginError() {
   loginMessage.textContent = "";
 }
-
-
 
 function normalize(text) {
   return String(text || "").trim().toLowerCase();
@@ -355,10 +328,8 @@ if (welcome) {
   
 }
 
-
 account.addEventListener("mouseenter", () => focusBubble("account"));
 account.addEventListener("click", () => focusBubble("account"));
-
 
 showLogin.addEventListener("click", event => {
   event.stopPropagation();
@@ -622,16 +593,6 @@ const size = `${baseSize * (sizeFactors[kind] || 1)}px`;
   preparePlanetBubble(el, finalX, finalY, size);
 }
 
-
-
-
-
-
-
-
-
-
-
 function preparePlanetBubble(el, finalX, finalY, size) {
 
   el.style.setProperty("--x", "50%");
@@ -810,7 +771,6 @@ search.addEventListener("click", event => {
     return;
   }
 
-
   focusBubble("search");
 });
 
@@ -824,10 +784,6 @@ exportUsersJson.addEventListener("click", event => {
   a.click();
   URL.revokeObjectURL(url);
 });
-
-
-
-
 
 async function loadMembers() {
   const body = document.getElementById("membersBody");
@@ -1006,7 +962,6 @@ function exportMembersExcel() {
 
   setMembersStatus("Excel export gemaakt.");
 }
-
 
 function appRowHtml(app, isNew = false) {
   return `
@@ -1232,8 +1187,6 @@ async function loadApps() {
   body.innerHTML = data.map(app => appRowHtml(app)).join("");
 }
 
-
-
 async function logoutUser() {
   await supabaseClient.auth.signOut();
 
@@ -1242,6 +1195,5 @@ async function logoutUser() {
 
   location.reload();
 }
-
 
 startLayout();

@@ -1,7 +1,8 @@
 /* =========================================================
    VENUS - BEHEER PLANEET
    ========================================================= */
-/* FASE 1 - zwevende planeet */
+
+   /* FASE 1 - zwevende planeet */
 
 .app-bubble.admin {
   background-image: url("../assets/images/venus.PNG") !important;
@@ -22,51 +23,65 @@
 }
 
 .app-bubble.admin.admin-phase-3 .admin-members-panel {
-  transform: scale(1.25);
+  transform: scale(1.5);
   transform-origin: center center;
 }
 
-.app-bubble.admin.admin-phase-3 .member-input,
-.app-bubble.admin.admin-phase-3 .app-input {
-  font-size: 1rem !important;
-  padding: 0.15rem !important;
+/* terugkeer naar zweeffase */
+
+.admin-members-title {
+  text-align: center;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  letter-spacing: 0.18em;
+  margin-bottom: 0.4rem;
 }
 
-.app-bubble.admin.admin-phase-3 .admin-toolbar button {
-  font-size: 1rem !important;
+.admin-toolbar button {
+  font-size: 1.85rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.5);
+  background: rgba(0,0,0,0.28);
+  color: white;
+  cursor: pointer;
 }
 
-.app-bubble.admin.admin-phase-3 .admin-members-title {
-  font-size: 2rem !important;
-  color:yellow;
+.members-table-wrap {
+  width: 100%;
+  height: 64%;
+  overflow: auto;
+  border-radius: 14px;
+  background: rgba(0, 45, 90, 0.55);
 }
 
-.member-input:disabled {
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.15rem;
+  color: white;
+}
+
+.members-table th,
+.members-table td {
+  font-size: 2.15rem !important;
+  padding: 0.35rem 0.55rem;
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+  text-align: left;
+}
+
+.member-input:disabled,
+.app-input:disabled {
   border-color: transparent;
   background: transparent;
+  color: white;
 }
 
-.app-bubble.admin.admin-phase-3 .members-table-wrap {
-  width: 145%;
-  margin-left: -22.5%;
-
-  height: 380px !important;
-  max-height: 780px !important;
-
-  overflow-y: auto !important;
-  overflow-x: auto !important;
+.members-status {
+  min-height: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  opacity: 0.95;
+  margin-top: 0.35rem;
 }
-
-.app-bubble.admin.admin-phase-3 .members-table,
-.app-bubble.admin.admin-phase-3 .members-table td,
-.app-bubble.admin.admin-phase-3 .member-input,
-.app-bubble.admin.admin-phase-3 .app-input,
-.app-bubble.admin.admin-phase-3 select,
-.app-bubble.admin.admin-phase-3 .members-table th {
-  font-size:10px !important;
-}
-
-
-/* FASE 2 - beheer menu */
-
-/* terugkeer naar zweeffase */
