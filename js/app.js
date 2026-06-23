@@ -345,9 +345,7 @@ if (welcome) {
 
   clearFocusStates();
   document.body.classList.add("day-open");
-  account.classList.remove("focus", "dim");
-  account.classList.remove("focus", "dim", "far");
-  account.classList.add("logged-in-moon");
+  setMoonLoggedIn();
   createMoonShadow();
   setMoonLoggedIn();
 }
