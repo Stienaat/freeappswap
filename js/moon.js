@@ -1,3 +1,22 @@
+/*
+  moon.js
+
+  Eigenaar van:
+  - account mode: start / login / register
+  - login foutmelding tonen
+  - maan-schaduw maken na login
+
+  Wordt gebruikt door app.js via:
+  - setAccountMode(mode)
+  - showLoginError(message)
+  - createMoonShadow()
+
+  Niet eigenaar van:
+  - Supabase login/register
+  - globale login-status
+  - search/download/upload/admin bubbles
+*/
+
 window.FreeAppSwapMoon = {};
 console.log("moon module loaded");
 
