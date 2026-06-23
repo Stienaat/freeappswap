@@ -80,7 +80,11 @@ function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
     }
   }
 }
+function clearMoonFocusState() {
+  account.classList.remove("focus", "dim");
+}
 
+window.clearMoonFocusState = clearMoonFocusState;
 window.updateMoonFocusState = updateMoonFocusState;
 window.createMoonShadow = createMoonShadow;
 window.setAccountMode = setAccountMode;

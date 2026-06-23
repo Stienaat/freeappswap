@@ -750,12 +750,11 @@ if (motion.y > 100 - margin) {
 
 function clearFocusStates() {
   search.classList.remove("focus", "dim");
-  account.classList.remove("focus", "dim");
+  clearMoonFocusState();
   document.querySelectorAll(".app-bubble").forEach(el => {
     el.classList.remove("focus", "dim");
   });
 }
-
 function focusBubble(kind) {
   if (kind === "account" && loggedIn) return;
   if (productModalOpen && !appMap[kind]) return;
