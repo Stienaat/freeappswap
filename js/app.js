@@ -242,8 +242,7 @@ async function startLayout() {
 setTimeout(async () => {
   await sleep(5450);
 
-  account.classList.add("open");
-  setAccountMode("start");
+openAccountMoon();
 }, 10000);
 }
 

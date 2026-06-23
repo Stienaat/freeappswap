@@ -83,7 +83,12 @@ function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
 function clearMoonFocusState() {
   account.classList.remove("focus", "dim");
 }
+function openAccountMoon() {
+  account.classList.add("open");
+  setAccountMode("start");
+}
 
+window.openAccountMoon = openAccountMoon;
 window.clearMoonFocusState = clearMoonFocusState;
 window.updateMoonFocusState = updateMoonFocusState;
 window.createMoonShadow = createMoonShadow;
