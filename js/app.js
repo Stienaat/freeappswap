@@ -326,7 +326,7 @@ function finishLogin(user) {
 
   appBubblesCreated = true;
 
-  search.classList.add("open");
+  openSunSearch();
 
   if (String(user.role || "").trim().toLowerCase() === "admin") {
     createAdminBubble();
@@ -746,7 +746,7 @@ if (motion.y > 100 - margin) {
 }
 
 function clearFocusStates() {
-  search.classList.remove("focus", "dim");
+ clearSunFocusState();
   clearMoonFocusState();
   document.querySelectorAll(".app-bubble").forEach(el => {
     el.classList.remove("focus", "dim");
@@ -758,9 +758,7 @@ function focusBubble(kind) {
   const activeIsSearch = kind === "search";
   const activeIsAccount = kind === "account";
 
-  search.classList.toggle("focus", activeIsSearch);
-  search.classList.toggle("dim", !activeIsSearch && (loggedIn || appBubblesCreated));
-
+ updateSunFocusState(activeIsSearch, loggedIn, appBubblesCreated);
   updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn);
 
   document.querySelectorAll(".app-bubble").forEach(el => {
