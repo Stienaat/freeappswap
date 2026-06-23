@@ -18,7 +18,7 @@
 */
 
 window.FreeAppSwapMoon = {};
-console.log("moon module loaded");
+
 
 function createMoonShadow() {
   if (document.querySelector(".moon-shadow")) return;
@@ -60,7 +60,13 @@ function showLoginError(text) {
   loginMessage.textContent = text;
 }
 
+function setMoonLoggedIn() {
+  account.classList.remove("focus", "dim", "far");
+  account.classList.add("logged-in-moon");
+  createMoonShadow();
+}
 
 window.createMoonShadow = createMoonShadow;
 window.setAccountMode = setAccountMode;
 window.showLoginError = showLoginError;
+window.setMoonLoggedIn = setMoonLoggedIn;

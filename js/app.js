@@ -61,6 +61,8 @@ let dbApps = [];
 
 let speedFactor = 1;
 
+
+
 // Zelfde structuur als data/apps.json. Later kan dit rechtstreeks uit Supabase komen.
 const appData = {
   platforms: [
@@ -347,7 +349,7 @@ if (welcome) {
   account.classList.remove("focus", "dim", "far");
   account.classList.add("logged-in-moon");
   createMoonShadow();
-  
+  setMoonLoggedIn();
 }
 
 account.addEventListener("mouseenter", () => focusBubble("account"));
