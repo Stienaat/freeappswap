@@ -765,18 +765,7 @@ function focusBubble(kind) {
   search.classList.toggle("focus", activeIsSearch);
   search.classList.toggle("dim", !activeIsSearch && (loggedIn || appBubblesCreated));
 
-  if (activeIsAccount) {
-    account.classList.remove("far", "dim");
-    account.classList.add("focus");
-  } else {
-    account.classList.remove("focus");
-    if (loggedIn) {
-      account.classList.add("far");
-      account.classList.remove("dim");
-    } else {
-      account.classList.toggle("dim", activeIsSearch);
-    }
-  }
+  updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn);
 
   document.querySelectorAll(".app-bubble").forEach(el => {
     const active = el.dataset.kind === kind;

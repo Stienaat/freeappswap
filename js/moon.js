@@ -65,7 +65,23 @@ function setMoonLoggedIn() {
   account.classList.add("logged-in-moon");
   createMoonShadow();
 }
+function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
+  if (activeIsAccount) {
+    account.classList.remove("far", "dim");
+    account.classList.add("focus");
+  } else {
+    account.classList.remove("focus");
 
+    if (loggedIn) {
+      account.classList.add("far");
+      account.classList.remove("dim");
+    } else {
+      account.classList.toggle("dim", activeIsSearch);
+    }
+  }
+}
+
+window.updateMoonFocusState = updateMoonFocusState;
 window.createMoonShadow = createMoonShadow;
 window.setAccountMode = setAccountMode;
 window.showLoginError = showLoginError;
