@@ -1,3 +1,36 @@
+/*
+  app.js
+
+  Centrale regie van FreeApps Exchange.
+
+  Eigenaar van:
+  - login/register flow
+  - Supabase communicatie
+  - bubble focus systeem
+  - login status
+  - post-login acties
+
+  Gebruikt:
+  - moon.js voor account UI
+      setAccountMode()
+      showLoginError()
+      createMoonShadow()
+
+  Niet eigenaar van:
+  - maan-schaduw implementatie
+  - account scherm layout
+*/
+/*
+  Nog in app.js aanwezig rond account:
+  - account eventlisteners
+  - account focus/dim/far classes
+  - logged-in-moon class na login
+
+  Later eventueel naar moon.js:
+  - account focus helpers
+  - account logged-in state helpers
+*/
+
 const home = document.getElementById("home");
 const search = document.getElementById("search");
 const account = document.getElementById("account");
