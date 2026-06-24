@@ -1,4 +1,11 @@
-.upload-card {
+/*   warschijnlijk niet gebruikt  
+
+
+
+
+
+
+.upload-card{
   width: 82%;
   height: 82%;
   position: relative;
@@ -127,3 +134,5 @@
   flex-direction: column;
   gap: .75rem;
 }
+
+

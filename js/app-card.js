@@ -13,9 +13,10 @@ function openDownloadOverlay(appId) {
   <div class="app-card">
 
     <div class="app-card-header">
-      <h2 class="app-card-title">${app.name || "App"}</h2>
+      <div class="app-card-actions">  
+        <h2 class="app-card-title">${app.name || "App"}</h2>
 
-      <div class="app-card-actions">
+      
         <a class="app-card-download" href="${app.download_url || "#"}">
           DOWNLOAD
         </a>

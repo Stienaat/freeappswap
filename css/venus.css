@@ -22,50 +22,64 @@
   overflow: visible !important;
 }
 
-.app-bubble.admin.admin-phase-3 .admin-members-panel {
+.app-bubble.admin.admin-phase-3 
+.admin-members-panel {
   transform: scale(1.5);
   transform-origin: center center;
 }
 
 /* terugkeer naar zweeffase */
+.admin-members-panel{
+  width: 70%x;
+  height: 70%;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 25px;
+}
 
 .admin-members-title {
   text-align: center;
-  color: white;
+  padding-top: 10px;
+  color: yellow;
   font-size: 3rem;
   font-weight: bold;
   letter-spacing: 0.18em;
-  margin-bottom: 0.4rem;
+ }
+
+.admin-toolbar{
+  padding-bottom: 40px; 
+   margin: -40px;
 }
 
 .admin-toolbar button {
   font-size: 1.85rem;
-  padding: 0.25rem 0.55rem;
+  min-width: 100px; 
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.5);
-  background: rgba(0,0,0,0.28);
+  background: rgba(0,0,0,0.58);
   color: white;
   cursor: pointer;
 }
-
-.members-table-wrap {
+.members-table-wrap {   
   width: 100%;
   height: 64%;
   overflow: auto;
   border-radius: 14px;
-  background: rgba(0, 45, 90, 0.55);
-}
+  background: rgba(0, 45, 90, 0.65);}
 
 .members-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 1.15rem;
-  color: white;
+  table-layout: fixed;
 }
-
+.members-table th:nth-child(1),
+.members-table td:nth-child(1) {
+  width: 40px;      /* of 40px, 80px, wat jij wilt */
+  white-space: nowrap;
+}
 .members-table th,
 .members-table td {
-  font-size: 2.15rem !important;
+  font-size: 2rem !important;
+  color: white;
   padding: 0.35rem 0.55rem;
   border-bottom: 1px solid rgba(255,255,255,0.18);
   text-align: left;
@@ -73,15 +87,17 @@
 
 .member-input:disabled,
 .app-input:disabled {
+  font-size: 1.4rem !important;
   border-color: transparent;
   background: transparent;
   color: white;
 }
 
 .members-status {
-  min-height: 1rem;
+  min-height: 2rem;
   text-align: center;
   font-size: 0.75rem;
   opacity: 0.95;
   margin-top: 0.35rem;
+  background: rgba(0,0,0,0.04);
 }

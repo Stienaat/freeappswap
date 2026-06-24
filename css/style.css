@@ -224,11 +224,9 @@ body.product-modal-open .app-bubble:not(.app-detail) {
   font-size: clamp(38px, 2vw, 4rem);
   font-weight: 800;
   color: yellow;
-
   text-shadow:
     0 0 8px rgba(0,0,0,.9),
     0 0 18px rgba(0,0,0,.7);
-
   opacity: 0;
   transition: opacity .8s ease;
   pointer-events: none;

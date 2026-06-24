@@ -373,7 +373,7 @@ forgotPassword.addEventListener("click", async event => {
   const email = normalize(emailInput.value);
 
   if (!email || !email.includes("@")) {
-    showLoginError("vul eerst je emailadres in");
+    showLoginError("Geef je emailadres in");
     return;
   }
 

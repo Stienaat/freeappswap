@@ -1,7 +1,7 @@
 /* =========================================================
-   JUPITER.CSS
-   basis-planeet
+   FASE 0 - basisbol / planeet bestaat
    ========================================================= */
+
 .app-bubble.upload {
   background-image: url("../assets/images/jupiter.PNG");
   background-size: cover;
@@ -11,8 +11,9 @@
 }
 
 /* =========================================================
-   FASE 0 - basisbol / planeet bestaat
+   FASE 1 -
    ========================================================= */
+
 .planet-title {
   width: 100%;
   text-align: left;
@@ -32,8 +33,3 @@
     2px 2px 6px rgba(0,0,0,.8);
 }
 
-/* =========================================================
-   FASE 1 - zwevende kleine bol met titel UPLOAD
-/* =========================================================
-   TERUGKEER - overlay sluit, Jupiter terug zweeffase
-   ========================================================= */

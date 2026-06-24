@@ -1,43 +1,14 @@
-.app-bubble.upload {
-  background-image: url("../assets/images/jupiter.PNG");
-  background-size: cover;
-  background-position: center;
-}
-  width: 72vw !important;
-  height: 62vh !important;
-}
+/* ==================================================================================
+  alle css voor de "members overlay" in venus, ten behoeve van de admin.
 
-.upload-card {
-  width: 82%;
-  height: 82%;
-  position: relative;
-  color: white;
-  background: rgba(0,0,0,0.42);
-  border-radius: 28px;
-  padding: 1.5rem;
-}
+  NOG NA TE ZIEN: ivm met obsolete, dubbele of dode code.
+======================================================================================*/
 
-.upload-title {
-  text-align: center;
-  font-size: 2.4rem;
-  margin: 0 0 1rem 0;
-}
 
-.upload-close {
-  position: absolute;
-  right: 1.4rem;
-  top: 1rem;
-  border-radius: 50%;
-  font-size: 2rem;
-}
 
-.upload-body {
-  display: grid;
-  grid-template-columns: 40% 1fr;
-  gap: 1.5rem;
-  height: calc(100% - 4rem);
-}
 
+
+/*
 .upload-left,
 .upload-right {
   min-height: 0;
@@ -71,51 +42,90 @@
 
 .upload-right input,
 .upload-right select,
-.upload-right textarea {
+.upload-textarea {
   width: 100%;
   font-size: 1.1rem;
   padding: .55rem;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,.35);
-  background: rgba(80,80,80,.45);
+  background: rgba(221, 219, 219, 0.45);
   color: white;
 }
 
 .upload-right textarea {
-  min-height: 120px;
+  min-height: 1200px;
   resize: vertical;
+  background: transparent;
 }
+ */
 
 #btnUploadSave {
   margin-top: auto;
   padding: .75rem 1.4rem;
   border-radius: 999px;
   font-weight: bold;
-}.upload-card-overlay {
+}
+
+/*==============================*/
+
+.upload-card-overlay {
   position: fixed;
-  inset: 0;
+  left: 50%;
+  top: 50%;
+  width: 55vw;
+  height: 80vh;
+  transform: translate(-50%, -50%);
+  background: rgb(238, 212, 212,0.5);
+  border-radius: 28px;
+  padding: 2rem;
+  color: white;
   z-index: 9999;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .upload-card {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-
-  width: 72vw;
-  height: 62vh;
-
-  background: rgba(0, 60, 80, 0.72);
+  width: 52.5vw;
+  height: 70vh;
+  background: radial-gradient(circle at 10% 90%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.82));
+  border-radius: 28px;
+  margin: 0.5rem;
   border-radius: 28px;
   padding: 2rem;
   color: white;
 }
 
 .upload-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}  
+
+.upload-card-title {
+  text-align: center;
+  font-size: 4rem;
+  margin: 0 0 1rem 0;
+}
+
+.upload-card-shot {
+  max-height: 900px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 38px;
+  overflow: hidden;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  place-items: center;
+}
+.upload-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .upload-card-body {
@@ -124,8 +134,36 @@
   gap: 2rem;
 }
 
+.upload-card-save ,
+.upload-card-close {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.6rem 1.2rem;
+background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
+
+border-radius: 999px;
+text-decoration: none;
+font-weight: bold;
+font-size: 1.95rem;
+box-shadow:
+    0 0 28px rgba(66,255,105,.42),
+    inset 0 -14px 30px rgba(0,0,0,.25);
+}
+
+
+.upload-card-placeholder {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 20px;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
 .upload-card-info {
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
+  white-space: pre-line;
+  font-size: 2.2rem;
+  line-height: 1.35;
 }
