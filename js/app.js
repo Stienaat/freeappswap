@@ -11,7 +11,7 @@
   - post-login acties
 
   Gebruikt:
-  - moon.js voor account UI
+  - login.js voor account UI
       setAccountMode()
       showLoginError()
       createMoonShadow()
@@ -26,7 +26,7 @@
   - account focus/dim/far classes
   - logged-in-moon class na login
 
-  Later eventueel naar moon.js:
+  Later eventueel naar login.js:
   - account focus helpers
   - account logged-in state helpers
 */

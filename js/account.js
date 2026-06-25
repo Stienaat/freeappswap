@@ -1,5 +1,5 @@
 /*
-  moon.js
+  login.js
 
   Eigenaar van:
   - account mode: start / login / register
@@ -16,7 +16,7 @@
   - globale login-status
   - search/download/upload/admin bubbles
 */
-
+console.log("account module loaded");
 window.FreeAppSwapMoon = {};
 
 
