@@ -41,11 +41,6 @@ body {
     2px 2px 6px rgba(0,0,0,.8);
 }
 
-.space {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-}
 
 .bubble {
   position: absolute;
@@ -235,5 +230,4 @@ body.product-modal-open .app-bubble:not(.app-detail) {
 .welcome-user.show {
   opacity: 1;
 }
-
 

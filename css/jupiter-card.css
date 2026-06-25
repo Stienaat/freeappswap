@@ -17,7 +17,7 @@
   
 }
 .upload-product{
-  background-image: var(--planet-image, url("../assets/images/saturnus.jpg"));
+  background-image: var(--planet-image, url("../assets/images/saturnus.PNG"));
 }
 
 .upload-title {

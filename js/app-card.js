@@ -56,13 +56,32 @@ function openDownloadOverlay(appId) {
   </div>
 `;
 
-  document.body.appendChild(overlay);
+function showSaturnOverlay() {
+let saturn = document.getElementById("saturnOverlay");
 
-  overlay.querySelector(".app-card-close")?.addEventListener("click", () => {
-    overlay.remove();
+if (!saturn) {
+  saturn = document.createElement("img");
+  saturn.id = "saturnOverlay";
+  saturn.src = "../assets/images/saturnus.PNG";
+  saturn.alt = "";
+  document.body.appendChild(saturn);
+}
+saturn.classList.add("show");
+}
+function hideSaturnOverlay() {
+  document.getElementById("saturnOverlay")?.classList.remove("show");
+}
 
-     
-  });
+document.body.appendChild(overlay);
+showCardPlanetBg();
+
+document.body.classList.add("planet-overlay-open");
+
+overlay.querySelector(".app-card-close")?.addEventListener("click", () => {
+  overlay.remove();
+  hideCardPlanetBg();
+  document.body.classList.remove("planet-overlay-open");
+});
 }
 
 window.openDownloadOverlay = window.openDownloadOverlay || openDownloadOverlay;

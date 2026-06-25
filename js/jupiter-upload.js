@@ -162,7 +162,7 @@ function openUploadCard() {
   `;
 
   document.body.appendChild(overlay);
-
+  showCardPlanetBg();
   const shot = overlay.querySelector("#uploadShot");
   const fileInput = overlay.querySelector("#uploadScreenshot");
 
@@ -183,7 +183,7 @@ function openUploadCard() {
 
   overlay.querySelector(".upload-card-close")?.addEventListener("click", () => {
     overlay.remove();
-
+    hideCardPlanetBg();
 const admin = document.querySelector('.app-bubble[data-kind="admin"]');
 
     if (admin) {

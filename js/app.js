@@ -103,7 +103,7 @@ const appData = {
       author: "FScreations",
       status: "Testversie",
       description: "Logisch kleurenspel gebaseerd op een Latin square.",
-      screenshot: "assets/images/LS.jpg",
+      screenshot: "../assets/images/LS.jpg",
       size: "-",
       updated_at: "-",
       readme: [
@@ -1201,6 +1201,13 @@ async function logoutUser() {
   appBubblesCreated = false;
 
   location.reload();
+}
+function showCardPlanetBg() {
+  document.body.classList.add("card-planet-bg");
+}
+
+function hideCardPlanetBg() {
+  document.body.classList.remove("card-planet-bg");
 }
 
 startLayout();
