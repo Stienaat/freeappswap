@@ -178,29 +178,12 @@ const platformMap = Object.fromEntries(appData.platforms.map(item => [item.id, i
 const categoryMap = Object.fromEntries(appData.categories.map(item => [item.id, item]));
 const appMap = Object.fromEntries(appData.apps.map(item => [item.id, item]));
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
-function createIntroStars() {
-  const layer = document.getElementById("introStars");
-  if (!layer) return;
 
-  layer.innerHTML = "";
-
-  for (let i = 0; i < 260; i++) {
-    const star = document.createElement("span");
-    star.className = "intro-star";
-    star.style.setProperty("--x", `${Math.random() * 100}%`);
-    star.style.setProperty("--y", `${Math.random() * 100}%`);
-    star.style.setProperty("--s", `${Math.random() * 2.4 + 0.6}px`);
-    star.style.setProperty("--o", `${Math.random() * 0.75 + 0.25}`);
-    layer.appendChild(star);
-  }
-}
 
 function createDownloadUpload() {
   if (appBubblesCreated) return;
@@ -211,40 +194,7 @@ function createDownloadUpload() {
   createAppBubble("upload");
 }
 
-async function startLayout() {
 
-  createIntroStars();
-
-  const intro = document.getElementById("introBirth");
-
-  await sleep(400);
-
-  intro?.classList.add("run");
-
-  setTimeout(() => {
-    document.querySelector(".intro-title")?.classList.add("show");
-  }, 11000);
-
-  setTimeout(() => {
-    document.querySelector(".intro-text-top")?.classList.add("show");
-  }, 13000);
-
-  setTimeout(() => {
-    document.querySelector(".intro-text-bottom")?.classList.add("show");
-  }, 15000);
-
-  setTimeout(() => {
-    document.querySelector(".intro-title")?.classList.add("hide");
-    document.querySelector(".intro-text-top")?.classList.add("hide");
-    document.querySelector(".intro-text-bottom")?.classList.add("hide");
-  }, 18500);
-
-setTimeout(async () => {
-  await sleep(5450);
-
-openAccountMoon();
-}, 10000);
-}
 
 const USERS_STORAGE_KEY = "freeAppSwap_users_json";
 
@@ -1210,4 +1160,8 @@ function hideCardPlanetBg() {
   document.body.classList.remove("card-planet-bg");
 }
 
-startLayout();
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+startIntro();

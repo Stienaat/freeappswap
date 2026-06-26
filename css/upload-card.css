@@ -1,89 +1,26 @@
 /* ==================================================================================
-  alle css voor de "members overlay" in venus, ten behoeve van de admin.
+  alle css voor de "upload-card, ten behoeve van de overlay.
 
   NOG NA TE ZIEN: ivm met obsolete, dubbele of dode code.
 ======================================================================================*/
 
-
-/*
-.upload-left,
-.upload-right {
-  min-height: 0;
-}
-
-.upload-dropzone {
-  height: 100%;
-  border: 2px dashed rgba(255,255,255,.45);
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-size: 1.2rem;
-  background: rgba(80,80,80,.35);
-  cursor: pointer;
-}
-
-.upload-right {
-  display: flex;
-  flex-direction: column;
-  gap: .55rem;
-}
-
-.upload-right input,
-.upload-right select,
-.upload-textarea {
-  width: 100%;
-  font-size: 1.1rem;
-  padding: .55rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.35);
-  background: rgba(221, 219, 219, 0.45);
-  color: white;
-}
-
-.upload-right textarea {
-  min-height: 1200px;
-  resize: vertical;
-  background: transparent;
-}
- */
-
-#btnUploadSave {
-  margin-top: auto;
-  padding: .75rem 1.4rem;
-  border-radius: 999px;
-  font-weight: bold;
-}
-
-/*==============================*/
-
-.upload-card-overlay {
-  position: fixed;
-  left: 50%;
-  top: 50%;
+.upload-card {
+  position: fixed;  
+  left: 50vw;
+  top: 50vh;
   width: 55vw;
   height: 80vh;
   transform: translate(-50%, -50%);
-  background: rgb(238, 212, 212,0.5);
-  border-radius: 28px;
- 
-  color: white;
-  z-index: 9999;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.upload-card {
-  position: fixed;
-  width: 55vw;
-  height: 80vh;
   background: radial-gradient(circle at 10% 90%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.22));
+    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.92));
   border-radius: 28px;
   margin: 0.5rem;
   border-radius: 28px;
   padding: 2rem;
   color: white;
+  z-index: 9999;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .upload-card-header {
@@ -91,16 +28,33 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-}  
+} 
 
 .upload-card-title {
   text-align: center;
-  font-size: 4rem;
+  font-size: 6rem;
   margin: 0 0 1rem 0;
 }
 
+.upload-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.upload-card-body {
+  height: calc(100% - 5rem);
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 2rem;
+  overflow: hidden;
+  white-space: pre-line;
+  font-size: 2.2rem;
+  line-height: 1.35;
+}
+
 .upload-card-shot {
-  max-height: 70vh;
+  max-height: 60vh;
   background: rgba(255,255,255,0.08);
   border-radius: 38px;
   overflow: hidden;
@@ -115,51 +69,19 @@
 
 .upload-preview {
   display: none;
-  width: auto;
-  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 20px;
+  width: auto !important;
+  height: auto !important;
   object-fit: contain;
-  border-radius: 18px;
-  margin: 10px;
-  background-color: aqua;
 }
+
 .upload-card-info {
   font-size: 25px;
   padding: 20px;
   background-color: rgba(255,255,255,0.08);
   border-radius: 20px;
-}
-
-.upload-card-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.upload-card-body {
-  display: grid;
-  grid-template-columns: 40% 1fr;
-  gap: 2rem;
-  white-space: pre-line;
-  font-size: 2.2rem;
-  line-height: 1.35;
-}
-
-.upload-card-save ,
-.upload-card-close {
-display: inline-flex;
-align-items: center;
-gap: 0.5rem;
-padding: 0.6rem 1.2rem;
-background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
-
-border-radius: 999px;
-text-decoration: none;
-font-weight: bold;
-font-size: 1.95rem;
-box-shadow:
-    0 0 28px rgba(66,255,105,.42),
-    inset 0 -14px 30px rgba(0,0,0,.25);
 }
 
 .upload-card-placeholder {
@@ -170,4 +92,21 @@ box-shadow:
   height: auto !important;
   object-fit: contain;
   background:transparent;
+}
+
+.upload-card-upload ,
+.upload-card-close {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.6rem 1.2rem;
+background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
+border-radius: 999px;
+text-decoration: none;
+font-weight: bold;
+font-size: 1.95rem;
+box-shadow:
+    0 0 28px rgba(66,255,105,.42),
+    inset 0 -14px 30px rgba(0,0,0,.25);
 }

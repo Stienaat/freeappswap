@@ -1,43 +1,41 @@
 function openDownloadOverlay(appId) {
- 
-
-  const app = dbApps.find(a => a.id === appId);
+   const app = dbApps.find(a => a.id === appId);
   if (!app) return;
 
-  document.querySelector(".app-card-overlay")?.remove();
+  document.querySelector(".download-card-overlay")?.remove();
 
   const overlay = document.createElement("div");
-  overlay.className = "app-card-overlay";
+  overlay.className = "download-card-overlay";
 
   overlay.innerHTML = `
-  <div class="app-card">
+  <div class="download-card">
 
-    <div class="app-card-header">
-      <div class="app-card-actions">  
-        <h2 class="app-card-title">${app.name || "App"}</h2>
+    <div class="download-card-header">
+      <div class="download-card-actions">  
+        <h2 class="download-card-title">${app.name || "App"}</h2>
 
       
-        <a class="app-card-download" href="${app.download_url || "#"}">
+        <a class="download-card-download" href="${app.download_url || "#"}">
           DOWNLOAD
         </a>
 
-        <button class="app-card-close" type="button">X</button>
+        <button class="download-card-close" type="button">X</button>
       </div>
     </div>
 
-    <div class="app-card-body">
+    <div class="download-card-body">
 
-      <div class="app-card-shot">
+      <div class="download-card-shot">
         <img src="${app.screenshot_url || "assets/images/no-screenshot.jpg"}" alt="">
       </div>
 
-      <div class="app-card-info">
+      <div class="download-card-info">
 
-        <div class="app-card-description">
+        <div class="download-card-description">
           ${app.description || "Geen beschrijving."}
         </div>
 
-        <div class="app-card-meta">
+        <div class="download-card-meta">
           <div><span>Versie</span><strong>${app.version || "-"}</strong></div>
           <div><span>Auteur</span><strong>${app.author || "-"}</strong></div>
           <div><span>Status</span><strong>${app.status || "-"}</strong></div>
@@ -45,7 +43,7 @@ function openDownloadOverlay(appId) {
           <div><span>Categorie</span><strong>${app.category || "-"}</strong></div>
         </div>
 
-        <div class="app-card-specs">
+        <div class="download-card-specs">
           ${app.specs || ""}
         </div>
 
@@ -77,7 +75,7 @@ showCardPlanetBg();
 
 document.body.classList.add("planet-overlay-open");
 
-overlay.querySelector(".app-card-close")?.addEventListener("click", () => {
+overlay.querySelector(".download-card-close")?.addEventListener("click", () => {
   overlay.remove();
   hideCardPlanetBg();
   document.body.classList.remove("planet-overlay-open");

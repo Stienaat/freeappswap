@@ -1,10 +1,10 @@
 /* ==================================================================================
-  alle css voor de "app's overlay" in venus, ten behoeve van de admin.
+  alle css voor de "download-card, ten behoeve van de overly.
 
   NOG NA TE ZIEN: ivm met obsolete, dubbele of dode code.
 ======================================================================================*/
 
-.app-card {
+.download-card {
   position: fixed;
   left: 50vw;
   top: 50vh;
@@ -12,7 +12,9 @@
   height: 80vh;
   transform: translate(-50%, -50%);
   background: radial-gradient(circle at 10% 90%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.22));
+    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.92));
+  border-radius: 28px;
+  margin: 0.5rem;
   border-radius: 28px;
   padding: 2rem;
   color: white;
@@ -21,34 +23,38 @@
   overflow: hidden;
 }
 
-.app-card-header {
+.download-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.app-card-actions {
+.download-card-title {
+  text-align: center;
+  font-size: 6rem;
+  margin: 0 0 1rem 0;
+}
+
+.download-card-actions {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.app-card-title {
-  margin: 0;
-  font-size: 6rem;
-}
-
-.app-card-body {
+.download-card-body {
   height: calc(100% - 5rem);
   display: grid;
-  grid-template-columns: 35% 1fr;
+  grid-template-columns: 40% 1fr;
   gap: 2rem;
   overflow: hidden;
+   white-space: pre-line;
+  font-size: 2.2rem;
+  line-height: 1.35;
 }
 
-.app-card-shot {
-  max-height: 900px;
+.download-card-shot {
+  max-height: 60vh;
   background: rgba(255,255,255,0.08);
   border-radius: 38px;
   overflow: hidden;
@@ -58,9 +64,11 @@
   height: 100%;
   padding: 20px;
   place-items: center;
+  font-size: 45px;
 }
 
-.app-card-shot img {
+.download-card-shot img {
+  display: none;
   max-width: 100%;
   max-height: 100%;
   border-radius: 20px;
@@ -69,44 +77,43 @@
   object-fit: contain;
 }
 
-.app-card-info {
+.download-card-info {
   min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.app-card-description {
+.download-card-description {
   white-space: pre-line;
   font-size: 2.2rem;
-  line-height: 1.35;
+  line-height: 1.2;
 }
 
-.app-card-meta div {
+.download-card-meta div {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255,255,255,0.25);
-  padding: 0.2rem 0;
-   font-size: 2.2rem;
+  padding: 0.1rem 0;
+  font-size: 2.2rem;
 }
 
-.app-card-specs {
+.download-card-specs {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255,255,255,0.25);
-  padding: 0.2rem 0;
-   font-size: 2.2rem;
+  padding: 0.1rem 0;
+  font-size: 2.2rem;
 }
 
-.app-card-download {
+.download-card-download ,
+.download-card-close {
 display: inline-flex;
 align-items: center;
 gap: 0.5rem;
 padding: 0.6rem 1.2rem;
 background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
     linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
-
 border-radius: 999px;
 text-decoration: none;
 font-weight: bold;
@@ -114,26 +121,4 @@ font-size: 1.95rem;
 box-shadow:
     0 0 28px rgba(66,255,105,.42),
     inset 0 -14px 30px rgba(0,0,0,.25);
-}
-
-.app-card-close {
-  background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
-  color: #111;
-  font-weight: 950;
-  z-index: 10;
-  font-size: 1.95rem;
-  position: static !important;
-  margin: 0 !important;
-  padding: 1.7rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  border: 0;
-  font-size: 2rem;
-  font-weight: bold;
-  cursor: pointer;
 }

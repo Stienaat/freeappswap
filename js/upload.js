@@ -4,8 +4,6 @@ function getUploadBubble() {
   return document.querySelector('.app-bubble[data-kind="upload"]');
 }
 
-
-
 function renderUploadForm(platformId = "apk") {
   const el = getUploadBubble();
   if (!el) return;
@@ -84,7 +82,6 @@ function renderUploadForm(platformId = "apk") {
     renderUploadStart();
   });
 }
-
 
 async function saveUploadedApp() {
   const status = document.getElementById("uploadStatus");

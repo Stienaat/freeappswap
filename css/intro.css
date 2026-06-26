@@ -183,7 +183,7 @@ body.card-planet-bg #saturnOverlay {
   opacity: 1 !important;
 }
 
-.app-card-overlay,
+.download-card-overlay,
 .upload-card-overlay {
   z-index: 100 !important;
 }
