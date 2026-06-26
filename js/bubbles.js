@@ -98,50 +98,5 @@ window.FreeAppSwapBubbles = (() => {
 
   return { initClosed, showHome, showStartBubbles, focus, showLoggedInUniverse, applyState };
 })();
-account: {
-  idle: {
-    x: 62, y: 47,
-    size: "280px",
-    scale: .62,
-    z: 900,
-   
-    dx: 0, dy: 0,
-    pad: "18px"
-  },
 
-  active: {
-    x: 62, y: 52,
-    size: "280px",
-    scale: 1,
-    z: 2000,
-    opacity: 1,
-    dx: 0, dy: 0,
-    pad: "18px"
-  },
 
-  background: {
-    x: 62, y: 52,
-    size: "280px",
-    scale: .22,
-    z: -260,
-   
-    dx: 0, dy: 0,
-    pad: "18px"
-  }
-}
-.search::after,
-.account::after,
-.app-bubble.download::after,
-.app-bubble.upload::after,
-.app-bubble.admin::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 28% 18%,
-      rgba(255,255,255,.45),
-      rgba(255,255,255,.18) 16%,
-      transparent 34%);
-}

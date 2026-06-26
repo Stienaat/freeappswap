@@ -42,8 +42,7 @@ window.startIntro = async function startIntro() {
   document.querySelector(".intro-title")?.classList.add("hide");
   document.querySelector(".intro-text-top")?.classList.add("hide");
   document.querySelector(".intro-text-bottom")?.classList.add("hide");
-}, 15
-000);
+}, 15000);
 
   setTimeout(async () => {
     await sleep(5450);
