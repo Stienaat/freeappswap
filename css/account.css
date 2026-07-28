@@ -25,19 +25,10 @@
 .account.open {
   --scale: 1;
   --opacity: 1;
-  padding-left: 30px;
-  padding-top: 30px;
+  padding: 0;
 }
 
-.account.focus {
-  --x: 72%;
-  --y: 32%;
-   --scale: 3;
-  --time: 2800ms;
-  z-index: 40;
-  padding-top: 30px;
 
-}
 
 .account.focus {
   --x: 72%;
@@ -73,13 +64,16 @@
 
 .account:not(.focus) .account-label {
   display: grid;
-  font-size: clamp(44px, 2.4vw, 0.1px);
-  margin-top: 80px;
-  margin-left: 50px;
+  place-items: center;
+
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  font-size: clamp(14px, 2.4vw, 28px);
   font-weight: 950;
   letter-spacing: 0.08em;
 }
-
 .account.focus .account-label,
 .account.logged-in-moon .account-label {
   display: none;
