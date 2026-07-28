@@ -55,9 +55,9 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
-let selectedPlatform = null;
+
 let productModalOpen = false;
-let dbApps = [];
+
 
 let speedFactor = 1;
 
@@ -174,10 +174,10 @@ const appData = {
   ]
 };
 
+
+const appMap = Object.fromEntries(appData.apps.map(item => [item.id, item]));
 const platformMap = Object.fromEntries(appData.platforms.map(item => [item.id, item]));
 const categoryMap = Object.fromEntries(appData.categories.map(item => [item.id, item]));
-const appMap = Object.fromEntries(appData.apps.map(item => [item.id, item]));
-
 
 
 function randomBetween(min, max) {
@@ -295,27 +295,9 @@ if (welcome) {
   clearFocusStates();
   document.body.classList.add("day-open");
   setMoonLoggedIn();
-  createMoonShadow();
-  setMoonLoggedIn();
-}
+  }
 
-account.addEventListener("mouseenter", () => focusBubble("account"));
-account.addEventListener("click", () => focusBubble("account"));
 
-showLogin.addEventListener("click", event => {
-  event.stopPropagation();
-  setAccountMode("login");
-});
-
-showRegister.addEventListener("click", event => {
-  event.stopPropagation();
-  setAccountMode("register");
-});
-
-backToAccountStart.addEventListener("click", event => {
-  event.stopPropagation();
-  setAccountMode("start");
-});
 
 forgotPassword.addEventListener("click", async event => {
   event.stopPropagation();

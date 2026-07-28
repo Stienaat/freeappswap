@@ -1,5 +1,12 @@
 console.log("mars module loaded");
 
+let selectedPlatform = null;
+let dbApps = [];
+
+
+
+
+
 function getDownloadBubble() {
   return document.querySelector('.app-bubble[data-kind="download"]');
 }

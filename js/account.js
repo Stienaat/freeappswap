@@ -87,6 +87,23 @@ function openAccountMoon() {
   account.classList.add("open");
   setAccountMode("start");
 }
+account.addEventListener("mouseenter", () => focusBubble("account"));
+account.addEventListener("click", () => focusBubble("account"));
+
+showLogin.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("login");
+});
+
+showRegister.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("register");
+});
+
+backToAccountStart.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("start");
+});
 
 window.openAccountMoon = openAccountMoon;
 window.clearMoonFocusState = clearMoonFocusState;
