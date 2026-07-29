@@ -1,0 +1,12 @@
+/* =========================================================
+   URANUS - INFO PLANEET
+   Voorlopig alleen een permanent zwevende navigatiebol.
+   Inhoud wordt later toegevoegd.
+   ========================================================= */
+
+.app-bubble.uranus {
+  background: transparent url("../assets/images/uranus.png") center / contain no-repeat;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: drop-shadow(18px 24px 22px rgba(0, 0, 0, .28));
+}

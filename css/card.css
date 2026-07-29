@@ -1,0 +1,173 @@
+/* =========================================================
+   CARD V2 COMPACT — gedeelde basis
+   Compact op desktop; scrollen alleen wanneer nodig.
+   ========================================================= */
+
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  padding: clamp(10px, 1.5vw, 20px);
+  box-sizing: border-box;
+}
+
+.card {
+  width: min(880px, 88vw);
+  height: min(570px, 78vh);
+  padding: clamp(16px, 1.8vw, 24px);
+  box-sizing: border-box;
+  overflow: hidden;
+  color: #fff;
+  border-radius: 24px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .9rem;
+  margin-bottom: clamp(10px, 1.4vh, 16px);
+}
+
+.card-title {
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 3.1rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.card-button,
+.card-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: .5rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  color: inherit;
+  font: inherit;
+  font-size: clamp(.9rem, 1.1vw, 1.1rem);
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.card-close {
+  width: 40px;
+  padding-inline: 0;
+  font-size: 1.55rem;
+}
+
+.card-body {
+  height: calc(100% - 58px);
+  display: grid;
+  grid-template-columns: minmax(210px, 37%) minmax(0, 1fr);
+  gap: clamp(12px, 1.5vw, 20px);
+  overflow: hidden;
+}
+
+.card-shot,
+.card-info {
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(12px, 1.3vw, 18px);
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.card-shot {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.card-shot img,
+.card-shot .upload-preview,
+.card-shot .upload-card-placeholder {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vh, 16px);
+  overflow: hidden;
+  font-size: clamp(.92rem, 1.05vw, 1.08rem);
+  line-height: 1.35;
+}
+
+.card-description,
+.card-specs {
+  white-space: pre-line;
+}
+
+.card-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 14px;
+}
+
+.card-meta > div {
+  display: grid;
+  grid-template-columns: minmax(72px, auto) 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+
+.card-meta span {
+  opacity: .72;
+}
+
+.card-meta strong {
+  overflow-wrap: anywhere;
+}
+
+/* Alleen op kleine of lage schermen mag scrollen terugkomen. */
+@media (max-width: 760px), (max-height: 650px) {
+  .card {
+    width: 94vw;
+    height: 90vh;
+    border-radius: 20px;
+  }
+
+  .card-title {
+    font-size: clamp(1.6rem, 7vw, 2.5rem);
+  }
+
+  .card-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(150px, 34%) minmax(0, 1fr);
+  }
+
+  .card-info {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .card-meta {
+    grid-template-columns: 1fr;
+  }
+}

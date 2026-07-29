@@ -75,7 +75,6 @@ async function showAdminApps() {
         <button id="btnEditApp">edit</button>
         <button id="btnDeleteApp">delete</button>
         <button id="btnExportApps">export</button>
-        <button id="btnSaveApp">save</button>
       </div>
 
       <div class="members-table-wrap">
@@ -105,11 +104,10 @@ async function showAdminApps() {
     showAdminMenu();
   };
 
-  document.getElementById("btnNewApp").onclick = newAppRow;
-  document.getElementById("btnEditApp").onclick = enableAppEdit;
+  document.getElementById("btnNewApp").onclick = () => openAdminAppEditor(null);
+  document.getElementById("btnEditApp").onclick = openSelectedAdminAppEditor;
   document.getElementById("btnDeleteApp").onclick = deleteSelectedApp;
   document.getElementById("btnExportApps").onclick = exportAppsExcel;
-  document.getElementById("btnSaveApp").onclick = saveSelectedApp;
 
   await loadApps();
 }

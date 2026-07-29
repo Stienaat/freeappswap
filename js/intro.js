@@ -47,5 +47,7 @@ window.startIntro = async function startIntro() {
   setTimeout(async () => {
     await sleep(5450);
     openAccountMoon();
+    window.createUranusBubble?.();
+    window.createJunoBubble?.();
   }, 7000);
 };

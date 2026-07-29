@@ -331,10 +331,9 @@ document.querySelectorAll(".search-link").forEach(button => {
 function handleNavigationTarget(target) {
 
   if (target === "upload") {
-  renderUploadForm("apk");
-  focusBubble("upload");
-  return;
-}
+    openUserAppEditor();
+    return;
+  }
 
   if (target === "download") {
     renderDownloadStart();
@@ -563,9 +562,12 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   event.stopPropagation();
 
   if (el.dataset.kind === "upload") {
-    openUploadCard();
+    openUserAppEditor();
     return;
   }
+
+  // Uranus en Juno zijn voorlopig alleen zichtbare, zwevende plaatsaanduiders.
+  if (el.dataset.passive === "true") return;
 
   if (!productModalOpen || el.classList.contains("app-detail")) {
     focusBubble(el.dataset.kind);
@@ -602,6 +604,8 @@ if (kind === "account") speedFactor = 1.15;
 if (kind === "admin") speedFactor = 0.30;
 if (kind === "download") speedFactor = 1.00;
 if (kind === "upload") speedFactor = 0.80;
+if (kind === "uranus") speedFactor = 0.42;
+if (kind === "juno") speedFactor = 0.32;
 
 const baseSpeed = motionStatus === 1
   ? randomBetween(1.0, 1.8)
@@ -1147,3 +1151,633 @@ function sleep(ms) {
 }
 
 startIntro();
+
+/* =========================================================
+   ADMIN APP EDITOR
+   Eén functionele editor voor new / edit / later review.
+   ========================================================= */
+
+function escapeAdminEditorHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function adminArrayToText(value) {
+  if (Array.isArray(value)) return value.join("\n");
+  if (typeof value === "string") return value;
+  return "";
+}
+
+function adminTextToArray(value) {
+  return String(value || "")
+    .split(/\r?\n|,/)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function closeAdminAppEditor() {
+  document.getElementById("adminAppEditorOverlay")?.remove();
+  document.body.classList.remove("admin-editor-open");
+}
+
+function setAdminEditorStatus(text, isError = false) {
+  const el = document.getElementById("adminEditorStatus");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.toggle("error", isError);
+}
+
+function openSelectedAdminAppEditor() {
+  const row = getSelectedAppRow();
+
+  if (!row) {
+    setAppsStatus("Selecteer eerst een app.");
+    return;
+  }
+
+  if (row.dataset.new === "1") {
+    setAppsStatus("Gebruik NEW voor een nieuwe app.");
+    return;
+  }
+
+  openAdminAppEditor(row.dataset.id);
+}
+
+async function openAdminAppEditor(appId = null, mode = "admin") {
+  closeAdminAppEditor();
+
+  let app = {
+    name: "",
+    subtitle: "",
+    description: "",
+    category: "",
+    platform: "apk",
+    version: "0.1",
+    author: "",
+    status: mode === "review" ? "pending" : "draft",
+    screenshot_url: "",
+    icon_url: "",
+    download_url: "",
+    file_size: "",
+    min_android: "",
+    license: "",
+    privacy: "",
+    features: [],
+    languages: [],
+    specs: "",
+    rejection_reason: ""
+  };
+
+  if (appId) {
+    const cached = (window.currentApps || []).find(item => String(item.id) === String(appId));
+
+    if (cached) {
+      app = { ...app, ...cached };
+    } else {
+      const { data, error } = await supabaseClient
+        .from("apps")
+        .select("*")
+        .eq("id", appId)
+        .single();
+
+      if (error) {
+        console.error(error);
+        setAppsStatus("App laden mislukt.");
+        return;
+      }
+
+      app = { ...app, ...data };
+    }
+  }
+
+  const overlay = document.createElement("div");
+  overlay.id = "adminAppEditorOverlay";
+  overlay.className = "admin-app-editor-overlay";
+  overlay.dataset.appId = appId || "";
+  overlay.dataset.mode = mode;
+
+  overlay.innerHTML = `
+    <section class="admin-app-editor" role="dialog" aria-modal="true" aria-labelledby="adminEditorTitle">
+      <header class="admin-editor-header">
+        <h2 id="adminEditorTitle">${appId ? "APP BEWERKEN" : "NIEUWE APP"}</h2>
+        <button type="button" id="btnCloseAdminEditor" class="admin-editor-close" aria-label="Sluiten">×</button>
+      </header>
+
+      <form id="adminAppEditorForm" autocomplete="off">
+        <div class="admin-editor-grid">
+          <label>Naam *
+            <input name="name" value="${escapeAdminEditorHtml(app.name)}" required>
+          </label>
+
+          <label>Ondertitel
+            <input name="subtitle" value="${escapeAdminEditorHtml(app.subtitle)}">
+          </label>
+
+          <label>Platform
+            <select name="platform">
+              <option value="apk" ${app.platform === "apk" ? "selected" : ""}>APK</option>
+              <option value="pwa" ${app.platform === "pwa" ? "selected" : ""}>PWA</option>
+              <option value="web" ${app.platform === "web" ? "selected" : ""}>WEB</option>
+              <option value="other" ${app.platform === "other" ? "selected" : ""}>OTHER</option>
+            </select>
+          </label>
+
+          <label>Categorie
+            <input name="category" value="${escapeAdminEditorHtml(app.category)}">
+          </label>
+
+          <label>Versie
+            <input name="version" value="${escapeAdminEditorHtml(app.version)}">
+          </label>
+
+          <label>Auteur
+            <input name="author" value="${escapeAdminEditorHtml(app.author)}">
+          </label>
+
+          <label>Status
+            <select name="status">
+              ${["draft", "pending", "accepted", "rejected", "hidden"].map(status =>
+                `<option value="${status}" ${app.status === status ? "selected" : ""}>${status}</option>`
+              ).join("")}
+            </select>
+          </label>
+
+          <label>Bestandsgrootte
+            <input name="file_size" value="${escapeAdminEditorHtml(app.file_size)}" placeholder="bv. 15.3 MB">
+          </label>
+
+          <label>Minimum Android
+            <input name="min_android" value="${escapeAdminEditorHtml(app.min_android)}" placeholder="bv. Android 8">
+          </label>
+
+          <label>Licentie
+            <input name="license" value="${escapeAdminEditorHtml(app.license)}">
+          </label>
+
+          <label class="admin-editor-wide">Screenshot URL
+            <input name="screenshot_url" value="${escapeAdminEditorHtml(app.screenshot_url)}">
+          </label>
+
+          <label class="admin-editor-wide">Icon URL
+            <input name="icon_url" value="${escapeAdminEditorHtml(app.icon_url)}">
+          </label>
+
+          <label class="admin-editor-wide">Download URL
+            <input name="download_url" value="${escapeAdminEditorHtml(app.download_url)}">
+          </label>
+
+          <label class="admin-editor-wide">Beschrijving
+            <textarea name="description" rows="4">${escapeAdminEditorHtml(app.description)}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Features <small>één per regel</small>
+            <textarea name="features" rows="4">${escapeAdminEditorHtml(adminArrayToText(app.features))}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Talen <small>één per regel</small>
+            <textarea name="languages" rows="3">${escapeAdminEditorHtml(adminArrayToText(app.languages))}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Specificaties
+            <textarea name="specs" rows="4">${escapeAdminEditorHtml(typeof app.specs === "object" ? JSON.stringify(app.specs, null, 2) : app.specs)}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Privacy
+            <textarea name="privacy" rows="3">${escapeAdminEditorHtml(app.privacy)}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Reden weigering
+            <textarea name="rejection_reason" rows="3">${escapeAdminEditorHtml(app.rejection_reason)}</textarea>
+          </label>
+        </div>
+
+        <div id="adminEditorStatus" class="admin-editor-status"></div>
+
+        <footer class="admin-editor-actions">
+          <button type="button" id="btnCancelAdminEditor">annuleren</button>
+          <button type="submit" class="primary">opslaan</button>
+        </footer>
+      </form>
+    </section>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.classList.add("admin-editor-open");
+
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) closeAdminAppEditor();
+  });
+
+  document.getElementById("btnCloseAdminEditor").onclick = closeAdminAppEditor;
+  document.getElementById("btnCancelAdminEditor").onclick = closeAdminAppEditor;
+  document.getElementById("adminAppEditorForm").onsubmit = saveAdminAppEditor;
+  overlay.querySelector('[name="name"]')?.focus();
+}
+
+async function saveAdminAppEditor(event) {
+  event.preventDefault();
+
+  const overlay = document.getElementById("adminAppEditorOverlay");
+  const form = event.currentTarget;
+  if (!overlay || !form) return;
+
+  const saveButton = form.querySelector('button[type="submit"]');
+  const formData = new FormData(form);
+  const appId = overlay.dataset.appId;
+
+  const record = {
+    name: String(formData.get("name") || "").trim(),
+    subtitle: String(formData.get("subtitle") || "").trim() || null,
+    description: String(formData.get("description") || "").trim() || null,
+    category: String(formData.get("category") || "").trim() || null,
+    platform: String(formData.get("platform") || "apk").trim(),
+    version: String(formData.get("version") || "").trim() || null,
+    author: String(formData.get("author") || "").trim() || null,
+    status: String(formData.get("status") || "draft").trim(),
+    screenshot_url: String(formData.get("screenshot_url") || "").trim() || null,
+    icon_url: String(formData.get("icon_url") || "").trim() || null,
+    download_url: String(formData.get("download_url") || "").trim() || null,
+    file_size: String(formData.get("file_size") || "").trim() || null,
+    min_android: String(formData.get("min_android") || "").trim() || null,
+    license: String(formData.get("license") || "").trim() || null,
+    privacy: String(formData.get("privacy") || "").trim() || null,
+    features: adminTextToArray(formData.get("features")),
+    languages: adminTextToArray(formData.get("languages")),
+    specs: String(formData.get("specs") || "").trim() || null,
+    rejection_reason: String(formData.get("rejection_reason") || "").trim() || null,
+    updated_at: new Date().toISOString()
+  };
+
+  if (!record.name) {
+    setAdminEditorStatus("Naam is verplicht.", true);
+    return;
+  }
+
+  saveButton.disabled = true;
+  setAdminEditorStatus("Opslaan...");
+
+  let result;
+
+  if (appId) {
+    result = await supabaseClient
+      .from("apps")
+      .update(record)
+      .eq("id", appId)
+      .select()
+      .single();
+  } else {
+    const { data: authData } = await supabaseClient.auth.getUser();
+    if (authData?.user?.id) record.submitted_by = authData.user.id;
+
+    result = await supabaseClient
+      .from("apps")
+      .insert(record)
+      .select()
+      .single();
+  }
+
+  saveButton.disabled = false;
+
+  if (result.error) {
+    console.error(result.error);
+    setAdminEditorStatus(`Opslaan mislukt: ${result.error.message}`, true);
+    return;
+  }
+
+  setAdminEditorStatus("Opgeslagen.");
+  await loadApps();
+  setAppsStatus(appId ? "App bijgewerkt." : "Nieuwe app toegevoegd.");
+  closeAdminAppEditor();
+}
+
+window.openAdminAppEditor = openAdminAppEditor;
+window.openSelectedAdminAppEditor = openSelectedAdminAppEditor;
+window.closeAdminAppEditor = closeAdminAppEditor;
+
+
+/* =========================================================
+   USER APP EDITOR
+   Groene gebruikersmodus, geopend vanuit de uploadbol.
+   Schrijft altijd een pending record naar public.apps.
+   ========================================================= */
+
+function closeUserAppEditor() {
+  document.getElementById("userAppEditorOverlay")?.remove();
+  document.body.classList.remove("user-editor-open");
+}
+
+function setUserEditorStatus(text, isError = false) {
+  const status = document.getElementById("userEditorStatus");
+  if (!status) return;
+  status.textContent = text;
+  status.classList.toggle("error", isError);
+}
+
+function setUserScreenshotPreview(source) {
+  const preview = document.getElementById("userScreenshotPreview");
+  const placeholder = document.getElementById("userScreenshotPlaceholder");
+  const valueInput = document.getElementById("userScreenshotValue");
+  if (!preview || !placeholder || !valueInput) return;
+
+  valueInput.value = source || "";
+  if (source) {
+    preview.src = source;
+    preview.hidden = false;
+    placeholder.hidden = true;
+  } else {
+    preview.removeAttribute("src");
+    preview.hidden = true;
+    placeholder.hidden = false;
+  }
+}
+
+function readUserScreenshotFile(file) {
+  if (!file || !file.type.startsWith("image/")) {
+    setUserEditorStatus("Kies een geldig afbeeldingsbestand.", true);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => setUserScreenshotPreview(String(reader.result || ""));
+  reader.onerror = () => setUserEditorStatus("Afbeelding lezen mislukt.", true);
+  reader.readAsDataURL(file);
+}
+
+function bindUserScreenshotInput(overlay) {
+  const dropZone = overlay.querySelector("#userScreenshotDropZone");
+  const fileInput = overlay.querySelector("#userScreenshotFile");
+  const removeButton = overlay.querySelector("#btnRemoveUserScreenshot");
+  if (!dropZone || !fileInput) return;
+
+  dropZone.addEventListener("click", event => {
+    if (event.target.closest("button")) return;
+    fileInput.click();
+  });
+
+  dropZone.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  fileInput.addEventListener("change", () => {
+    readUserScreenshotFile(fileInput.files?.[0]);
+  });
+
+  ["dragenter", "dragover"].forEach(type => {
+    dropZone.addEventListener(type, event => {
+      event.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+  });
+
+  ["dragleave", "drop"].forEach(type => {
+    dropZone.addEventListener(type, event => {
+      event.preventDefault();
+      dropZone.classList.remove("drag-over");
+    });
+  });
+
+  dropZone.addEventListener("drop", event => {
+    readUserScreenshotFile(event.dataTransfer?.files?.[0]);
+  });
+
+  overlay.addEventListener("paste", event => {
+    const imageItem = Array.from(event.clipboardData?.items || [])
+      .find(item => item.type.startsWith("image/"));
+    if (!imageItem) return;
+    event.preventDefault();
+    readUserScreenshotFile(imageItem.getAsFile());
+  });
+
+  removeButton?.addEventListener("click", event => {
+    event.stopPropagation();
+    fileInput.value = "";
+    setUserScreenshotPreview("");
+  });
+}
+
+async function openUserAppEditor() {
+  closeUserAppEditor();
+  closeAdminAppEditor();
+
+  const { data: authData } = await supabaseClient.auth.getUser();
+  const user = authData?.user;
+
+  if (!user) {
+    setAccountMode("login");
+    focusBubble("account");
+    showLoginError("login vereist!");
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.id = "userAppEditorOverlay";
+  overlay.className = "user-app-editor-overlay";
+
+  overlay.innerHTML = `
+    <section class="user-app-editor" role="dialog" aria-modal="true" aria-labelledby="userEditorTitle">
+      <header class="user-editor-header">
+        <div>
+          <div class="user-editor-kicker">FREEAPPS EXCHANGE</div>
+          <h2 id="userEditorTitle">JOUW APP INDIENEN</h2>
+        </div>
+
+        <div class="user-editor-header-actions">
+          <button type="submit" form="userAppEditorForm" class="user-editor-submit">
+            APP INDIENEN
+          </button>
+          <button type="button" id="btnCloseUserEditor" class="user-editor-close" aria-label="Sluiten">×</button>
+        </div>
+      </header>
+
+      <form id="userAppEditorForm" autocomplete="off">
+        <div class="user-editor-layout">
+          <aside class="user-editor-media user-editor-panel">
+            <div id="userScreenshotDropZone" class="user-screenshot-drop" tabindex="0">
+              <img id="userScreenshotPreview" alt="Screenshotvoorbeeld" hidden>
+              <div id="userScreenshotPlaceholder" class="user-screenshot-placeholder">
+                <strong>SCREENSHOT</strong>
+                <span>plak met Ctrl+V</span>
+                <span>sleep een afbeelding</span>
+                <span>of klik om te kiezen</span>
+              </div>
+              <input id="userScreenshotFile" type="file" accept="image/*" hidden>
+              <input id="userScreenshotValue" name="screenshot_url" type="hidden">
+            </div>
+            <button type="button" id="btnRemoveUserScreenshot" class="user-media-remove">screenshot verwijderen</button>
+            <p class="user-media-help">De afbeelding wordt onmiddellijk als voorbeeld getoond.</p>
+          </aside>
+
+          <div class="user-editor-fields">
+            <section class="user-editor-main user-editor-panel">
+              <div class="user-editor-grid user-editor-main-grid">
+                <label>Naam van de app *
+                  <input name="name" required maxlength="120">
+                </label>
+
+                <label>Ondertitel
+                  <input name="subtitle" maxlength="180">
+                </label>
+
+                <label class="user-editor-wide">Beschrijving *
+                  <textarea name="description" rows="5" required></textarea>
+                </label>
+
+                <label class="user-editor-wide">Belangrijkste functies <small>één per regel</small>
+                  <textarea name="features" rows="5"></textarea>
+                </label>
+
+                <label>Talen <small>één per regel</small>
+                  <textarea name="languages" rows="4" placeholder="Nederlands&#10;Engels"></textarea>
+                </label>
+
+                <label>Privacy
+                  <textarea name="privacy" rows="4"></textarea>
+                </label>
+
+                <label class="user-editor-wide">Specificaties en extra informatie
+                  <textarea name="specs" rows="5"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <aside class="user-editor-meta user-editor-panel">
+              <div class="user-editor-grid user-editor-meta-grid">
+                <label>Versie
+                  <input name="version" value="0.1">
+                </label>
+
+                <label>Auteur / studio
+                  <input name="author">
+                </label>
+
+                <label>Platform
+                  <select name="platform">
+                    <option value="apk">APK</option>
+                    <option value="pwa">PWA</option>
+                    <option value="web">WEB</option>
+                    <option value="other">OTHER</option>
+                  </select>
+                </label>
+
+                <label>Categorie
+                  <select name="category">
+                    <option value="games">Games</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="tools">Tools</option>
+                  </select>
+                </label>
+
+                <label>Bestandsgrootte
+                  <input name="file_size" placeholder="bv. 15.3 MB">
+                </label>
+
+                <label>Minimum Android
+                  <input name="min_android" placeholder="bv. Android 8">
+                </label>
+
+                <label>Licentie
+                  <input name="license" value="Gratis">
+                </label>
+
+                <label>Icoon URL
+                  <input name="icon_url" type="url" placeholder="https://...">
+                </label>
+
+                <label>Link naar appbestand *
+                  <input name="download_url" required placeholder="https://...">
+                </label>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div id="userEditorStatus" class="user-editor-status"></div>
+      </form>
+    </section>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.classList.add("user-editor-open");
+
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) closeUserAppEditor();
+  });
+
+  overlay.querySelector("#btnCloseUserEditor").onclick = closeUserAppEditor;
+  overlay.querySelector("#userAppEditorForm").onsubmit = saveUserAppEditor;
+  bindUserScreenshotInput(overlay);
+  overlay.querySelector('[name="name"]')?.focus();
+}
+
+async function saveUserAppEditor(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const submitButton = document.querySelector('.user-app-editor-overlay .user-editor-submit');
+  const formData = new FormData(form);
+  const { data: authData, error: authError } = await supabaseClient.auth.getUser();
+  const user = authData?.user;
+
+  if (authError || !user) {
+    setUserEditorStatus("Je sessie is verlopen. Log opnieuw in.", true);
+    return;
+  }
+
+  const record = {
+    name: String(formData.get("name") || "").trim(),
+    subtitle: String(formData.get("subtitle") || "").trim() || null,
+    description: String(formData.get("description") || "").trim(),
+    category: String(formData.get("category") || "").trim() || null,
+    platform: String(formData.get("platform") || "apk").trim().toLowerCase(),
+    version: String(formData.get("version") || "").trim() || null,
+    author: String(formData.get("author") || "").trim() || null,
+    status: "pending",
+    screenshot_url: String(formData.get("screenshot_url") || "").trim() || null,
+    icon_url: String(formData.get("icon_url") || "").trim() || null,
+    download_url: String(formData.get("download_url") || "").trim() || null,
+    file_size: String(formData.get("file_size") || "").trim() || null,
+    min_android: String(formData.get("min_android") || "").trim() || null,
+    license: String(formData.get("license") || "").trim() || "Gratis",
+    privacy: String(formData.get("privacy") || "").trim() || null,
+    features: adminTextToArray(formData.get("features")),
+    languages: adminTextToArray(formData.get("languages")),
+    specs: String(formData.get("specs") || "").trim() || null,
+    submitted_by: user.id,
+    updated_at: new Date().toISOString()
+  };
+
+  if (!record.name || !record.description || !record.download_url) {
+    setUserEditorStatus("Vul naam, beschrijving en link naar het appbestand in.", true);
+    return;
+  }
+
+  if (submitButton) submitButton.disabled = true;
+  setUserEditorStatus("App indienen...");
+
+  const { error } = await supabaseClient
+    .from("apps")
+    .insert(record);
+
+  if (submitButton) submitButton.disabled = false;
+
+  if (error) {
+    console.error(error);
+    setUserEditorStatus(`Indienen mislukt: ${error.message}`, true);
+    return;
+  }
+
+  setUserEditorStatus("Je app is ingediend en wacht op controle.");
+  form.reset();
+  setUserScreenshotPreview("");
+
+  setTimeout(() => closeUserAppEditor(), 1400);
+}
+
+window.openUserAppEditor = openUserAppEditor;
+window.closeUserAppEditor = closeUserAppEditor;

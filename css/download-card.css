@@ -1,124 +1,141 @@
-/* ==================================================================================
-  alle css voor de "download-card, ten behoeve van de overly.
-
-  NOG NA TE ZIEN: ivm met obsolete, dubbele of dode code.
-======================================================================================*/
+/* =========================================================
+   DOWNLOAD CARD — 3 kolommen, compact en blauw
+   Laden na card.css.
+   ========================================================= */
 
 .download-card {
-  position: fixed;
-  left: 50vw;
-  top: 50vh;
-  width: 55vw;
-  height: 80vh;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 10% 90%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(45deg, rgba(89, 130, 93, 0.9), rgba(10, 10, 10, 0.92));
-  border-radius: 28px;
-  margin: 0.5rem;
-  border-radius: 28px;
-  padding: 2rem;
-  color: white;
-  z-index: 9999;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.download-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+  background:
+    radial-gradient(circle at 12% 88%, rgba(116, 190, 255, .24), transparent 36%),
+    linear-gradient(135deg, rgba(25, 67, 120, .94), rgba(5, 17, 39, .96));
+  box-shadow: 0 20px 64px rgba(0, 0, 0, .46);
 }
 
 .download-card-title {
-  text-align: center;
-  font-size: 6rem;
-  margin: 0 0 1rem 0;
+  font-size: clamp(1.75rem, 2.45vw, 2.65rem);
 }
 
-.download-card-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+.download-card-download,
+.download-card-close {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, .30), transparent 34%),
+    linear-gradient(180deg, rgba(80, 170, 255, .88), rgba(15, 70, 155, .96));
+  box-shadow:
+    0 0 20px rgba(70, 160, 255, .34),
+    inset 0 -10px 22px rgba(0, 0, 0, .24);
+}
+
+.download-card-download {
+  min-height: 34px;
+  padding: .42rem .82rem;
+  font-size: clamp(.78rem, .92vw, .96rem);
+}
+
+.download-card-close {
+  width: 36px;
+  min-height: 36px;
+  font-size: 1.35rem;
+}
+
+.download-card-download:hover,
+.download-card-close:hover {
+  filter: brightness(1.12);
+}
+
+.download-card-header {
+  margin-bottom: 10px;
 }
 
 .download-card-body {
-  height: calc(100% - 5rem);
-  display: grid;
-  grid-template-columns: 40% 1fr;
-  gap: 2rem;
-  overflow: hidden;
-   white-space: pre-line;
-  font-size: 2.2rem;
-  line-height: 1.35;
+  grid-template-columns: minmax(150px, 24%) minmax(0, 1fr) minmax(170px, 25%);
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.download-card-shot,
+.download-card-main,
+.download-card-meta {
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .08);
 }
 
 .download-card-shot {
-  max-height: 60vh;
-  background: rgba(255,255,255,0.08);
-  border-radius: 38px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 20px;
-  place-items: center;
-  font-size: 45px;
+  padding: 10px;
 }
 
-.download-card-shot img {
-  display: none;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 20px;
-  width: auto !important;
-  height: auto !important;
-  object-fit: contain;
-}
-
-.download-card-info {
-  min-height: 0;
-  overflow-y: auto;
+.download-card-main {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  overflow: hidden;
+  font-size: clamp(.88rem, 1vw, 1.03rem);
+  line-height: 1.28;
 }
 
-.download-card-description {
+.download-card-description,
+.download-card-specs {
+  margin: 0;
   white-space: pre-line;
-  font-size: 2.2rem;
-  line-height: 1.2;
-}
-
-.download-card-meta div {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.25);
-  padding: 0.1rem 0;
-  font-size: 2.2rem;
 }
 
 .download-card-specs {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.25);
-  padding: 0.1rem 0;
-  font-size: 2.2rem;
+  overflow-wrap: anywhere;
 }
 
-.download-card-download ,
-.download-card-close {
-display: inline-flex;
-align-items: center;
-gap: 0.5rem;
-padding: 0.6rem 1.2rem;
-background: radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
-    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
-border-radius: 999px;
-text-decoration: none;
-font-weight: bold;
-font-size: 1.95rem;
-box-shadow:
-    0 0 28px rgba(66,255,105,.42),
-    inset 0 -14px 30px rgba(0,0,0,.25);
+.download-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  font-size: clamp(.82rem, .92vw, .98rem);
+}
+
+.download-card-meta > div {
+  display: grid;
+  grid-template-columns: minmax(66px, auto) minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+
+.download-card-meta > div:last-child {
+  border-bottom: 0;
+}
+
+.download-card-meta span {
+  opacity: .72;
+}
+
+.download-card-meta strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .download-card-body {
+    grid-template-columns: minmax(140px, 27%) minmax(0, 1fr);
+  }
+
+  .download-card-meta {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+  }
+}
+
+@media (max-width: 760px), (max-height: 650px) {
+  .download-card-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(130px, 30%) auto auto;
+    overflow-y: auto;
+  }
+
+  .download-card-meta {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
 }

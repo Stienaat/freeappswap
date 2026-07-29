@@ -1,0 +1,12 @@
+/* =========================================================
+   JUNO - DONATIEBOL
+   Voorlopig alleen de kleinste permanent zwevende bol.
+   Inhoud en QR-code worden later toegevoegd.
+   ========================================================= */
+
+.app-bubble.juno {
+  background: transparent url("../assets/images/juno.png") center / contain no-repeat;
+  border-radius: 50%;
+  overflow: visible;
+  filter: drop-shadow(13px 18px 16px rgba(0, 0, 0, .30));
+}
