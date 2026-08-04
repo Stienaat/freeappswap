@@ -3,10 +3,14 @@
    ========================================================= */
 
 .app-bubble.mercury {
-    background: url("../assets/images/mercurius.PNG") center center / contain no-repeat;
-    background-color: transparent;
-    --size: min(15vw, 20vh) !important; 
+    background:
+        url("../assets/images/mercurius.PNG")
+        center center / contain
+        no-repeat;
 
+    --size: min(20vw, 26vh) !important;    
+
+    
 }
 
 .mercury-label {
