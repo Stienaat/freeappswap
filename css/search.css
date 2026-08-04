@@ -10,7 +10,7 @@
 }
 
 .search {
-  background-image: url("../assets/images/sun.PNG");
+  background-image: url("../assets/images/zon.PNG");
   background-size: cover;
   background-position: center;
 }
@@ -19,7 +19,7 @@
   cursor: pointer;
     --x: 2%;
     --y: 5%;
-    --size: min(12vw, 9vh);
+    --size: min(15vw, 11vh);
   }
 
 /* Kleine zoekbol: icoon kleiner, tekst iets groter */
@@ -40,7 +40,7 @@
 .search.focus {
   --x: 24%;
   --y: 28%;
-  --size: min(38vw, 38vh);
+  --size: min(45vw, 45vh);
   --scale: 1;
   --opacity: .98;
   --time: 4200ms;
@@ -84,6 +84,7 @@ body.day-open #search {
   display: none;
   gap: .34em;
   text-align: left;
+  padding-left: 50px;
   font-size: calc(var(--size) * .032);
   line-height: 1.06;
   color: #111733;

@@ -1,3 +1,5 @@
+console.log("jupiter module loaded");
+
 let selectedUploadPlatform = "apk";
 
 function getUploadBubble() {
@@ -192,3 +194,13 @@ const admin = document.querySelector('.app-bubble[data-kind="admin"]');
     }
       });
     }
+
+
+/* Legacy upload-card fallback: de actieve gebruikerseditor zit in app.js. */
+window.closeLegacyUploadCard = function closeLegacyUploadCard() {
+  document.querySelector(".upload-card-overlay")?.remove();
+
+  if (typeof hideCardPlanetBg === "function") {
+    hideCardPlanetBg();
+  }
+};

@@ -1,0 +1,225 @@
+/* =========================================================
+   MERCURIUS — CONTACT
+   ========================================================= */
+
+.app-bubble.mercury {
+    background: url("../assets/images/mercurius.PNG") center center / contain no-repeat;
+    background-color: transparent;
+    --size: min(15vw, 20vh) !important; 
+
+}
+
+.mercury-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  padding: .28rem .48rem;
+
+  color: #fff;
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-shadow: 0 1px 5px #000;
+  pointer-events: none;
+}
+
+.app-bubble.mercury:hover {
+  filter: brightness(1.12);
+}
+
+/* Transparante omgeving: de levende achtergrond blijft zichtbaar. */
+.mercury-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20500;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  background: transparent;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+
+.mercury-card-overlay.show {
+  opacity: 1;
+}
+
+.mercury-card {
+  width: min(690px, 94vw);
+  max-height: min(720px, 94vh);
+  box-sizing: border-box;
+  overflow-y: auto;
+  border: 1px solid rgba(115, 221, 255, .5);
+  border-radius: 28px;
+  padding: 1.2rem 1.4rem 1rem;
+  background:
+    radial-gradient(circle at 12% 5%, rgba(116, 221, 255, .13), transparent 34%),
+    linear-gradient(145deg, rgba(7, 36, 54, .82), rgba(3, 18, 33, .78));
+  color: #f0fbff;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, .5),
+    0 0 32px rgba(51, 182, 237, .18),
+    inset 0 0 42px rgba(121, 222, 255, .07);
+  backdrop-filter: blur(3px);
+  transform: translateY(14px) scale(.97);
+  transition: transform .25s ease;
+}
+
+.mercury-card-overlay.show .mercury-card {
+  transform: translateY(0) scale(1);
+}
+
+.mercury-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: .65rem;
+  border-bottom: 1px solid rgba(126, 220, 255, .18);
+}
+
+.mercury-card-kicker {
+  margin-bottom: .12rem;
+  color: rgba(197, 240, 255, .6);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .22em;
+}
+
+.mercury-card-header h2 {
+  margin: 0;
+  color: #8ee4ff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 4vw, 2.55rem);
+  line-height: 1;
+  letter-spacing: .1em;
+}
+
+.mercury-card-close {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(189, 237, 255, .32);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+  font-size: 1.65rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mercury-card-intro {
+  margin: .8rem auto 1rem;
+  max-width: 570px;
+  color: rgba(234, 249, 255, .84);
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .91rem;
+  line-height: 1.5;
+}
+
+.mercury-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .72rem .85rem;
+}
+
+.mercury-form-grid label {
+  display: grid;
+  gap: .28rem;
+  color: #a8eaff;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.mercury-form-grid input,
+.mercury-form-grid select,
+.mercury-form-grid textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(118, 213, 249, .25);
+  border-radius: 10px;
+  padding: .58rem .68rem;
+  background: rgba(173, 226, 244, .12);
+  color: #fff;
+  font: .88rem Arial, sans-serif;
+}
+
+.mercury-form-grid select option {
+  color: #12232b;
+}
+
+.mercury-form-grid textarea {
+  min-height: 9.3rem;
+  resize: vertical;
+}
+
+.mercury-form-grid input:focus,
+.mercury-form-grid select:focus,
+.mercury-form-grid textarea:focus {
+  outline: 2px solid rgba(101, 220, 255, .65);
+  outline-offset: 1px;
+  background: rgba(225, 248, 255, .18);
+}
+
+.mercury-form-wide {
+  grid-column: 1 / -1;
+}
+
+.mercury-status {
+  min-height: 1.2rem;
+  padding-top: .55rem;
+  color: #9ff0bd;
+  text-align: center;
+  font-size: .78rem;
+}
+
+.mercury-status.error {
+  color: #ffb5b5;
+}
+
+.mercury-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: .35rem;
+}
+
+.mercury-send {
+  min-width: 150px;
+  border: 1px solid rgba(124, 225, 255, .55);
+  border-radius: 999px;
+  padding: .62rem 1.15rem;
+  background: linear-gradient(180deg, #c8f3ff, #76d9ef);
+  color: #123544;
+  font-weight: 900;
+  letter-spacing: .05em;
+  cursor: pointer;
+}
+
+.mercury-send:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+@media (max-width: 620px) {
+  .mercury-card-overlay {
+    padding: 0;
+  }
+
+  .mercury-card {
+    width: 100vw;
+    max-height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .mercury-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mercury-form-wide {
+    grid-column: auto;
+  }
+}

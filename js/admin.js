@@ -3,6 +3,38 @@ function showAdminMenu() {
   if (!admin) return;
 
   renderAdminMenu(admin);
+  window.attachAdminConfigButton?.(admin);
+}
+
+function closeAdminPanel() {
+  const admin = document.querySelector('.app-bubble.admin');
+  if (!admin) return;
+
+  admin.classList.remove(
+    "admin-phase-3",
+    "focus",
+    "dim"
+  );
+
+  admin.dataset.motionStatus = "2";
+  renderAdminMenu(admin);
+  window.attachAdminConfigButton?.(admin);
+
+  if (admin._wrapMotion) {
+    admin._wrapMotion.lastTime = performance.now();
+  }
+}
+
+function closeAdminWorkspace() {
+  if (typeof window.closeAdminAppEditor === "function") {
+    window.closeAdminAppEditor();
+  }
+
+  if (typeof window.closeAdminConfigCard === "function") {
+    window.closeAdminConfigCard();
+  }
+
+  closeAdminPanel();
 }
 
 async function showAdminUsers() {
@@ -45,9 +77,9 @@ async function showAdminUsers() {
     </div>
   `;
 
-  document.getElementById("btnAdminBack").onclick = () => {
-    admin.classList.remove("admin-phase-3");
-    showAdminMenu();
+  document.getElementById("btnAdminBack").onclick = event => {
+    event.stopPropagation();
+    closeAdminWorkspace();
   };
 
   document.getElementById("btnEditMember").onclick = enableMemberEdit;
@@ -100,8 +132,9 @@ async function showAdminApps() {
     </div>
   `;
 
-  document.getElementById("btnAdminBack").onclick = () => {
-    showAdminMenu();
+  document.getElementById("btnAdminBack").onclick = event => {
+    event.stopPropagation();
+    closeAdminWorkspace();
   };
 
   document.getElementById("btnNewApp").onclick = () => openAdminAppEditor(null);
@@ -128,9 +161,14 @@ radial-gradient(circle at 30% 20%,
 `;
 
 renderAdminMenu(el);
+window.attachAdminConfigButton?.(el);
 
   preparePlanetBubble(el, randomBetween(43, 57), randomBetween(70, 82), "min(17vw, 24vh)");
 }
 
 window.showAdminApps = showAdminApps;
 window.showAdminUsers = showAdminUsers;
+
+window.closeAdminPanel = closeAdminPanel;
+window.closeAdminWorkspace = closeAdminWorkspace;
+window.PlanetManager?.register("admin", closeAdminWorkspace);

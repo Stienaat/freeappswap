@@ -331,6 +331,7 @@ document.querySelectorAll(".search-link").forEach(button => {
 function handleNavigationTarget(target) {
 
   if (target === "upload") {
+    window.PlanetManager.activate("upload");
     openUserAppEditor();
     return;
   }
@@ -559,20 +560,29 @@ function preparePlanetBubble(el, finalX, finalY, size) {
   el.style.setProperty("--float-time", "1s");
 
   el.addEventListener("click", event => {
-  event.stopPropagation();
+    event.stopPropagation();
 
-  if (el.dataset.kind === "upload") {
-    openUserAppEditor();
-    return;
-  }
+    const kind = el.dataset.kind;
+    const focusGroup = appMap[kind] ? "download" : kind;
 
-  // Uranus en Juno zijn voorlopig alleen zichtbare, zwevende plaatsaanduiders.
-  if (el.dataset.passive === "true") return;
+    // Een app-bol hoort functioneel bij Mars/Download.
+    // Gebruik daarom "download" als uitzonderingsgroep, zodat de
+    // detailkaart niet meteen door de centrale manager wordt gesloten.
+    window.PlanetManager.activate(focusGroup);
 
-  if (!productModalOpen || el.classList.contains("app-detail")) {
-    focusBubble(el.dataset.kind);
-  }
-});
+    if (kind === "upload") {
+      openUserAppEditor();
+      return;
+    }
+
+    // Passieve bollen mogen andere open onderdelen wel sluiten,
+    // maar openen zelf geen algemeen focusvenster.
+    if (el.dataset.passive === "true") return;
+
+    if (kind === "uranus" || kind === "juno") return;
+
+    focusBubble(kind);
+  });
 
   document.querySelector(".space").appendChild(el);
 
@@ -681,6 +691,113 @@ if (motion.y > 100 - margin) {
   requestAnimationFrame(step);
 }
 
+/* =========================================================
+   PLANET MANAGER
+   Eén centrale plaats voor focusverlies, sluiten en hervatten.
+   ========================================================= */
+
+window.PlanetManager = (() => {
+  const closers = new Map();
+
+  function register(kind, closeHandler) {
+    if (!kind || typeof closeHandler !== "function") return;
+    closers.set(kind, closeHandler);
+  }
+
+  function unregister(kind) {
+    closers.delete(kind);
+  }
+
+  function resumeMotion(kind, fallbackStatus = "2") {
+    const planet = document.querySelector(`.app-bubble[data-kind="${kind}"]`);
+    if (!planet) return;
+
+    planet.dataset.motionStatus = fallbackStatus;
+    planet.classList.remove("focus", "dim");
+
+    if (planet._wrapMotion) {
+      planet._wrapMotion.lastTime = performance.now();
+    }
+  }
+
+  function closeGenericOverlays(exceptKind = null) {
+    if (exceptKind !== "admin") {
+      document.getElementById("adminAppEditorOverlay")?.remove();
+      document.body.classList.remove("admin-editor-open");
+    }
+
+    if (exceptKind !== "upload") {
+      document.getElementById("userAppEditorOverlay")?.remove();
+      document.body.classList.remove("user-editor-open");
+    }
+
+    if (exceptKind !== "download") {
+      document.querySelector(".download-card-overlay")?.remove();
+      document.body.classList.remove("planet-overlay-open", "card-planet-bg");
+      productModalOpen = false;
+
+      if (typeof hideCardPlanetBg === "function") {
+        hideCardPlanetBg();
+      }
+    }
+  }
+
+  function close(kind) {
+    const closeHandler = closers.get(kind);
+
+    if (typeof closeHandler === "function") {
+      try {
+        closeHandler();
+      } catch (error) {
+        console.error(`Sluiten van ${kind} mislukt:`, error);
+      }
+    }
+
+    if (kind === "admin") resumeMotion("admin", "2");
+    if (kind === "uranus") resumeMotion("uranus", "1");
+    if (kind === "upload") resumeMotion("upload", "2");
+    if (kind === "download") resumeMotion("download", "2");
+  }
+
+  function closeAll(exceptKind = null) {
+    for (const kind of closers.keys()) {
+      if (kind !== exceptKind) close(kind);
+    }
+
+    closeGenericOverlays(exceptKind);
+
+    document.querySelectorAll(".app-bubble").forEach(planet => {
+      const kind = planet.dataset.kind;
+      if (kind === exceptKind) return;
+
+      planet.classList.remove("focus", "dim");
+
+      if (kind === "uranus") {
+        planet.dataset.motionStatus = "1";
+      } else if (kind === "admin" || kind === "download" || kind === "upload") {
+        planet.dataset.motionStatus = "2";
+      }
+
+      if (planet._wrapMotion) {
+        planet._wrapMotion.lastTime = performance.now();
+      }
+    });
+  }
+
+  function activate(kind) {
+    closeAll(kind);
+  }
+
+  return {
+    register,
+    unregister,
+    close,
+    closeAll,
+    activate,
+    resumeMotion
+  };
+})();
+
 function clearFocusStates() {
  clearSunFocusState();
   clearMoonFocusState();
@@ -690,19 +807,58 @@ function clearFocusStates() {
 }
 function focusBubble(kind) {
   if (kind === "account" && loggedIn) return;
-  if (productModalOpen && !appMap[kind]) return;
+
+  const isStaticDownloadApp = Boolean(appMap[kind]);
+  const isDatabaseDownloadApp =
+    typeof dbApps !== "undefined" &&
+    Array.isArray(dbApps) &&
+    dbApps.some(app => String(app.id) === String(kind));
+
+  const focusGroup =
+    isStaticDownloadApp || isDatabaseDownloadApp
+      ? "download"
+      : kind;
+
+  window.PlanetManager.activate(focusGroup);
+
   const activeIsSearch = kind === "search";
   const activeIsAccount = kind === "account";
 
- updateSunFocusState(activeIsSearch, loggedIn, appBubblesCreated);
+  updateSunFocusState(activeIsSearch, loggedIn, appBubblesCreated);
   updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn);
 
   document.querySelectorAll(".app-bubble").forEach(el => {
     const active = el.dataset.kind === kind;
+
     el.classList.toggle("focus", active);
-    el.classList.toggle("dim", !active && (activeIsSearch || activeIsAccount || kind === "download" || kind === "upload" || categoryMap[kind] || appMap[kind]));
+    el.classList.toggle(
+      "dim",
+      !active &&
+      (
+        activeIsSearch ||
+        activeIsAccount ||
+        kind === "download" ||
+        kind === "upload" ||
+        categoryMap[kind] ||
+        appMap[kind]
+      )
+    );
   });
 }
+
+const planetSpace = document.querySelector(".space");
+
+planetSpace?.addEventListener("click", event => {
+  const interactiveTarget = event.target.closest(
+    ".app-bubble, button, a, input, textarea, select, " +
+    ".download-card-overlay, .user-app-editor-overlay, .admin-app-editor-overlay"
+  );
+
+  if (interactiveTarget) return;
+
+  window.PlanetManager.closeAll();
+  clearFocusStates();
+});
 
 search.addEventListener("click", event => {
   event.stopPropagation();
@@ -1781,3 +1937,4 @@ async function saveUserAppEditor(event) {
 
 window.openUserAppEditor = openUserAppEditor;
 window.closeUserAppEditor = closeUserAppEditor;
+window.PlanetManager.register("upload", closeUserAppEditor);

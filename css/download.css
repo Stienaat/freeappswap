@@ -9,7 +9,7 @@
       background-position: center;
       border-radius: 50%;
       overflow: hidden;
-      --scale: 1.5 !important;
+      --scale: 1.0 !important;
     }
  
 /* FASE 2 - categoriekeuze */
@@ -43,4 +43,143 @@
 
 .app-bubble.download.phase-categories .download-back {
   margin-top: .2em;
+}
+
+/* Fase 4 - DOWNLOAD CARD — 3 kolommen, compact en blauw */
+
+.download-card {
+  background:
+    radial-gradient(circle at 12% 88%, rgba(116, 190, 255, .24), transparent 36%),
+    linear-gradient(135deg, rgba(25, 67, 120, .94), rgba(5, 17, 39, .96));
+  box-shadow: 0 20px 64px rgba(0, 0, 0, .46);
+}
+
+.download-card-title {
+  font-size: clamp(1.75rem, 2.45vw, 2.65rem);
+}
+
+.download-card-download,
+.download-card-close {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, .30), transparent 34%),
+    linear-gradient(180deg, rgba(80, 170, 255, .88), rgba(15, 70, 155, .96));
+  box-shadow:
+    0 0 20px rgba(70, 160, 255, .34),
+    inset 0 -10px 22px rgba(0, 0, 0, .24);
+}
+
+.download-card-download {
+  min-height: 34px;
+  padding: .42rem .82rem;
+  font-size: clamp(.78rem, .92vw, .96rem);
+}
+
+.download-card-close {
+  width: 36px;
+  min-height: 36px;
+  font-size: 1.35rem;
+}
+
+.download-card-download:hover,
+.download-card-close:hover {
+  filter: brightness(1.12);
+}
+
+.download-card-header {
+  margin-bottom: 10px;
+}
+
+.download-card-body {
+  grid-template-columns: minmax(150px, 24%) minmax(0, 1fr) minmax(170px, 25%);
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.download-card-shot,
+.download-card-main,
+.download-card-meta {
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.download-card-shot {
+  padding: 10px;
+}
+
+.download-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  overflow: hidden;
+  font-size: clamp(.88rem, 1vw, 1.03rem);
+  line-height: 1.28;
+}
+
+.download-card-description,
+.download-card-specs {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.download-card-specs {
+  overflow-wrap: anywhere;
+}
+
+.download-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  font-size: clamp(.82rem, .92vw, .98rem);
+}
+
+.download-card-meta > div {
+  display: grid;
+  grid-template-columns: minmax(66px, auto) minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+
+.download-card-meta > div:last-child {
+  border-bottom: 0;
+}
+
+.download-card-meta span {
+  opacity: .72;
+}
+
+.download-card-meta strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .download-card-body {
+    grid-template-columns: minmax(140px, 27%) minmax(0, 1fr);
+  }
+
+  .download-card-meta {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+  }
+}
+
+@media (max-width: 760px), (max-height: 650px) {
+  .download-card-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(130px, 30%) auto auto;
+    overflow-y: auto;
+  }
+
+  .download-card-meta {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
 }
