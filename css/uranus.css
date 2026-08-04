@@ -8,7 +8,7 @@
   position: absolute;
   background:
     transparent
-    url("../assets/images/uranus.png")
+    url("../assets/images/uranus.PNG")
     center / contain no-repeat;
   border-radius: 50%;
   overflow: visible;
@@ -71,7 +71,7 @@
   overflow: hidden;
   background:
     linear-gradient(rgba(225, 249, 255, .13), rgba(15, 73, 92, .12)),
-    url("../assets/images/uranus.png")
+    url("../assets/images/uranus.PNG")
     center / cover no-repeat;
 
 }
