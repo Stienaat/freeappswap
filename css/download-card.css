@@ -50,6 +50,17 @@
   gap: clamp(8px, 1vw, 14px);
 }
 
+.download-card-body {
+  min-height: 0;
+  overflow: hidden !important;
+}
+
+.download-card-main {
+  min-height: 0;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 .download-card-shot,
 .download-card-main,
 .download-card-meta {
@@ -69,10 +80,11 @@
   flex-direction: column;
   gap: 10px;
   padding: 14px;
-  overflow: hidden;
+
   font-size: clamp(.88rem, 1vw, 1.03rem);
   line-height: 1.28;
 }
+
 
 .download-card-description,
 .download-card-specs {
@@ -131,7 +143,7 @@
   .download-card-body {
     grid-template-columns: 1fr;
     grid-template-rows: minmax(130px, 30%) auto auto;
-    overflow-y: auto;
+   overflow: hidden;
   }
 
   .download-card-meta {

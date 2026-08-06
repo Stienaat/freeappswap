@@ -3,10 +3,6 @@ console.log("mars module loaded");
 let selectedPlatform = null;
 let dbApps = [];
 
-
-
-
-
 function getDownloadBubble() {
   return document.querySelector('.app-bubble[data-kind="download"]');
 }
@@ -138,6 +134,7 @@ async function loadDownloadAppsFromDb() {
   const { data, error } = await supabaseClient
     .from("apps")
     .select("*")
+    .eq("status", "accepted")
     .order("name", { ascending: true });
 
   if (error) {

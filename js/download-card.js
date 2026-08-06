@@ -2,6 +2,12 @@ function openDownloadOverlay(appId) {
   const app = dbApps.find(a => a.id === appId);
   if (!app) return;
 
+if (app.status !== "accepted") {
+  console.warn("App is nog niet geaccepteerd:", app.name);
+  return;
+}
+
+
   document.querySelector(".download-card-overlay")?.remove();
 
   const overlay = document.createElement("div");
@@ -42,20 +48,45 @@ function openDownloadOverlay(appId) {
 
         <div class="download-card-main">
           <div class="download-card-description card-description">
-            ${app.description || "Geen beschrijving."}
-          </div>
+  ${app.description || "Geen beschrijving."}
+</div>
 
-          <div class="download-card-specs card-specs">
-            ${app.specs || ""}
-          </div>
+${app.features && app.features.length ? `
+<div class="download-card-section">
+  <h3>Mogelijkheden</h3>
+  <ul>
+    ${app.features.map(f => `<li>${f}</li>`).join("")}
+  </ul>
+</div>
+` : ""}
+
+<div class="download-card-specs card-specs">
+  ${app.specs || ""}
+</div>
+
+${app.languages && app.languages.length ? `
+<div class="download-card-section">
+  <h3>Talen</h3>
+  ${app.languages.join(", ")}
+</div>
+` : ""}
+
+${app.privacy ? `
+<div class="download-card-section">
+  <h3>Privacy</h3>
+  ${app.privacy}
+</div>
+` : ""}
         </div>
 
         <aside class="download-card-meta card-meta">
           <div><span>Versie</span><strong>${app.version || "-"}</strong></div>
           <div><span>Auteur</span><strong>${app.author || "-"}</strong></div>
-          <div><span>Status</span><strong>${app.status || "-"}</strong></div>
           <div><span>Platform</span><strong>${app.platform || "-"}</strong></div>
           <div><span>Categorie</span><strong>${app.category || "-"}</strong></div>
+          <div><span>Bestand</span><strong>${app.file_size || "-"} MB</strong></div>
+          <div><span>Android</span><strong>${app.min_android || "-"}</strong></div>
+          <div><span>Licentie</span><strong>${app.license || "-"}</strong></div>
         </aside>
 
       </div>

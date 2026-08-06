@@ -77,7 +77,8 @@
   display: grid;
   grid-template-columns: minmax(210px, 37%) minmax(0, 1fr);
   gap: clamp(12px, 1.5vw, 20px);
-  overflow: hidden;
+overflow-y: auto;
+overflow-x: hidden;
 }
 
 .card-shot,

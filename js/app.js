@@ -45,9 +45,15 @@ const exportUsersJson = document.getElementById("exportUsersJson");
 const forgotPassword = document.getElementById("forgotPassword");
 const submitButton = document.getElementById("accountSubmit");
 const nameInput = document.getElementById("loginName");
+
 const emailInput = document.getElementById("loginEmail");
 const passwordInput = document.getElementById("loginPassword");
-const passwordConfirmInput = document.getElementById("loginPasswordConfirm");
+const passwordConfirmInput =
+  document.getElementById("loginPasswordConfirm");
+
+if (passwordInput) passwordInput.value = "";
+if (passwordConfirmInput) passwordConfirmInput.value = "";
+
 const SUPABASE_URL = "https://njefjypajmbolkufgkgd.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qZWZqeXBham1ib2xrdWZna2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDQyNjksImV4cCI6MjA5NjYyMDI2OX0.mUZSAB8mxExzXQM3OK55mfYnGZVhl1QmyLNwv64V-Mo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -57,7 +63,6 @@ let appBubblesCreated = false;
 let accountMode = "start";
 
 let productModalOpen = false;
-
 
 let speedFactor = 1;
 
@@ -474,12 +479,16 @@ accountForm.addEventListener("submit", async event => {
     console.error(profileError);
   }
 
+  passwordInput.value = "";
+  passwordConfirmInput.value = "";
+
   finishLogin({
     id: authUser.id,
     name: profile?.name || email,
     email,
     role: profile?.role || "member"
   });
+  
 });
   
  function renderAdminMenu(admin) {
