@@ -61,7 +61,7 @@
     linear-gradient(145deg, rgba(7, 36, 54, .82), rgba(3, 18, 33, .78));
   color: #f0fbff;
   box-shadow:
-    0 24px 80px rgba(0, 0, 0, .5),
+    0 24px 80px rgba(246, 154, 154, 0.5),
     0 0 32px rgba(51, 182, 237, .18),
     inset 0 0 42px rgba(121, 222, 255, .07);
   backdrop-filter: blur(3px);

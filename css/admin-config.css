@@ -13,7 +13,7 @@ body.admin-config-open {
   display: grid;
   place-items: center;
   padding: 2vh 2vw;
-  background: rgba(0, 0, 0, .22);
+  background: #093cd538;
 }
 
 .admin-config-card {
@@ -22,14 +22,14 @@ body.admin-config-open {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   overflow: hidden;
-  border: 1px solid rgba(255, 226, 88, .52);
+  border: 1px solid rgba(243, 16, 16, 0.907);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 12% 8%, rgba(255, 232, 130, .15), transparent 32%),
-    linear-gradient(145deg, rgba(79, 40, 5, .91), rgba(25, 18, 11, .94));
+    radial-gradient(circle at 12% 8%, rgba(6, 49, 30, 0.15), transparent 32%),
+    linear-gradient(145deg, rgba(24, 99, 198, 0.91), rgba(36, 192, 206, 0.94));
   color: #fff7bf;
   box-shadow:
-    0 28px 90px rgba(0, 0, 0, .55),
+    0 28px 90px rgba(9, 245, 60, 0.55),
     inset 0 0 45px rgba(255, 210, 67, .08);
   backdrop-filter: blur(4px);
 }
@@ -41,7 +41,7 @@ body.admin-config-open {
   gap: 1rem;
   padding: .8rem 1.1rem .75rem 1.35rem;
   border-bottom: 1px solid rgba(255, 226, 88, .18);
-  background: rgba(41, 25, 12, .42);
+  background: rgba(45, 125, 237, 0.42);
 }
 
 .admin-config-kicker {
@@ -74,14 +74,14 @@ body.admin-config-open {
   gap: .45rem;
   padding: .65rem 1rem;
   overflow-x: auto;
-  border-bottom: 1px solid rgba(255, 226, 88, .16);
+  border-bottom: 1px solid rgba(54, 60, 65, 0.16);
 }
 
 .admin-config-tab {
   border: 1px solid rgba(255, 229, 92, .25);
   border-radius: 999px;
   padding: .48rem .9rem;
-  background: rgba(0, 0, 0, .24);
+  background: rgba(5, 29, 63, 0.24);
   color: rgba(255, 248, 196, .76);
   font-size: .76rem;
   font-weight: 800;
@@ -130,7 +130,7 @@ body.admin-config-open {
   gap: .72rem;
   padding: .9rem;
   border-radius: 18px;
-  background: rgba(255, 255, 255, .06);
+  background: rgba(66, 139, 221, 0.06);
 }
 
 .admin-config-qr-drop {
@@ -142,7 +142,7 @@ body.admin-config-open {
   overflow: hidden;
   border: 2px dashed rgba(255, 231, 107, .46);
   border-radius: 16px;
-  background: rgba(255, 255, 255, .9);
+  background: rgba(26, 44, 238, 0.9);
   color: #5d470b;
   cursor: pointer;
 }
@@ -246,7 +246,7 @@ body.admin-config-open {
 }
 
 .admin-config-status.error {
-  color: #ffabab;
+  color: #467495;
 }
 
 .admin-config-actions {
@@ -440,7 +440,7 @@ body.admin-config-open {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: rgba(51, 33, 12, .96);
+  background: rgba(145, 129, 111, 0.96);
   color: #ffe98c;
 }
 
@@ -692,7 +692,7 @@ body.admin-config-open {
 .admin-review-table th {
   position: sticky;
   top: 0;
-  background: rgba(51, 33, 12, .96);
+  background: rgba(124, 115, 104, 0.96);
   color: #ffe98c;
 }
 

@@ -1,0 +1,24 @@
+/* ===== Slimotica / FreeApps scrollbar ===== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180,220,255,.35) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(180,220,255,.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(180,220,255,.55);
+}
