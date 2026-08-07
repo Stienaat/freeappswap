@@ -96,10 +96,13 @@ window.createUranusBubble = function createUranusBubble() {
         <article class="uranus-section">
           <span class="uranus-section-icon">▣</span>
           <div>
-            <h3>PRIVACY</h3>
+            <h3>Privacy en cookies</h3>
             <p>
-              We behandelen gegevens met respect en gebruiken ze alleen voor de
-              werking en beveiliging van FreeApps Exchange.
+            FreeApps Exchange gebruikt alleen noodzakelijke browseropslag om functies zoals aanmelden en sessiebeheer mogelijk te maken. Er worden momenteel geen advertentie- of trackingcookies gebruikt.
+
+Gegevens die u zelf invoert, zoals accountgegevens, reviews, contactberichten en app-informatie, worden opgeslagen in Supabase en alleen gebruikt voor de werking en het beheer van FreeApps Exchange.
+
+Wachtwoorden worden niet door FreeApps Exchange opgeslagen of zichtbaar gemaakt; de aanmelding verloopt via Supabase Authentication
             </p>
           </div>
         </article>

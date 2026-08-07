@@ -999,6 +999,13 @@ async function deleteSelectedMember() {
   const id = row.dataset.id;
   const name = row.querySelector('[data-field="name"]').value.trim();
 
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  if (id === user?.id) {
+    alert("De actieve administrator kan zichzelf niet verwijderen.");
+    return;
+  }
+
   if (!confirm(`Lid "${name}" verwijderen uit members?`)) return;
 
   const { error } = await supabaseClient
