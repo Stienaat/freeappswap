@@ -1,0 +1,165 @@
+/* =========================================================
+   UPLOAD CARD COMPACT — laden na card.css
+   Compatibel met de huidige upload-HTML.
+   ========================================================= */
+
+.upload-card {
+  background:
+    radial-gradient(circle at 10% 90%, rgba(255,255,255,.24), transparent 34%),
+    linear-gradient(45deg, rgba(89,130,93,.90), rgba(10,10,10,.92));
+  box-shadow: 0 20px 64px rgba(0,0,0,.46);
+}
+
+.upload-card:not(.card) {
+  position: fixed;
+  left: 50vw;
+  top: 50vh;
+  width: min(880px, 88vw);
+  height: min(570px, 78vh);
+  transform: translate(-50%, -50%);
+  padding: clamp(16px, 1.8vw, 24px);
+  color: white;
+  z-index: 9999;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.upload-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .9rem;
+  margin-bottom: clamp(10px, 1.4vh, 16px);
+}
+
+.upload-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.upload-card-title {
+  min-width: 0;
+  margin: 0 auto 0 0;
+  font-size: clamp(1.9rem, 3vw, 3.1rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-card-body {
+  height: calc(100% - 58px);
+  display: grid;
+  grid-template-columns: minmax(210px, 37%) minmax(0, 1fr);
+  gap: clamp(12px, 1.5vw, 20px);
+  overflow: hidden;
+}
+
+.upload-card-shot,
+.upload-card-info {
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(12px, 1.3vw, 18px);
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: rgba(255,255,255,.08);
+}
+
+.upload-card-shot {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: clamp(1.25rem, 2vw, 2rem);
+}
+
+.upload-preview,
+.upload-card-placeholder {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  border-radius: 14px;
+  background: transparent;
+}
+
+.upload-card-info {
+  overflow: hidden;
+  font-size: clamp(.92rem, 1.05vw, 1.08rem);
+  line-height: 1.35;
+}
+
+.upload-card-info input,
+.upload-card-info select,
+.upload-card-info textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: .95rem;
+}
+
+.upload-card-info textarea {
+  min-height: 64px;
+}
+
+.upload-card-upload,
+.upload-card-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: .5rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  color: inherit;
+  font: inherit;
+  font-size: clamp(.9rem, 1.1vw, 1.1rem);
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, rgba(92,255,114,.70), rgba(6,85,28,.92));
+  box-shadow:
+    0 0 20px rgba(66,255,105,.34),
+    inset 0 -10px 22px rgba(0,0,0,.24);
+}
+
+.upload-card-close {
+  width: 40px;
+  padding-inline: 0;
+  font-size: 1.55rem;
+}
+
+.upload-card-upload:hover,
+.upload-card-close:hover {
+  filter: brightness(1.12);
+}
+
+@media (max-width: 760px), (max-height: 650px) {
+  .upload-card:not(.card) {
+    width: 94vw;
+    height: 90vh;
+    border-radius: 20px;
+  }
+
+  .upload-card-title {
+    font-size: clamp(1.6rem, 7vw, 2.5rem);
+  }
+
+  .upload-card-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(150px, 34%) minmax(0, 1fr);
+  }
+
+  .upload-card-info {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+}

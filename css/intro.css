@@ -166,3 +166,24 @@ body.day-open .intro-birth::before {
   pointer-events: auto !important;
 }
 
+#saturnOverlay {
+  position: fixed !important;
+  left: 52% !important;
+  top: 58% !important;
+  width: 115vw !important;
+  height: auto !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 40 !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transition: opacity .4s ease !important;
+}
+
+body.card-planet-bg #saturnOverlay {
+  opacity: 1 !important;
+}
+
+.download-card-overlay,
+.upload-card-overlay {
+  z-index: 100 !important;
+}

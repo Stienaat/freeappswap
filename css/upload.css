@@ -1,0 +1,35 @@
+/* =========================================================
+   FASE 0 - basisbol / planeet bestaat
+   ========================================================= */
+
+.app-bubble.upload {
+  background-image: url("../assets/images/jupiter.png");
+  background-size: cover;
+  background-position: center;
+
+  --size: min(15vw, 20vh) !important;
+}
+
+/* =========================================================
+   FASE 1 -
+   ========================================================= */
+
+.planet-title {
+  width: 100%;
+  text-align: left;
+
+  font-size: 1em;
+  font-weight: 950;
+  letter-spacing: .03em;
+}
+.planet-title {
+  display: flex;
+  justify-content: center;
+  
+  color: white;
+  text-shadow:
+    0 0 4px rgba(0,0,0,.8),
+    0 0 12px rgba(0,0,0,.7),
+    2px 2px 6px rgba(0,0,0,.8);
+}
+

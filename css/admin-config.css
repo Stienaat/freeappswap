@@ -1,0 +1,890 @@
+/* =========================================================
+   VENUS — ADMIN CONFIG CARD
+   ========================================================= */
+
+body.admin-config-open {
+  overflow: hidden;
+}
+
+.admin-config-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 21000;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  background: #093cd538;
+}
+
+.admin-config-card {
+  width: min(920px, 96vw);
+  height: min(650px, 94vh);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(243, 16, 16, 0.907);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(6, 49, 30, 0.15), transparent 32%),
+    linear-gradient(145deg, rgba(24, 99, 198, 0.91), rgba(36, 192, 206, 0.94));
+  color: #fff7bf;
+  box-shadow:
+    0 28px 90px rgba(9, 245, 60, 0.55),
+    inset 0 0 45px rgba(255, 210, 67, .08);
+  backdrop-filter: blur(4px);
+}
+
+.admin-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 1.1rem .75rem 1.35rem;
+  border-bottom: 1px solid rgba(255, 226, 88, .18);
+  background: rgba(45, 125, 237, 0.42);
+}
+
+.admin-config-kicker {
+  color: rgba(255, 238, 149, .64);
+  font-size: .63rem;
+  font-weight: 800;
+  letter-spacing: .24em;
+}
+
+.admin-config-header h2 {
+  margin: .08rem 0 0;
+  color: #ffe55c;
+  font-size: 1.35rem;
+  letter-spacing: .15em;
+}
+
+.admin-config-close {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 239, 153, .28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  font-size: 1.65rem;
+  cursor: pointer;
+}
+
+.admin-config-tabs {
+  display: flex;
+  gap: .45rem;
+  padding: .65rem 1rem;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(54, 60, 65, 0.16);
+}
+
+.admin-config-tab {
+  border: 1px solid rgba(255, 229, 92, .25);
+  border-radius: 999px;
+  padding: .48rem .9rem;
+  background: rgba(5, 29, 63, 0.24);
+  color: rgba(255, 248, 196, .76);
+  font-size: .76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-config-tab.active {
+  background: #ffe55c;
+  color: #30220a;
+}
+
+.admin-config-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.admin-config-page {
+  display: none;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 1rem 1.15rem;
+}
+
+.admin-config-page.active {
+  display: block;
+}
+
+#adminJunoConfigForm {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+}
+
+.admin-config-juno-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
+  gap: 1.1rem;
+}
+
+.admin-config-qr-panel,
+.admin-config-fields {
+  display: grid;
+  align-content: start;
+  gap: .72rem;
+  padding: .9rem;
+  border-radius: 18px;
+  background: rgba(66, 139, 221, 0.06);
+}
+
+.admin-config-qr-drop {
+  width: min(240px, 100%);
+  aspect-ratio: 1;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 2px dashed rgba(255, 231, 107, .46);
+  border-radius: 16px;
+  background: rgba(26, 44, 238, 0.9);
+  color: #5d470b;
+  cursor: pointer;
+}
+
+.admin-config-qr-drop.drag-over {
+  border-color: #ffe55c;
+  transform: translateY(-1px);
+}
+
+.admin-config-qr-drop img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#configJunoQrPlaceholder {
+  display: grid;
+  gap: .35rem;
+  text-align: center;
+}
+
+#configJunoQrPlaceholder strong {
+  font-size: 1.1rem;
+  letter-spacing: .13em;
+}
+
+#configJunoQrPlaceholder span {
+  font-size: .75rem;
+}
+
+.admin-config-text-button {
+  justify-self: center;
+  border: 0;
+  background: transparent;
+  color: #ffe98c;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-config-fields label {
+  display: grid;
+  gap: .28rem;
+  color: #ffe98c;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.admin-config-fields input,
+.admin-config-fields textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(255, 235, 133, .22);
+  border-radius: 9px;
+  padding: .55rem .65rem;
+  background: rgba(255, 255, 255, .1);
+  color: white;
+  font: inherit;
+}
+
+.admin-config-fields textarea {
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.admin-config-check {
+  grid-template-columns: auto 1fr !important;
+  align-items: center;
+}
+
+.admin-config-check input {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-config-money {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  border: 1px solid rgba(255, 235, 133, .22);
+  border-radius: 9px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .1);
+}
+
+.admin-config-money span {
+  text-align: center;
+}
+
+.admin-config-money input {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.admin-config-status {
+  min-height: 1.25rem;
+  padding: .45rem 0 .15rem;
+  text-align: center;
+  color: #bff1c5;
+  font-size: .78rem;
+}
+
+.admin-config-status.error {
+  color: #467495;
+}
+
+.admin-config-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .7rem;
+  padding-top: .55rem;
+}
+
+.admin-config-actions button {
+  border: 1px solid rgba(255, 236, 141, .32);
+  border-radius: 999px;
+  padding: .55rem 1rem;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  cursor: pointer;
+}
+
+.admin-config-actions button.primary {
+  background: #ffe55c;
+  color: #30220a;
+  font-weight: 800;
+}
+
+.admin-config-placeholder {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: rgba(255, 248, 202, .75);
+}
+
+.admin-config-placeholder h3 {
+  margin: 0 0 .5rem;
+  color: #ffe55c;
+  letter-spacing: .12em;
+}
+
+@media (max-width: 720px) {
+  .admin-config-overlay {
+    padding: 0;
+  }
+
+  .admin-config-card {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .admin-config-juno-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-config-qr-drop {
+    width: min(220px, 72vw);
+  }
+}
+
+
+/* EPC/SEPA bankgegevens */
+.admin-config-bank-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.1rem;
+}
+
+.admin-config-bank-panel {
+  display: grid;
+  align-content: start;
+  gap: .72rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .06);
+}
+
+.admin-config-bank-panel h3 {
+  margin: 0 0 .2rem;
+  color: #ffe55c;
+  font-size: .9rem;
+  letter-spacing: .1em;
+}
+
+.admin-config-bank-panel label {
+  display: grid;
+  gap: .28rem;
+  color: #ffe98c;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.admin-config-bank-panel label small {
+  color: rgba(255, 248, 202, .55);
+  font-weight: 400;
+}
+
+.admin-config-bank-panel input,
+.admin-config-bank-panel textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(255, 235, 133, .22);
+  border-radius: 9px;
+  padding: .55rem .65rem;
+  background: rgba(255, 255, 255, .1);
+  color: white;
+  font: inherit;
+}
+
+.admin-config-bank-panel textarea {
+  resize: vertical;
+  min-height: 9rem;
+}
+
+.admin-config-epc-note {
+  margin-top: .35rem;
+  padding: .72rem .8rem;
+  border: 1px solid rgba(255, 229, 92, .18);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .18);
+  color: rgba(255, 248, 202, .7);
+  font-size: .75rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .admin-config-bank-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   CONTACTBERICHTEN — VENUS CONFIG
+   ========================================================= */
+
+.admin-contact-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: .7rem;
+}
+
+.admin-contact-toolbar strong {
+  color: #ffe55c;
+  letter-spacing: .1em;
+}
+
+.admin-contact-toolbar > div {
+  display: flex;
+  gap: .5rem;
+}
+
+.admin-contact-toolbar select,
+.admin-contact-toolbar button {
+  border: 1px solid rgba(255, 235, 133, .25);
+  border-radius: 999px;
+  padding: .45rem .75rem;
+  background: rgba(255, 255, 255, .08);
+  color: #fff8c4;
+  cursor: pointer;
+}
+
+.admin-contact-toolbar select option {
+  color: #241a08;
+}
+
+.admin-contact-table-wrap {
+  height: calc(100% - 68px);
+  overflow: auto;
+  border: 1px solid rgba(255, 229, 92, .15);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+.admin-contact-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-contact-table th,
+.admin-contact-table td {
+  padding: .58rem .65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  color: rgba(255, 250, 218, .88);
+  text-align: left;
+  font-size: .78rem;
+}
+
+.admin-contact-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(145, 129, 111, 0.96);
+  color: #ffe98c;
+}
+
+.admin-contact-table tbody tr {
+  cursor: pointer;
+}
+
+.admin-contact-table tbody tr:hover {
+  background: rgba(255, 229, 92, .08);
+}
+
+.admin-contact-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: .22rem .48rem;
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.admin-contact-badge.status-new {
+  background: #ffe55c;
+  color: #30220a;
+}
+
+.admin-contact-badge.status-read {
+  background: rgba(115, 204, 255, .25);
+  color: #bcecff;
+}
+
+.admin-contact-badge.status-answered {
+  background: rgba(105, 227, 150, .22);
+  color: #baf5ce;
+}
+
+.admin-contact-badge.status-archived {
+  background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .65);
+}
+
+.admin-contact-status {
+  min-height: 1.15rem;
+  padding-top: .4rem;
+  color: #bff1c5;
+  text-align: center;
+  font-size: .75rem;
+}
+
+.admin-contact-status.error {
+  color: #ffaaaa;
+}
+
+.admin-contact-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 22000;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  background: rgba(0, 0, 0, .35);
+}
+
+.admin-contact-detail {
+  width: min(720px, 94vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 229, 92, .42);
+  border-radius: 22px;
+  padding: 1rem 1.1rem;
+  background:
+    linear-gradient(145deg, rgba(68, 40, 9, .97), rgba(24, 17, 10, .98));
+  color: #fff8cb;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .6);
+}
+
+.admin-contact-detail > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px solid rgba(255, 229, 92, .18);
+}
+
+.admin-contact-detail-kicker {
+  color: rgba(255, 235, 139, .62);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.admin-contact-detail h3 {
+  margin: .15rem 0 0;
+  color: #ffe55c;
+}
+
+.admin-contact-detail-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 239, 153, .28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.admin-contact-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin: .8rem 0;
+}
+
+.admin-contact-meta div {
+  padding: .55rem .65rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .055);
+}
+
+.admin-contact-meta dt {
+  color: #ffe98c;
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.admin-contact-meta dd {
+  margin: .16rem 0 0;
+  color: rgba(255, 252, 229, .9);
+  font-size: .82rem;
+}
+
+.admin-contact-meta a {
+  color: #bdeeff;
+}
+
+.admin-contact-message {
+  min-height: 150px;
+  padding: .85rem .9rem;
+  border: 1px solid rgba(255, 229, 92, .13);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, .2);
+  color: rgba(255, 253, 236, .92);
+  font-size: .88rem;
+  line-height: 1.55;
+}
+
+.admin-contact-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .5rem;
+  padding-top: .8rem;
+}
+
+.admin-contact-detail-actions button {
+  border: 1px solid rgba(255, 235, 133, .25);
+  border-radius: 999px;
+  padding: .48rem .75rem;
+  background: rgba(255, 255, 255, .08);
+  color: #fff8c4;
+  cursor: pointer;
+}
+
+.admin-contact-detail-actions button.danger {
+  border-color: rgba(255, 115, 115, .35);
+  color: #ffb1b1;
+}
+
+@media (max-width: 650px) {
+  .admin-contact-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-contact-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-contact-table th:nth-child(3),
+  .admin-contact-table td:nth-child(3),
+  .admin-contact-table th:nth-child(4),
+  .admin-contact-table td:nth-child(4) {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   REVIEWS + STATISTIEKEN
+   ========================================================= */
+
+.admin-review-toolbar,
+.admin-stats-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: .7rem;
+}
+
+.admin-review-toolbar strong,
+.admin-stats-toolbar strong {
+  color: #ffe55c;
+  letter-spacing: .1em;
+}
+
+.admin-review-toolbar > div {
+  display: flex;
+  gap: .5rem;
+}
+
+.admin-review-toolbar select,
+.admin-review-toolbar button,
+.admin-stats-toolbar button {
+  border: 1px solid rgba(255, 235, 133, .25);
+  border-radius: 999px;
+  padding: .45rem .75rem;
+  background: rgba(255, 255, 255, .08);
+  color: #fff8c4;
+  cursor: pointer;
+}
+
+.admin-review-toolbar select option {
+  color: #241a08;
+}
+
+.admin-review-table-wrap {
+  height: calc(100% - 68px);
+  overflow: auto;
+  border: 1px solid rgba(255, 229, 92, .15);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+.admin-review-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-review-table th,
+.admin-review-table td {
+  padding: .58rem .65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  color: rgba(255, 250, 218, .88);
+  text-align: left;
+  font-size: .78rem;
+}
+
+.admin-review-table th {
+  position: sticky;
+  top: 0;
+  background: rgba(124, 115, 104, 0.96);
+  color: #ffe98c;
+}
+
+.admin-review-table tbody tr {
+  cursor: pointer;
+}
+
+.admin-review-table tbody tr:hover {
+  background: rgba(255, 229, 92, .08);
+}
+
+.admin-review-badge {
+  display: inline-block;
+  padding: .22rem .48rem;
+  border-radius: 999px;
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.admin-review-badge.status-visible {
+  background: rgba(105, 227, 150, .22);
+  color: #baf5ce;
+}
+
+.admin-review-badge.status-hidden {
+  background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .65);
+}
+
+.admin-review-stars,
+.admin-review-detail-rating {
+  color: #ffe55c;
+}
+
+.admin-review-status,
+.admin-stats-status {
+  min-height: 1.1rem;
+  padding-top: .4rem;
+  text-align: center;
+  color: #bff1c5;
+  font-size: .75rem;
+}
+
+.admin-review-status.error,
+.admin-stats-status.error {
+  color: #ffaaaa;
+}
+
+.admin-review-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 22000;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  background: rgba(0, 0, 0, .35);
+}
+
+.admin-review-detail {
+  width: min(680px, 94vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 229, 92, .42);
+  border-radius: 22px;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(145deg, rgba(68, 40, 9, .97), rgba(24, 17, 10, .98));
+  color: #fff8cb;
+}
+
+.admin-review-detail > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px solid rgba(255, 229, 92, .18);
+}
+
+.admin-review-detail-kicker {
+  color: rgba(255, 235, 139, .62);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.admin-review-detail h3 {
+  margin: .15rem 0 0;
+  color: #ffe55c;
+}
+
+.admin-review-detail-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 239, 153, .28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  color: white;
+  font-size: 1.5rem;
+}
+
+.admin-review-detail-rating {
+  margin: .8rem 0 .3rem;
+  font-size: 1.35rem;
+}
+
+.admin-review-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+  color: rgba(255, 248, 202, .64);
+  font-size: .72rem;
+}
+
+.admin-review-detail-text {
+  min-height: 130px;
+  margin-top: .8rem;
+  padding: .85rem .9rem;
+  border-radius: 13px;
+  background: rgba(0, 0, 0, .2);
+  line-height: 1.55;
+}
+
+.admin-review-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-top: .8rem;
+}
+
+.admin-review-detail-actions button {
+  border: 1px solid rgba(255, 235, 133, .25);
+  border-radius: 999px;
+  padding: .48rem .75rem;
+  background: rgba(255, 255, 255, .08);
+  color: #fff8c4;
+  cursor: pointer;
+}
+
+.admin-review-detail-actions .danger {
+  color: #ffb1b1;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.admin-stat-card {
+  display: grid;
+  gap: .22rem;
+  padding: .75rem .8rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .065);
+}
+
+.admin-stat-card span {
+  color: rgba(255, 248, 202, .65);
+  font-size: .7rem;
+}
+
+.admin-stat-card strong {
+  color: #ffe55c;
+  font-size: 1.35rem;
+}
+
+.admin-top-downloads {
+  margin-top: .8rem;
+  padding: .75rem .85rem;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+.admin-top-downloads h3 {
+  margin: 0 0 .45rem;
+  color: #ffe98c;
+  font-size: .8rem;
+  letter-spacing: .09em;
+}
+
+.admin-top-download-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .3rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  font-size: .76rem;
+}
+
+@media (max-width: 760px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

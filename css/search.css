@@ -10,7 +10,7 @@
 }
 
 .search {
-  background-image: url("../assets/images/planet-search.PNG");
+  background-image: url("../assets/images/zon.PNG");
   background-size: cover;
   background-position: center;
 }
@@ -19,23 +19,18 @@
   cursor: pointer;
     --x: 2%;
     --y: 5%;
-    --size: min(12vw, 9vh);
+    --size: min(15vw, 11vh);
   }
 
 /* Kleine zoekbol: icoon kleiner, tekst iets groter */
 
 .search-label {
-  transition:
+  color: white;
+    transition:
     opacity 1100ms ease,
     transform 1600ms var(--ease);
   transform-origin: 50% 50%;
 }
-
-.search-label {
-  padding-top: 30%;
-  fill: rgb(5, 5, 5) !important;
-}
-
 
 .search-label {
   transform: translateY(194px) scale(1.05);
@@ -45,7 +40,7 @@
 .search.focus {
   --x: 24%;
   --y: 28%;
-  --size: min(38vw, 38vh);
+  --size: min(45vw, 45vh);
   --scale: 1;
   --opacity: .98;
   --time: 4200ms;
@@ -54,7 +49,7 @@
 
 .search.focus .search-label {
   opacity: 0;
-  transform: scale(.65);
+  transform: scale(0.65);
   pointer-events: none;
 }
 
@@ -89,6 +84,7 @@ body.day-open #search {
   display: none;
   gap: .34em;
   text-align: left;
+  padding-left: 50px;
   font-size: calc(var(--size) * .032);
   line-height: 1.06;
   color: #111733;

@@ -1,51 +1,7 @@
 /* =========================================================
-   MARS - DOWNLOAD PLANEET
+   DOWNLOAD CARD — 3 kolommen, compact en blauw
+   Laden na card.css.
    ========================================================= */
-   /* FASE 1 - zwevende planeet */
-   
-   .app-bubble.download {
-      background-image: url("../assets/images/mars.PNG");
-      background-size: cover;
-      background-position: center;
-      border-radius: 50%;
-      overflow: hidden;
-      --scale: 1.0 !important;
-    }
- 
-/* FASE 2 - categoriekeuze */
-
-    .category-link {
-      border: 0;
-      border-radius: 999px;
-      padding: .35em .8em;
-      background: rgba(255,255,255,.34);
-      box-shadow: inset 0 1px 4px rgba(255,255,255,.45);
-      white-space: nowrap;
-      font: inherit;
-      font-weight: 900;
-      color: #111733;
-      cursor: pointer;
-    }
-
-    .category-link:hover {
-      background: rgba(255,255,255,.58);
-    }
-
-      .app-bubble.focus {
-      --x: 50% !important;
-      --y: 51% !important;
-      --size: min(38vw, 80vh) !important;
-      --scale: 0.8 !important;   
-      z-index: 40;
-    }
-
-/* FASE 3 - applijst */
-
-.app-bubble.download.phase-categories .download-back {
-  margin-top: .2em;
-}
-
-/* Fase 4 - DOWNLOAD CARD — 3 kolommen, compact en blauw */
 
 .download-card {
   background:
@@ -94,6 +50,17 @@
   gap: clamp(8px, 1vw, 14px);
 }
 
+.download-card-body {
+  min-height: 0;
+  overflow: hidden !important;
+}
+
+.download-card-main {
+  min-height: 0;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
 .download-card-shot,
 .download-card-main,
 .download-card-meta {
@@ -113,10 +80,11 @@
   flex-direction: column;
   gap: 10px;
   padding: 14px;
-  overflow: hidden;
+
   font-size: clamp(.88rem, 1vw, 1.03rem);
   line-height: 1.28;
 }
+
 
 .download-card-description,
 .download-card-specs {
@@ -175,7 +143,7 @@
   .download-card-body {
     grid-template-columns: 1fr;
     grid-template-rows: minmax(130px, 30%) auto auto;
-    overflow-y: auto;
+   overflow: hidden;
   }
 
   .download-card-meta {

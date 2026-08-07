@@ -1,0 +1,393 @@
+/* =========================================================
+   JUNO — kleine donatiebol + transparante donatiekaart
+   ========================================================= */
+
+.app-bubble.juno {
+  z-index: 9999 !important;
+  background:
+    transparent
+    url("../assets/images/juno.png")
+    center / contain no-repeat;
+  border-radius: 50%;
+  overflow: visible;
+  filter: drop-shadow(8px 10px 10px rgba(0, 0, 0, .35));
+  cursor: pointer;
+    --size: min(7vw, 10vh) !important;
+}
+
+.app-bubble.juno::after {
+  content: "€";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffe45d;
+  font-size: 17px;
+  font-weight: 950;
+  line-height: 1;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, .95);
+  text-shadow:
+    0 0 3px #000,
+    0 0 7px rgba(255, 228, 93, .95);
+  pointer-events: none;
+}
+
+.app-bubble.juno:hover {
+  filter:
+    brightness(1.12)
+    drop-shadow(8px 10px 12px rgba(0, 0, 0, .42));
+}
+
+/* Geen donkere backdrop: aarde en bewegende planeten blijven zichtbaar. */
+.juno-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  padding: 2vh 2vw;
+  background: transparent;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+
+.juno-card-overlay.show {
+  opacity: 1;
+}
+
+.juno-card {
+  position: relative;
+  width: min(470px, 92vw);
+  max-height: min(760px, 94vh);
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 2rem 2.1rem 1.55rem;
+  border: 1px solid rgba(88, 190, 255, .58);
+  border-radius: 30px;
+  background:
+    linear-gradient(
+      155deg,
+      rgba(3, 13, 34, .62),
+      rgba(2, 10, 27, .34)
+    );
+  color: #dff7ff;
+  text-align: center;
+  box-shadow:
+    0 0 0 1px rgba(112, 202, 255, .15),
+    0 0 34px rgba(25, 151, 255, .22),
+    inset 0 0 45px rgba(18, 85, 145, .13);
+  backdrop-filter: blur(2px);
+  transform: translateY(14px) scale(.97);
+  transition: transform .25s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 205, 255, .65) transparent;
+}
+
+.juno-card-overlay.show .juno-card {
+  transform: translateY(0) scale(1);
+}
+
+.juno-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.juno-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.juno-card::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(102, 205, 255, .58);
+}
+
+.juno-card-close {
+  position: absolute;
+  top: .85rem;
+  right: .9rem;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(184, 232, 255, .52);
+  border-radius: 50%;
+  background: rgba(4, 19, 43, .72);
+  color: #fff;
+  font: 800 1.55rem/1 Arial, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 7px 20px rgba(0, 0, 0, .28);
+}
+
+.juno-card-close:hover {
+  transform: scale(1.06);
+  background: rgba(10, 74, 112, .86);
+}
+
+.juno-card-mascot {
+  position: absolute;
+  top: 1rem;
+  left: 1.7rem;
+  width: 100px;
+  max-height: 190px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, .4));
+}
+
+.juno-card-header {
+  padding: .15rem 2rem .3rem 5.3rem;
+}
+
+.juno-card-header h2 {
+  margin: 0;
+  color: #88dcff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.3rem, 6vw, 3.5rem);
+  line-height: .95;
+  letter-spacing: .045em;
+  text-shadow: 0 0 12px rgba(59, 190, 255, .38);
+}
+
+.juno-card-header p {
+  margin: .32rem 0 0;
+  color: #57d7ef;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+}
+
+.juno-card-copy {
+  margin: 1.35rem 0 1rem;
+  padding-left: 2.1rem;
+  color: rgba(235, 249, 255, .9);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .94rem;
+  line-height: 1.55;
+}
+
+.juno-card-divider {
+  height: 1px;
+  margin: .85rem 0 1rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(106, 209, 255, .42),
+    transparent
+  );
+}
+
+.juno-card-scan-title {
+  display: block;
+  margin: 0 0 .35rem;
+  color: #67e0f5;
+  font: 700 .92rem/1.2 Arial, sans-serif;
+  letter-spacing: .07em;
+}
+
+.juno-card-amount-actions {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: .55rem;
+  margin: 0 auto .25rem;
+}
+
+.juno-card-amount-row {
+  width: min(155px, 100%);
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  margin: 0;
+  border: 1px solid rgba(83, 209, 248, .72);
+  border-radius: 10px;
+  background: rgba(1, 10, 27, .48);
+  overflow: hidden;
+}
+
+.juno-card-amount-row span {
+  color: #dff8ff;
+  font-size: 1.4rem;
+}
+
+.juno-card-amount-row input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  padding: .62rem .7rem;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.juno-card-amount-row input::placeholder {
+  color: rgba(206, 232, 244, .34);
+}
+
+.juno-card-confirm {
+  flex: 0 0 auto;
+  border: 1px solid rgba(88, 214, 255, .62);
+  border-radius: 999px;
+  padding: .58rem .95rem;
+  background: rgba(16, 101, 147, .38);
+  color: #dff9ff;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .045em;
+  cursor: pointer;
+}
+
+.juno-card-confirm:hover {
+  background: rgba(25, 145, 195, .55);
+}
+
+.juno-card-status {
+  min-height: 1rem;
+  margin: .42rem 0 .2rem;
+  color: #8ff3c0;
+  font-size: .74rem;
+}
+
+.juno-card-status.error {
+  color: #ffb6b6;
+}
+
+.juno-card-scan-title {
+  margin-top: .7rem;
+}
+
+.juno-card-payment {
+  display: grid;
+  grid-template-columns: 155px minmax(115px, 145px);
+  justify-content: center;
+  align-items: center;
+  column-gap: 3.35rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.juno-card-qr {
+  width: 200px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  box-sizing: border-box;
+  border: 1px solid rgba(126, 222, 255, .7);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .96);
+}
+
+.juno-card-qr-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.juno-card-qr-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: .4rem;
+  color: #10344a;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #fff 0 7px,
+      #e3f1f7 7px 14px
+    );
+}
+
+.juno-card-qr-placeholder strong {
+  font: 900 2.3rem/1 Arial, sans-serif;
+}
+
+.juno-card-qr-placeholder span {
+  max-width: 100px;
+  font-size: .67rem;
+  line-height: 1.2;
+}
+
+.juno-card-payment p {
+  min-width: 0;
+  margin: 0;
+  color: rgba(234, 248, 255, .9);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .92rem;
+  line-height: 1.55;
+}
+
+.juno-card-footer {
+  display: grid;
+  gap: .18rem;
+  justify-items: center;
+  margin-top: .8rem;
+  color: #72e4f5;
+}
+
+.juno-card-footer strong {
+  font-size: 1.05rem;
+  letter-spacing: .08em;
+}
+
+.juno-card-footer span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .92rem;
+}
+
+.juno-card-footer b {
+  color: #24d8f3;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(36, 216, 243, .75);
+}
+
+@media (max-width: 620px) {
+  .juno-card {
+    padding: 4.6rem 1rem 1.2rem;
+  }
+
+  .juno-card-amount-actions {
+    flex-wrap: wrap;
+  }
+
+  .juno-card-header {
+    padding: 0 1.6rem .4rem 5.7rem;
+  }
+
+  .juno-card-copy {
+    padding-left: 0;
+  }
+
+  .juno-card-payment {
+    grid-template-columns: 130px minmax(100px, 1fr);
+    column-gap: .8rem;
+  }
+
+  .juno-card-qr {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+
+.juno-card-payment p small {
+  display: block;
+  margin-top: .55rem;
+  color: rgba(206, 241, 255, .72);
+  font-family: Arial, sans-serif;
+  font-size: .68rem;
+  line-height: 1.35;
+}
+
+.juno-card-payment p small strong {
+  color: #e9fbff;
+  font-weight: 700;
+}
+
+
+.juno-card-qr-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}

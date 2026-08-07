@@ -1,56 +1,114 @@
-window.FreeAppSwapAccount = (() => {
-  let loggedIn = false;
+/*
+  login.js
 
-  function init() {
-    const form = document.getElementById("accountForm");
-    const status = document.getElementById("accountStatus");
-    const jsonButton = document.getElementById("downloadUsersJson");
+  Eigenaar van:
+  - account mode: start / login / register
+  - login foutmelding tonen
+  - maan-schaduw maken na login
 
-form?.addEventListener("submit", async event => {
-  event.preventDefault();
+  Wordt gebruikt door app.js via:
+  - setAccountMode(mode)
+  - showLoginError(message)
+  - createMoonShadow()
 
-  try {
-    const name = document.getElementById("nameInput")?.value?.trim() || "";
-    const email = document.getElementById("emailInput")?.value?.trim().toLowerCase() || "";
-    const password = document.getElementById("passwordInput")?.value || "";
+  Niet eigenaar van:
+  - Supabase login/register
+  - globale login-status
+  - search/download/upload/admin bubbles
+*/
+console.log("account module loaded");
+window.FreeAppSwapMoon = {};
 
-    console.log("LOGIN TEST", { email, hasPassword: !!password });
 
-    if (!email || !password) {
-      if (status) status.textContent = "Email en paswoord zijn verplicht.";
-      return;
-    }
+function createMoonShadow() {
+  if (document.querySelector(".moon-shadow")) return;
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+  const shadow = document.createElement("div");
+  shadow.className = "moon-shadow";
 
-    console.log("LOGIN RESULT", { data, error });
+  document.querySelector(".space").appendChild(shadow);
+}
 
-    if (error) {
-      if (status) status.textContent = error.message;
-      return;
-    }
+function setAccountMode(mode) {
+  accountMode = mode;
+  clearLoginError();
 
-    if (status) status.textContent = `Welkom terug ${email}`;
+  const isStart = mode === "start";
+  const isRegister = mode === "register";
 
-    loggedIn = true;
+  accountTitle.textContent = isStart ? "ACCOUNT" : isRegister ? "REGISTREER" : "LOGIN";
+  accountStart.style.display = isStart ? "grid" : "none";
+  accountForm.style.display = isStart ? "none" : "grid";
+  account.classList.toggle("register-mode", isRegister);
 
-    setTimeout(() => {
-      FreeAppSwapBubbles.showLoggedInUniverse();
-    }, 900);
+  submitButton.textContent = isRegister ? "REGISTREER" : "LOGIN";
+  forgotPassword.style.display = isRegister ? "none" : "block";
 
-  } catch (err) {
-    console.error("LOGIN CRASH", err);
-    if (status) status.textContent = "Login crash: " + err.message;
+  nameInput.required = isRegister;
+  passwordConfirmInput.required = isRegister;
+  emailInput.placeholder = "Email";
+  passwordInput.autocomplete = isRegister ? "new-password" : "current-password";
+
+  if (isStart) {
+    account.classList.remove("focus", "dim");
+  } else {
+    focusBubble("account");
+    setTimeout(() => emailInput.focus(), 350);
   }
+}
+function showLoginError(text) {
+  loginMessage.textContent = text;
+}
+
+function setMoonLoggedIn() {
+  account.classList.remove("focus", "dim", "far");
+  account.classList.add("logged-in-moon");
+  createMoonShadow();
+}
+function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
+  if (activeIsAccount) {
+    account.classList.remove("far", "dim");
+    account.classList.add("focus");
+  } else {
+    account.classList.remove("focus");
+
+    if (loggedIn) {
+      account.classList.add("far");
+      account.classList.remove("dim");
+    } else {
+      account.classList.toggle("dim", activeIsSearch);
+    }
+  }
+}
+function clearMoonFocusState() {
+  account.classList.remove("focus", "dim");
+}
+function openAccountMoon() {
+  account.classList.add("open");
+  setAccountMode("start");
+}
+account.addEventListener("mouseenter", () => focusBubble("account"));
+account.addEventListener("click", () => focusBubble("account"));
+
+showLogin.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("login");
 });
 
-    jsonButton?.addEventListener("click", () => FreeAppSwapStore.downloadUsersJson());
-  }
+showRegister.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("register");
+});
 
-  function isLoggedIn() { return loggedIn; }
+backToAccountStart.addEventListener("click", event => {
+  event.stopPropagation();
+  setAccountMode("start");
+});
 
-  return { init, isLoggedIn };
-})();
+window.openAccountMoon = openAccountMoon;
+window.clearMoonFocusState = clearMoonFocusState;
+window.updateMoonFocusState = updateMoonFocusState;
+window.createMoonShadow = createMoonShadow;
+window.setAccountMode = setAccountMode;
+window.showLoginError = showLoginError;
+window.setMoonLoggedIn = setMoonLoggedIn;
