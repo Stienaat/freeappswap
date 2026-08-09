@@ -633,9 +633,18 @@ async function loadAdminStats() {
   status.classList.remove("error");
 
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const week = new Date(now);
-  week.setDate(now.getDate() - 7);
+  const todayString =
+    `${now.getFullYear()}-` +
+    `${String(now.getMonth() + 1).padStart(2, "0")}-` +
+    `${String(now.getDate()).padStart(2, "0")}`;
+
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - 6);
+
+  const weekStartString =
+    `${weekStart.getFullYear()}-` +
+    `${String(weekStart.getMonth() + 1).padStart(2, "0")}-` +
+    `${String(weekStart.getDate()).padStart(2, "0")}`;
 
   const [
     membersResult,
@@ -646,13 +655,40 @@ async function loadAdminStats() {
     visitsTodayResult,
     visitsWeekResult
   ] = await Promise.all([
-    supabaseClient.from("members").select("*", { count: "exact", head: true }),
-    supabaseClient.from("apps").select("id,name,status,downloads"),
-    supabaseClient.from("reviews").select("rating,status"),
-    supabaseClient.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
-    supabaseClient.from("analytics_events").select("*", { count: "exact", head: true }).eq("event_name", "page_view"),
-    supabaseClient.from("analytics_events").select("*", { count: "exact", head: true }).eq("event_name", "page_view").gte("created_at", today.toISOString()),
-    supabaseClient.from("analytics_events").select("*", { count: "exact", head: true }).eq("event_name", "page_view").gte("created_at", week.toISOString())
+    supabaseClient
+      .from("members")
+      .select("*", { count: "exact", head: true }),
+
+    supabaseClient
+      .from("apps")
+      .select("id,name,status,downloads"),
+
+    supabaseClient
+      .from("reviews")
+      .select("rating,status"),
+
+    supabaseClient
+      .from("contact_messages")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "new"),
+
+    supabaseClient
+      .from("site_stats")
+      .select("value")
+      .eq("counter", "visitors")
+      .maybeSingle(),
+
+    supabaseClient
+      .from("site_visits_daily")
+      .select("visits")
+      .eq("visit_date", todayString)
+      .maybeSingle(),
+
+    supabaseClient
+      .from("site_visits_daily")
+      .select("visits")
+      .gte("visit_date", weekStartString)
+      .lte("visit_date", todayString)
   ]);
 
   const errors = [
@@ -673,28 +709,80 @@ async function loadAdminStats() {
   }
 
   const apps = appsResult.data || [];
-  const visibleReviews = (reviewsResult.data || []).filter(item => item.status === "visible");
+
+  const visibleReviews = (reviewsResult.data || [])
+    .filter(item => item.status === "visible");
+
   const rating = visibleReviews.length
-    ? visibleReviews.reduce((sum, item) => sum + Number(item.rating || 0), 0) / visibleReviews.length
+    ? visibleReviews.reduce(
+        (sum, item) => sum + Number(item.rating || 0),
+        0
+      ) / visibleReviews.length
     : 0;
+
+  const visitsWeek = (visitsWeekResult.data || [])
+    .reduce(
+      (sum, item) => sum + Number(item.visits || 0),
+      0
+    );
 
   setStatValue("statMembers", membersResult.count || 0);
   setStatValue("statApps", apps.length);
-  setStatValue("statPending", apps.filter(item => item.status === "pending").length);
-  setStatValue("statAccepted", apps.filter(item => item.status === "accepted").length);
-  setStatValue("statDownloads", apps.reduce((sum, item) => sum + Number(item.downloads || 0), 0));
+
+  setStatValue(
+    "statPending",
+    apps.filter(item => item.status === "pending").length
+  );
+
+  setStatValue(
+    "statAccepted",
+    apps.filter(item => item.status === "accepted").length
+  );
+
+  setStatValue(
+    "statDownloads",
+    apps.reduce(
+      (sum, item) => sum + Number(item.downloads || 0),
+      0
+    )
+  );
+
   setStatValue("statReviews", visibleReviews.length);
-  setStatValue("statRating", visibleReviews.length ? rating.toFixed(1).replace(".", ",") : "-");
+
+  setStatValue(
+    "statRating",
+    visibleReviews.length
+      ? rating.toFixed(1).replace(".", ",")
+      : "-"
+  );
+
   setStatValue("statContacts", contactsResult.count || 0);
-  setStatValue("statVisitsToday", visitsTodayResult.count || 0);
-  setStatValue("statVisitsWeek", visitsWeekResult.count || 0);
-  setStatValue("statVisitsTotal", visitsTotalResult.count || 0);
+
+  setStatValue(
+    "statVisitsToday",
+    visitsTodayResult.data?.visits || 0
+  );
+
+  setStatValue(
+    "statVisitsWeek",
+    visitsWeek
+  );
+
+  setStatValue(
+    "statVisitsTotal",
+    visitsTotalResult.data?.value || 0
+  );
 
   const top = [...apps]
-    .sort((a, b) => Number(b.downloads || 0) - Number(a.downloads || 0))
+    .sort(
+      (a, b) =>
+        Number(b.downloads || 0) -
+        Number(a.downloads || 0)
+    )
     .slice(0, 10);
 
   const host = document.getElementById("adminTopDownloads");
+
   if (host) {
     host.innerHTML = top.length
       ? top.map((item, index) => `
@@ -708,7 +796,6 @@ async function loadAdminStats() {
 
   status.textContent = "Statistieken bijgewerkt.";
 }
-
 window.loadAdminReviews = loadAdminReviews;
 window.loadAdminStats = loadAdminStats;
 window.closeAdminReviewDetail = closeAdminReviewDetail;

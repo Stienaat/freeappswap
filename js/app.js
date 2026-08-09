@@ -72,7 +72,9 @@ let speedFactor = 1;
 const appData = {
   platforms: [
     { id: "apk", label: "APK" },
-    { id: "pwa", label: "PWA" }
+    { id: "pwa", label: "PWA" },
+    { id: "web", label: "WEB" },
+    { id: "OTHER", label: "OTHER" }
   ],
   categories: [
     { id: "games", label: "GAMES", planet: "assets/images/planet-games.png" },
@@ -1954,3 +1956,4 @@ async function saveUserAppEditor(event) {
 window.openUserAppEditor = openUserAppEditor;
 window.closeUserAppEditor = closeUserAppEditor;
 window.PlanetManager.register("upload", closeUserAppEditor);
+
