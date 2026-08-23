@@ -1755,7 +1755,9 @@ async function saveAdminAppEditor(event) {
         .from("apps")
         .update({
           download_url: uploadResult.download_url,
-          file_size: uploadResult.file_size,
+          file_size: Number(
+            (uploadResult.size_bytes / 1024 / 1024).toFixed(1)
+    ),
           updated_at: new Date().toISOString()
         })
         .eq("id", savedAppId);
