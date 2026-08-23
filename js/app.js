@@ -57,7 +57,8 @@ if (passwordConfirmInput) passwordConfirmInput.value = "";
 const SUPABASE_URL = "https://njefjypajmbolkufgkgd.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qZWZqeXBham1ib2xrdWZna2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDQyNjksImV4cCI6MjA5NjYyMDI2OX0.mUZSAB8mxExzXQM3OK55mfYnGZVhl1QmyLNwv64V-Mo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+const FREEAPPS_STORAGE_URL =
+  "https://conclusion-reynolds-gold-pointed.trycloudflare.com";
 let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
@@ -1499,6 +1500,17 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
             <input name="icon_url" value="${escapeAdminEditorHtml(app.icon_url)}">
           </label>
 
+<label class="admin-editor-wide">APK-bestand
+  <input
+    name="apk_file"
+    type="file"
+    accept=".apk,application/vnd.android.package-archive"
+  >
+  <small>
+    Maximaal 100 MB. Laat leeg om het bestaande bestand te behouden.
+  </small>
+</label>
+
           <label class="admin-editor-wide">Download URL
             <input name="download_url" value="${escapeAdminEditorHtml(app.download_url)}">
           </label>
@@ -1551,16 +1563,85 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
   overlay.querySelector('[name="name"]')?.focus();
 }
 
+async function uploadApkToFreeAppsStorage(appId, file) {
+  if (!(file instanceof File) || file.size === 0) {
+    return null;
+  }
+
+  if (!file.name.toLowerCase().endsWith(".apk")) {
+    throw new Error("Kies een geldig APK-bestand.");
+  }
+
+  const maximumBytes = 100 * 1024 * 1024;
+
+  if (file.size > maximumBytes) {
+    throw new Error("Het APK-bestand mag maximaal 100 MB groot zijn.");
+  }
+
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    throw new Error(`Sessie controleren mislukt: ${error.message}`);
+  }
+
+  const accessToken = data?.session?.access_token;
+
+  if (!accessToken) {
+    throw new Error("Je moet aangemeld zijn om een APK te uploaden.");
+  }
+
+  const uploadData = new FormData();
+  uploadData.append("file", file, file.name);
+
+  const response = await fetch(
+    `${FREEAPPS_STORAGE_URL}/upload/${encodeURIComponent(appId)}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: uploadData
+    }
+  );
+
+  const responseText = await response.text();
+
+  let result = {};
+
+  try {
+    result = responseText ? JSON.parse(responseText) : {};
+  } catch {
+    result = {};
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      result.error ||
+      `Upload mislukt met foutcode ${response.status}.`
+    );
+  }
+
+  return result;
+}
+
 async function saveAdminAppEditor(event) {
   event.preventDefault();
 
   const overlay = document.getElementById("adminAppEditorOverlay");
   const form = event.currentTarget;
+
   if (!overlay || !form) return;
 
   const saveButton = form.querySelector('button[type="submit"]');
   const formData = new FormData(form);
   const appId = overlay.dataset.appId;
+
+  const selectedFile = formData.get("apk_file");
+
+  const apkFile =
+    selectedFile instanceof File && selectedFile.size > 0
+      ? selectedFile
+      : null;
 
   const record = {
     name: String(formData.get("name") || "").trim(),
@@ -1571,17 +1652,26 @@ async function saveAdminAppEditor(event) {
     version: String(formData.get("version") || "").trim() || null,
     author: String(formData.get("author") || "").trim() || null,
     status: String(formData.get("status") || "draft").trim(),
-    screenshot_url: String(formData.get("screenshot_url") || "").trim() || null,
-    icon_url: String(formData.get("icon_url") || "").trim() || null,
-    download_url: String(formData.get("download_url") || "").trim() || null,
-    file_size: String(formData.get("file_size") || "").trim() || null,
-    min_android: String(formData.get("min_android") || "").trim() || null,
-    license: String(formData.get("license") || "").trim() || null,
-    privacy: String(formData.get("privacy") || "").trim() || null,
+    screenshot_url:
+      String(formData.get("screenshot_url") || "").trim() || null,
+    icon_url:
+      String(formData.get("icon_url") || "").trim() || null,
+    download_url:
+      String(formData.get("download_url") || "").trim() || null,
+    file_size:
+      String(formData.get("file_size") || "").trim() || null,
+    min_android:
+      String(formData.get("min_android") || "").trim() || null,
+    license:
+      String(formData.get("license") || "").trim() || null,
+    privacy:
+      String(formData.get("privacy") || "").trim() || null,
     features: adminTextToArray(formData.get("features")),
     languages: adminTextToArray(formData.get("languages")),
-    specs: String(formData.get("specs") || "").trim() || null,
-    rejection_reason: String(formData.get("rejection_reason") || "").trim() || null,
+    specs:
+      String(formData.get("specs") || "").trim() || null,
+    rejection_reason:
+      String(formData.get("rejection_reason") || "").trim() || null,
     updated_at: new Date().toISOString()
   };
 
@@ -1590,41 +1680,116 @@ async function saveAdminAppEditor(event) {
     return;
   }
 
+  if (apkFile) {
+    if (!apkFile.name.toLowerCase().endsWith(".apk")) {
+      setAdminEditorStatus("Kies een geldig APK-bestand.", true);
+      return;
+    }
+
+    if (apkFile.size > 100 * 1024 * 1024) {
+      setAdminEditorStatus(
+        "Het APK-bestand mag maximaal 100 MB groot zijn.",
+        true
+      );
+      return;
+    }
+  }
+
   saveButton.disabled = true;
-  setAdminEditorStatus("Opslaan...");
+  setAdminEditorStatus("Appgegevens opslaan...");
 
-  let result;
+  try {
+    let result;
 
-  if (appId) {
-    result = await supabaseClient
-      .from("apps")
-      .update(record)
-      .eq("id", appId)
-      .select()
-      .single();
-  } else {
-    const { data: authData } = await supabaseClient.auth.getUser();
-    if (authData?.user?.id) record.submitted_by = authData.user.id;
+    if (appId) {
+      result = await supabaseClient
+        .from("apps")
+        .update(record)
+        .eq("id", appId)
+        .select()
+        .single();
+    } else {
+      const {
+        data: authData,
+        error: authError
+      } = await supabaseClient.auth.getUser();
 
-    result = await supabaseClient
-      .from("apps")
-      .insert(record)
-      .select()
-      .single();
+      if (authError || !authData?.user?.id) {
+        throw new Error("Je moet aangemeld zijn om een app op te slaan.");
+      }
+
+      record.submitted_by = authData.user.id;
+
+      result = await supabaseClient
+        .from("apps")
+        .insert(record)
+        .select()
+        .single();
+    }
+
+    if (result.error) {
+      throw new Error(`Opslaan mislukt: ${result.error.message}`);
+    }
+
+    const savedAppId = result.data?.id;
+
+    if (!savedAppId) {
+      throw new Error("De opgeslagen app heeft geen geldig app-ID.");
+    }
+
+    if (!appId) {
+      overlay.dataset.appId = savedAppId;
+    }
+
+    if (apkFile) {
+      const sizeMb = (apkFile.size / 1024 / 1024).toFixed(1);
+
+      setAdminEditorStatus(
+        `APK uploaden (${sizeMb} MB)...`
+      );
+
+      const uploadResult =
+        await uploadApkToFreeAppsStorage(savedAppId, apkFile);
+
+      const { error: fileUpdateError } = await supabaseClient
+        .from("apps")
+        .update({
+          download_url: uploadResult.download_url,
+          file_size: uploadResult.file_size,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", savedAppId);
+
+      if (fileUpdateError) {
+        throw new Error(
+          `APK is opgeslagen, maar de downloadgegevens konden niet worden bijgewerkt: ${fileUpdateError.message}`
+        );
+      }
+
+      setAdminEditorStatus("App en APK opgeslagen.");
+    } else {
+      setAdminEditorStatus("App opgeslagen.");
+    }
+
+    await loadApps();
+
+    setAppsStatus(
+      appId
+        ? "App bijgewerkt."
+        : "Nieuwe app toegevoegd."
+    );
+
+    closeAdminAppEditor();
+  } catch (error) {
+    console.error(error);
+
+    setAdminEditorStatus(
+      error?.message || "Opslaan mislukt.",
+      true
+    );
+  } finally {
+    saveButton.disabled = false;
   }
-
-  saveButton.disabled = false;
-
-  if (result.error) {
-    console.error(result.error);
-    setAdminEditorStatus(`Opslaan mislukt: ${result.error.message}`, true);
-    return;
-  }
-
-  setAdminEditorStatus("Opgeslagen.");
-  await loadApps();
-  setAppsStatus(appId ? "App bijgewerkt." : "Nieuwe app toegevoegd.");
-  closeAdminAppEditor();
 }
 
 window.openAdminAppEditor = openAdminAppEditor;
