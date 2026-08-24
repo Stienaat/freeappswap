@@ -58,7 +58,7 @@ const SUPABASE_URL = "https://njefjypajmbolkufgkgd.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qZWZqeXBham1ib2xrdWZna2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDQyNjksImV4cCI6MjA5NjYyMDI2OX0.mUZSAB8mxExzXQM3OK55mfYnGZVhl1QmyLNwv64V-Mo";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const FREEAPPS_STORAGE_URL =
-  "https://conclusion-reynolds-gold-pointed.trycloudflare.com";
+  "https://storage.freeapps-exchange.com";
 let loggedIn = false;
 let appBubblesCreated = false;
 let accountMode = "start";
