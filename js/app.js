@@ -830,8 +830,15 @@ function focusBubble(kind) {
     isStaticDownloadApp || isDatabaseDownloadApp
       ? "download"
       : kind;
+  
+      if (kind !== "download") {
+  renderDownloadStart();
+}
 
   window.PlanetManager.activate(focusGroup);
+  if (kind === "download") {
+  renderDownloadApps();
+}
 
   const activeIsSearch = kind === "search";
   const activeIsAccount = kind === "account";
