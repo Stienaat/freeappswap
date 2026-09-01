@@ -29,12 +29,13 @@ window.createUranusBubble = function createUranusBubble() {
         <article class="uranus-section">
           <span class="uranus-section-icon">i</span>
           <div>
-            <h3>WAT IS FREEAPPS EXCHANGE?</h3>
+            <h3>WAT IS FREEAPPS EXCHANGE EN WAAROM BESTAAT HET??</h3>
             <p>
               In een wereld vol abonnementen, kopen en reclame, een uniek gratis platform waar je veilige, nuttige en kwalitatieve apps
               van hobbyontwikkelaars kunt ontdekken, downloaden en uploaden.<br> maak je graag voor de fun  apps en wil je die delen met anderen. Hier moet je zijn.
             </p>
-            <p> Uitwisselen is hier het codewoord.</p>
+            <p> Uitwisselen is hier het codewoord. Alles kan, niks moet. Je mag downloaden wat je wil. Uploaden van apps maakt ons blij maar is niet verplicht<
+            /p>
           </div>
         </article>
 
@@ -43,8 +44,8 @@ window.createUranusBubble = function createUranusBubble() {
           <div>
             <h3>WAAROM BESTAAT HET?</h3>
             <p>
-              Omdat goede gratis software te vaak verborgen blijft. Wij brengen
-              ze samen op één overzichtelijke en betrouwbare plek. 
+              Omdat echt gratis software zeer zeldzaam is. Wij pogen die hier naar buiten te brengen en een kans te geven.
+              Op één overzichtelijke en betrouwbare plek. 
             </p>
           </div>
         </article>
@@ -54,7 +55,7 @@ window.createUranusBubble = function createUranusBubble() {
           <div>
             <h3>VOOR WIE IS HET?</h3>
             <p>
-              Voor hobbyontwikkelaars, testers en iedereen die graag eenvoudige,
+              Voor werkelijk iedereen, hobbyontwikkelaars, gewonde gebruikers, testers en iedereen die graag eenvoudige,
               eerlijke software maakt of ontdekt.
             </p>
           </div>
@@ -65,7 +66,7 @@ window.createUranusBubble = function createUranusBubble() {
           <div>
             <h3>HOE WERKT HET?</h3>
             <p>
-              Bekijk apps per platform en categorie. Leden kunnen zelf een app
+              Bekijk apps per platform en categorie. iedereen kan zelf ook een app
               indienen; na controle wordt die zichtbaar en downloadbaar voor anderen.
             </p>
           </div>
@@ -87,7 +88,7 @@ window.createUranusBubble = function createUranusBubble() {
           <div>
             <h3>UPLOADS &amp; CONTROLE</h3>
             <p>
-              Ingediende apps krijgen eerst de status pending. Een beheerder
+              Ingediende apps krijgen altijd eerst de status pending. Een beheerder
               controleert de informatie en accepteert of wijzigt de app.
             </p>
           </div>
@@ -112,9 +113,11 @@ Wachtwoorden worden niet door FreeApps Exchange opgeslagen of zichtbaar gemaakt;
           <div>
             <h3>CONTACT</h3>
             <p>
-              Vragen, suggesties of meldingen? Neem contact op. We helpen je
-              graag verder.
-              En bedenk ook: gratis is nooit helemaal gratis. Een kleine gift wordt altijd in dank afgenomen, maar blijft volledig vrij. 
+              Vragen, suggesties of meldingen? Neem contact op. We helpen je graag verder.
+              En bedenk ook dit: Is gratis echt helemaal gratis. Ja, de apps zijn helemaal gratis, geen addertjes onder het gratis. Alles open en vrij, niks verborgen of verdoken. 
+              Maar het maken is nooit helemaal gratis. Erzijn altijd kleine kosten.Daarom: Een kleine gift (uit eigen vrije wil, zonder druk) wordt altijd in dank afgenomen. 
+              Laat de kleine Juno hierbij helpen.
+
               
             </p>
           </div>
