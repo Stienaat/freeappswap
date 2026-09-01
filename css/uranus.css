@@ -12,7 +12,7 @@
     center / contain no-repeat;
   border-radius: 50%;
   overflow: visible;
-  filter: drop-shadow(18px 24px 22px rgba(0, 0, 0, .28));
+  filter: drop-shadow(18px 24px 22px rgba(0, 0, 0, .18));
   cursor: pointer;
   transition:
     left .95s cubic-bezier(.2, .8, .2, 1),
@@ -164,7 +164,7 @@ body.uranus-info-active .app-bubble:not(.uranus) {
   align-items: start;
   margin: 0 0 .75rem;
   padding: 0;
-  background: transparent;
+  background: rgba(250, 250, 250, .2);
 }
 
 .uranus-section-icon {
@@ -174,7 +174,7 @@ body.uranus-info-active .app-bubble:not(.uranus) {
   place-items: center;
   border: 1px solid rgba(255, 255, 255, .48);
   border-radius: 50%;
-  background: rgba(8, 22, 28, .82);
+  background:rgba(0, 0, 0, .2);
   color: #fff;
   font-family: Arial, sans-serif;
   font-size: 1.15rem;
