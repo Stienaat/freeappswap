@@ -279,31 +279,25 @@ function finishLogin(user) {
 
   setTimeout(() => {
 
-  createAppBubble("download");
-  createAppBubble("upload");
+    if (String(user.role || "").trim().toLowerCase() === "admin") {
+      createAdminBubble();
+    }
 
-  appBubblesCreated = true;
+  }, 900);
 
-  openSunSearch();
-
-  if (String(user.role || "").trim().toLowerCase() === "admin") {
-    createAdminBubble();
-  }
-}, 900);
   loggedIn = true;
-  
 
   const welcome = document.getElementById("welcomeUser");
 
-if (welcome) {
-  welcome.textContent = `Welkom ${user.name}`;
-  welcome.classList.add("show");
-}
+  if (welcome) {
+    welcome.textContent = `Welkom ${user.name}`;
+    welcome.classList.add("show");
+  }
 
   clearFocusStates();
   document.body.classList.add("day-open");
   setMoonLoggedIn();
-  }
+}
 
 
 
@@ -2064,18 +2058,27 @@ async function openUserAppEditor() {
 }
 
 async function saveUserAppEditor(event) {
+
   event.preventDefault();
 
   const form = event.currentTarget;
   const submitButton = document.querySelector('.user-app-editor-overlay .user-editor-submit');
   const formData = new FormData(form);
-  const { data: authData, error: authError } = await supabaseClient.auth.getUser();
-  const user = authData?.user;
+ 
+if (!loggedIn) {
+  alert("Log in om een app te uploaden.");
+  focusBubble("account");
+  return;
+}
 
-  if (authError || !user) {
-    setUserEditorStatus("Je sessie is verlopen. Log opnieuw in.", true);
-    return;
-  }
+const { data: authData, error: authError } = await supabaseClient.auth.getUser();
+const user = authData?.user;
+
+if (authError || !user) {
+  alert("Je sessie is verlopen. Log opnieuw in.");
+  focusBubble("account");
+  return;
+}
 
   const record = {
     name: String(formData.get("name") || "").trim(),
@@ -2131,3 +2134,10 @@ window.openUserAppEditor = openUserAppEditor;
 window.closeUserAppEditor = closeUserAppEditor;
 window.PlanetManager.register("upload", closeUserAppEditor);
 
+// Publieke planeten en zoekfunctie altijd beschikbaar
+createAppBubble("download");
+createAppBubble("upload");
+
+appBubblesCreated = true;
+
+openSunSearch();

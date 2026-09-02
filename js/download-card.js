@@ -20,12 +20,13 @@ if (app.status !== "accepted") {
         <h2 class="download-card-title card-title">${app.name || "App"}</h2>
 
         <div class="download-card-actions card-actions">
-          <a
-            class="download-card-download card-button"
-            href="${app.download_url || "#"}"
-          >
-            DOWNLOAD
-          </a>
+      <a
+        class="download-card-download card-button"
+        href="${app.download_url || "#"}"
+        data-download-url="${app.download_url || ""}"
+      >
+        DOWNLOAD
+      </a>
 
           <button
             class="download-card-close card-close"
@@ -94,6 +95,24 @@ ${app.privacy ? `
   `;
 
   document.body.appendChild(overlay);
+  document.body.appendChild(overlay);
+
+const downloadButton = overlay.querySelector(".download-card-download");
+
+downloadButton?.addEventListener("click", event => {
+  if (!loggedIn) {
+    event.preventDefault();
+
+    alert("Log in om deze app te downloaden.");
+    focusBubble("account");
+
+    return;
+  }
+});
+
+showCardPlanetBg();
+
+document.body.classList.add("planet-overlay-open");
   showCardPlanetBg();
   document.body.classList.add("planet-overlay-open");
 
@@ -102,6 +121,31 @@ ${app.privacy ? `
     hideCardPlanetBg();
     document.body.classList.remove("planet-overlay-open");
   });
+}
+
+function showFreeAppsNotice(message) {
+
+   console.log("showFreeAppsNotice:", message);
+  document.querySelector(".freeapps-notice")?.remove();
+
+  const notice = document.createElement("div");
+  notice.className = "freeapps-notice";
+
+  notice.innerHTML = `
+    <div class="freeapps-notice-text">${message}</div>
+    <button type="button" class="freeapps-notice-button">
+      INLOGGEN
+    </button>
+  `;
+
+  document.body.appendChild(notice);
+
+  notice
+    .querySelector(".freeapps-notice-button")
+    .addEventListener("click", () => {
+      notice.remove();
+      focusBubble("account");
+    });
 }
 
 window.openDownloadOverlay = window.openDownloadOverlay || openDownloadOverlay;
