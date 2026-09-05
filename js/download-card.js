@@ -1,3 +1,93 @@
+function formatFreeAppsInline(text) {
+  return text.replace(
+    /\*\*(.+?)\*\*/g,
+    "<strong>$1</strong>"
+  );
+}
+
+function formatFreeAppsText(value) {
+  if (!value) return "";
+
+  const escapeHtml = text =>
+    text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  const lines = escapeHtml(String(value))
+    .replace(/\r\n/g, "\n")
+    .split("\n");
+
+  let html = "";
+  let listType = null;
+  let paragraphLines = [];
+
+  function closeList() {
+    if (listType === "ul") html += "</ul>";
+    if (listType === "ol") html += "</ol>";
+    listType = null;
+  }
+
+  function flushParagraph() {
+    if (!paragraphLines.length) return;
+
+    html += `<p>${paragraphLines
+      .map(line => formatFreeAppsInline(line))
+      .join("<br>")}</p>`;
+
+    paragraphLines = [];
+  }
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+
+    if (!line) {
+      flushParagraph();
+      closeList();
+      continue;
+    }
+
+    const bulletMatch = line.match(/^-\s+(.+)$/);
+    const numberMatch = line.match(/^\d+\.\s+(.+)$/);
+
+    if (bulletMatch) {
+      flushParagraph();
+
+      if (listType !== "ul") {
+        closeList();
+        html += "<ul>";
+        listType = "ul";
+      }
+
+      html += `<li>${formatFreeAppsInline(bulletMatch[1])}</li>`;
+      continue;
+    }
+
+    if (numberMatch) {
+      flushParagraph();
+
+      if (listType !== "ol") {
+        closeList();
+        html += "<ol>";
+        listType = "ol";
+      }
+
+      html += `<li>${formatFreeAppsInline(numberMatch[1])}</li>`;
+      continue;
+    }
+
+    closeList();
+    paragraphLines.push(line);
+  }
+
+  flushParagraph();
+  closeList();
+
+  return html;
+}
+
 function openDownloadOverlay(appId) {
   const app = dbApps.find(a => a.id === appId);
   if (!app) return;
@@ -6,7 +96,6 @@ if (app.status !== "accepted") {
   console.warn("App is nog niet geaccepteerd:", app.name);
   return;
 }
-
 
   document.querySelector(".download-card-overlay")?.remove();
 
@@ -48,53 +137,58 @@ if (app.status !== "accepted") {
         </div>
 
         <div class="download-card-main">
-          <div class="download-card-description card-description">
-  ${app.description || "Geen beschrijving."}
-</div>
 
-${app.features && app.features.length ? `
-<div class="download-card-section">
-  <h3>Mogelijkheden</h3>
-  <ul>
-    ${app.features.map(f => `<li>${f}</li>`).join("")}
-  </ul>
-</div>
-` : ""}
+        <section class="download-card-text-section">
+          <h3>BESCHRIJVING</h3>
 
-<div class="download-card-specs card-specs">
-  ${app.specs || ""}
-</div>
+        <div class="download-card-text">
+          ${formatFreeAppsText(app.description || "Geen beschrijving beschikbaar.")}
+        </div>
+        </section>
 
-${app.languages && app.languages.length ? `
-<div class="download-card-section">
-  <h3>Talen</h3>
-  ${app.languages.join(", ")}
-</div>
-` : ""}
+        ${app.specs ? `
+          <section class="download-card-text-section">
+            <h3>SPECIFICATIES</h3>
 
-${app.privacy ? `
-<div class="download-card-section">
-  <h3>Privacy</h3>
-  ${app.privacy}
-</div>
-` : ""}
+          <div class="download-card-text">
+            ${formatFreeAppsText(app.specs)}
+          </div>
+            </section>
+
+          ` : ""}
+
         </div>
 
-        <aside class="download-card-meta card-meta">
+       <aside class="download-card-meta card-meta">
           <div><span>Versie</span><strong>${app.version || "-"}</strong></div>
           <div><span>Auteur</span><strong>${app.author || "-"}</strong></div>
           <div><span>Platform</span><strong>${app.platform || "-"}</strong></div>
           <div><span>Categorie</span><strong>${app.category || "-"}</strong></div>
-          <div><span>Bestand</span><strong>${app.file_size || "-"} MB</strong></div>
-          <div><span>Android</span><strong>${app.min_android || "-"}</strong></div>
-          <div><span>Licentie</span><strong>${app.license || "-"}</strong></div>
-        </aside>
 
+          <div>
+            <span>Talen</span>
+            <strong>
+              ${Array.isArray(app.languages) && app.languages.length
+                ? app.languages.join(", ")
+                : "-"}
+            </strong>
+          </div>
+          ${app.readme_url ? `
+          <a
+            class="download-card-readme card-button"
+            href="${app.readme_url}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            README / HANDLEIDING
+          </a>
+        ` : ""}
+      </aside>
+     
       </div>
     </div>
   `;
 
-  document.body.appendChild(overlay);
   document.body.appendChild(overlay);
 
 const downloadButton = overlay.querySelector(".download-card-download");

@@ -608,22 +608,15 @@ body.admin-config-open {
   border-color: rgba(255, 115, 115, .35);
   color: #ffb1b1;
 }
-
-@media (max-width: 650px) {
-  .admin-contact-toolbar {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .admin-contact-meta {
+@media (max-width: 900px) {
+  .user-editor-fields {
     grid-template-columns: 1fr;
   }
-
-  .admin-contact-table th:nth-child(3),
-  .admin-contact-table td:nth-child(3),
-  .admin-contact-table th:nth-child(4),
-  .admin-contact-table td:nth-child(4) {
-    display: none;
+}
+@media (max-width: 650px) {
+  .user-editor-fields {
+    overflow: visible;
+    padding-right: 0;
   }
 }
 

@@ -1395,13 +1395,13 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
     author: "",
     status: mode === "review" ? "pending" : "draft",
     screenshot_url: "",
-    icon_url: "",
+   
     download_url: "",
     file_size: "",
     min_android: "",
     license: "",
     privacy: "",
-    features: [],
+  
     languages: [],
     specs: "",
     rejection_reason: ""
@@ -1448,9 +1448,7 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
             <input name="name" value="${escapeAdminEditorHtml(app.name)}" required>
           </label>
 
-          <label>Ondertitel
-            <input name="subtitle" value="${escapeAdminEditorHtml(app.subtitle)}">
-          </label>
+   
 
           <label>Platform
             <select name="platform">
@@ -1472,6 +1470,13 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
           <label>Auteur
             <input name="author" value="${escapeAdminEditorHtml(app.author)}">
           </label>
+
+          <label>Naam indiener
+              <input
+                name="submitter_name"
+                value="${escapeAdminEditorHtml(app.submitter_name)}"
+              >
+            </label>
 
           <label>Status
             <select name="status">
@@ -1497,32 +1502,48 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
             <input name="screenshot_url" value="${escapeAdminEditorHtml(app.screenshot_url)}">
           </label>
 
-          <label class="admin-editor-wide">Icon URL
-            <input name="icon_url" value="${escapeAdminEditorHtml(app.icon_url)}">
+         
+
+          <label class="admin-editor-wide">APK-bestand
+            <input
+              name="apk_file"
+              type="file"
+              accept=".apk,application/vnd.android.package-archive"
+            >
+            <small>
+              Maximaal 100 MB. Laat leeg om het bestaande bestand te behouden.
+            </small>
           </label>
 
-<label class="admin-editor-wide">APK-bestand
-  <input
-    name="apk_file"
-    type="file"
-    accept=".apk,application/vnd.android.package-archive"
-  >
-  <small>
-    Maximaal 100 MB. Laat leeg om het bestaande bestand te behouden.
-  </small>
-</label>
+          <label class="admin-editor-wide">README-bestand
+            <input
+              name="readme_file"
+              type="file"
+              accept=".txt,.md,text/plain,text/markdown"
+            >
+            <small>
+              Laat leeg om het bestaande README-bestand te behouden.
+            </small>
+          </label>
 
           <label class="admin-editor-wide">Download URL
             <input name="download_url" value="${escapeAdminEditorHtml(app.download_url)}">
           </label>
 
+          <div class="admin-editor-wide text-format-help">
+
+          <strong>Tekstopmaak:</strong>
+            lege regel = nieuwe alinea ·
+             - tekst = opsomming ·
+          1. tekst = nummering ·
+             **tekst** = vet
+           </div>
+
           <label class="admin-editor-wide">Beschrijving
             <textarea name="description" rows="4">${escapeAdminEditorHtml(app.description)}</textarea>
           </label>
 
-          <label class="admin-editor-wide">Features <small>één per regel</small>
-            <textarea name="features" rows="4">${escapeAdminEditorHtml(adminArrayToText(app.features))}</textarea>
-          </label>
+       
 
           <label class="admin-editor-wide">Talen <small>één per regel</small>
             <textarea name="languages" rows="3">${escapeAdminEditorHtml(adminArrayToText(app.languages))}</textarea>
@@ -1530,6 +1551,10 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
 
           <label class="admin-editor-wide">Specificaties
             <textarea name="specs" rows="4">${escapeAdminEditorHtml(typeof app.specs === "object" ? JSON.stringify(app.specs, null, 2) : app.specs)}</textarea>
+          </label>
+
+          <label class="admin-editor-wide">Aanvullende informatie
+            <textarea name="additional_info" rows="4">${escapeAdminEditorHtml(app.additional_info)}</textarea>
           </label>
 
           <label class="admin-editor-wide">Privacy
@@ -1625,6 +1650,46 @@ async function uploadApkToFreeAppsStorage(appId, file) {
   return result;
 }
 
+async function uploadReadmeToSupabase(appId, readmeFile) {
+  if (!appId || !readmeFile) {
+    throw new Error("App-ID of README-bestand ontbreekt.");
+  }
+
+  const safeFilename = readmeFile.name
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const storagePath =
+    `readmes/${appId}/${Date.now()}-${safeFilename}`;
+
+  const { error: uploadError } = await supabaseClient.storage
+    .from("Apps")
+    .upload(storagePath, readmeFile, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (uploadError) {
+    throw new Error(
+      `README uploaden mislukt: ${uploadError.message}`
+    );
+  }
+
+  const { data } = supabaseClient.storage
+    .from("Apps")
+    .getPublicUrl(storagePath);
+
+  if (!data?.publicUrl) {
+    throw new Error(
+      "README is opgeslagen, maar de publieke URL kon niet worden bepaald."
+    );
+  }
+
+  return {
+    readme_url: data.publicUrl,
+    readme_filename: readmeFile.name
+  };
+}
+
 async function saveAdminAppEditor(event) {
   event.preventDefault();
 
@@ -1644,19 +1709,27 @@ async function saveAdminAppEditor(event) {
       ? selectedFile
       : null;
 
+      const selectedReadme = formData.get("readme_file");
+
+  const readmeFile =
+    selectedReadme instanceof File && selectedReadme.size > 0
+      ? selectedReadme
+      : null;
+  
   const record = {
     name: String(formData.get("name") || "").trim(),
-    subtitle: String(formData.get("subtitle") || "").trim() || null,
+   
     description: String(formData.get("description") || "").trim() || null,
     category: String(formData.get("category") || "").trim() || null,
     platform: String(formData.get("platform") || "apk").trim(),
     version: String(formData.get("version") || "").trim() || null,
     author: String(formData.get("author") || "").trim() || null,
+    submitter_name:
+      String(formData.get("submitter_name") || "").trim() || null,
     status: String(formData.get("status") || "draft").trim(),
     screenshot_url:
       String(formData.get("screenshot_url") || "").trim() || null,
-    icon_url:
-      String(formData.get("icon_url") || "").trim() || null,
+   
     download_url:
       String(formData.get("download_url") || "").trim() || null,
     file_size:
@@ -1667,10 +1740,12 @@ async function saveAdminAppEditor(event) {
       String(formData.get("license") || "").trim() || null,
     privacy:
       String(formData.get("privacy") || "").trim() || null,
-    features: adminTextToArray(formData.get("features")),
+  
     languages: adminTextToArray(formData.get("languages")),
     specs:
       String(formData.get("specs") || "").trim() || null,
+    additional_info:
+      String(formData.get("additional_info") || "").trim() || null,
     rejection_reason:
       String(formData.get("rejection_reason") || "").trim() || null,
     updated_at: new Date().toISOString()
@@ -1741,6 +1816,28 @@ async function saveAdminAppEditor(event) {
     if (!appId) {
       overlay.dataset.appId = savedAppId;
     }
+
+      if (readmeFile) {
+  setAdminEditorStatus("README uploaden...");
+
+  const readmeResult =
+    await uploadReadmeToSupabase(savedAppId, readmeFile);
+
+  const { error: readmeUpdateError } = await supabaseClient
+    .from("apps")
+    .update({
+      readme_url: readmeResult.readme_url,
+      readme_filename: readmeResult.readme_filename,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", savedAppId);
+
+  if (readmeUpdateError) {
+    throw new Error(
+      `README is opgeslagen, maar de gegevens konden niet worden bijgewerkt: ${readmeUpdateError.message}`
+    );
+  }
+}
 
     if (apkFile) {
       const sizeMb = (apkFile.size / 1024 / 1024).toFixed(1);
@@ -1907,15 +2004,6 @@ async function openUserAppEditor() {
   closeUserAppEditor();
   closeAdminAppEditor();
 
-  const { data: authData } = await supabaseClient.auth.getUser();
-  const user = authData?.user;
-
-  if (!user) {
-    setAccountMode("login");
-    focusBubble("account");
-    showLoginError("login vereist!");
-    return;
-  }
 
   const overlay = document.createElement("div");
   overlay.id = "userAppEditorOverlay";
@@ -1958,21 +2046,24 @@ async function openUserAppEditor() {
           <div class="user-editor-fields">
             <section class="user-editor-main user-editor-panel">
               <div class="user-editor-grid user-editor-main-grid">
-                <label>Naam van de app *
+                <label>  Naam
                   <input name="name" required maxlength="120">
-                </label>
+              </label>
 
-                <label>Ondertitel
-                  <input name="subtitle" maxlength="180">
-                </label>
+              <label>Naam indiener
+                <input name="submitter_name" maxlength="120">
+              </label>
+           
 
-                <label class="user-editor-wide">Beschrijving *
-                  <textarea name="description" rows="5" required></textarea>
-                </label>
+               <label class="user-editor-wide">
+                Beschrijving *
+                <small>
+                  Opmaak: lege regel = alinea · - tekst = opsomming · 1. tekst = nummering · **tekst** = vet
+                </small>
+                <textarea name="description" rows="5" required></textarea>
+              </label>
 
-                <label class="user-editor-wide">Belangrijkste functies <small>één per regel</small>
-                  <textarea name="features" rows="5"></textarea>
-                </label>
+         
 
                 <label>Talen <small>één per regel</small>
                   <textarea name="languages" rows="4" placeholder="Nederlands&#10;Engels"></textarea>
@@ -1982,60 +2073,80 @@ async function openUserAppEditor() {
                   <textarea name="privacy" rows="4"></textarea>
                 </label>
 
-                <label class="user-editor-wide">Specificaties en extra informatie
+                <label class="user-editor-wide">
+                  Specificaties
+                  <small>
+                    Opmaak: lege regel = alinea · - tekst = opsomming · 1. tekst = nummering · **tekst** = vet
+                  </small>
                   <textarea name="specs" rows="5"></textarea>
                 </label>
+
+                <label class="user-editor-wide">
+                  Aanvullende informatie
+                  <small>
+                    Opmaak: lege regel = alinea · - tekst = opsomming · 1. tekst = nummering · **tekst** = vet
+                  </small>
+                  <textarea name="additional_info" rows="5"></textarea>
+                </label>
+         
               </div>
             </section>
 
             <aside class="user-editor-meta user-editor-panel">
-              <div class="user-editor-grid user-editor-meta-grid">
-                <label>Versie
-                  <input name="version" value="0.1">
-                </label>
 
-                <label>Auteur / studio
-                  <input name="author">
-                </label>
+  <div class="user-editor-grid user-editor-meta-grid">
+    <label>Versie
+      <input name="version" value="0.1">
+    </label>
 
-                <label>Platform
-                  <select name="platform">
-                    <option value="apk">APK</option>
-                    <option value="pwa">PWA</option>
-                    <option value="web">WEB</option>
-                    <option value="other">OTHER</option>
-                  </select>
-                </label>
+    <label>Auteur / studio
+      <input name="author">
+    </label>
 
-                <label>Categorie
-                  <select name="category">
-                    <option value="games">Games</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="tools">Tools</option>
-                  </select>
-                </label>
+    <label>Platform
+      <select name="platform">
+        <option value="apk">APK</option>
+        <option value="pwa">PWA</option>
+        <option value="web">WEB</option>
+        <option value="other">OTHER</option>
+      </select>
+    </label>
 
-                <label>Bestandsgrootte
-                  <input name="file_size" placeholder="bv. 15.3 MB">
-                </label>
+    <label>Categorie
+      <select name="category">
+        <option value="games">Games</option>
+        <option value="utilities">Utilities</option>
+        <option value="tools">Tools</option>
+      </select>
+    </label>
 
-                <label>Minimum Android
-                  <input name="min_android" placeholder="bv. Android 8">
-                </label>
+    <label>Bestandsgrootte
+      <input name="file_size" placeholder="bv. 15.3 MB">
+    </label>
 
-                <label>Licentie
-                  <input name="license" value="Gratis">
-                </label>
+    <label>Minimum Android
+      <input name="min_android" placeholder="bv. Android 8">
+    </label>
 
-                <label>Icoon URL
-                  <input name="icon_url" type="url" placeholder="https://...">
-                </label>
+    <label>Licentie
+      <input name="license" value="Gratis">
+    </label>
 
-                <label>Link naar appbestand *
-                  <input name="download_url" required placeholder="https://...">
-                </label>
-              </div>
-            </aside>
+    <label>Link naar appbestand *
+      <input name="download_url" required placeholder="https://...">
+    </label>
+  </div>
+
+  <label class="user-editor-readme">
+    README / HANDLEIDING
+    <input
+      name="readme_file"
+      type="file"
+      accept=".txt,.md,text/plain,text/markdown"
+    >
+  </label>
+
+</aside>
           </div>
         </div>
 
@@ -2064,6 +2175,7 @@ async function saveUserAppEditor(event) {
   const form = event.currentTarget;
   const submitButton = document.querySelector('.user-app-editor-overlay .user-editor-submit');
   const formData = new FormData(form);
+  const readmeFile = formData.get("readme_file");
  
 if (!loggedIn) {
   alert("Log in om een app te uploaden.");
@@ -2081,24 +2193,23 @@ if (authError || !user) {
 }
 
   const record = {
-    name: String(formData.get("name") || "").trim(),
-    subtitle: String(formData.get("subtitle") || "").trim() || null,
+    name: String(formData.get("name") || "").trim(), 
     description: String(formData.get("description") || "").trim(),
     category: String(formData.get("category") || "").trim() || null,
     platform: String(formData.get("platform") || "apk").trim().toLowerCase(),
     version: String(formData.get("version") || "").trim() || null,
     author: String(formData.get("author") || "").trim() || null,
+    submitter_name: String(formData.get("submitter_name") || "").trim() || null,
     status: "pending",
     screenshot_url: String(formData.get("screenshot_url") || "").trim() || null,
-    icon_url: String(formData.get("icon_url") || "").trim() || null,
     download_url: String(formData.get("download_url") || "").trim() || null,
     file_size: String(formData.get("file_size") || "").trim() || null,
     min_android: String(formData.get("min_android") || "").trim() || null,
     license: String(formData.get("license") || "").trim() || "Gratis",
-    privacy: String(formData.get("privacy") || "").trim() || null,
-    features: adminTextToArray(formData.get("features")),
+    privacy: String(formData.get("privacy") || "").trim() || null,   
     languages: adminTextToArray(formData.get("languages")),
     specs: String(formData.get("specs") || "").trim() || null,
+    additional_info: String(formData.get("additional_info") || "").trim() || null,
     submitted_by: user.id,
     updated_at: new Date().toISOString()
   };
@@ -2111,9 +2222,11 @@ if (authError || !user) {
   if (submitButton) submitButton.disabled = true;
   setUserEditorStatus("App indienen...");
 
-  const { error } = await supabaseClient
-    .from("apps")
-    .insert(record);
+ const { data: insertedApp, error } = await supabaseClient
+  .from("apps")
+  .insert(record)
+  .select("id")
+  .single();
 
   if (submitButton) submitButton.disabled = false;
 
@@ -2122,6 +2235,31 @@ if (authError || !user) {
     setUserEditorStatus(`Indienen mislukt: ${error.message}`, true);
     return;
   }
+
+  if (readmeFile && readmeFile.size > 0) {
+  try {
+    const readmeData = await uploadReadmeToSupabase(
+      insertedApp.id,
+      readmeFile
+    );
+
+    const { error: readmeDbError } = await supabaseClient
+      .from("apps")
+      .update(readmeData)
+      .eq("id", insertedApp.id);
+
+    if (readmeDbError) {
+      throw readmeDbError;
+    }
+  } catch (readmeError) {
+    console.error(readmeError);
+    setUserEditorStatus(
+      `App ingediend, maar README mislukt: ${readmeError.message}`,
+      true
+    );
+    return;
+  }
+}
 
   setUserEditorStatus("Je app is ingediend en wacht op controle.");
   form.reset();
