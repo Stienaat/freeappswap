@@ -43,9 +43,14 @@ window.FreeAppSwapBubbles = (() => {
 
     node.classList.toggle("hidden", stateName === "hidden");
     node.style.setProperty("--time", time);
-    node.style.setProperty("--x", `${state.x}%`);
-    node.style.setProperty("--y", `${state.y}%`);
-    node.style.setProperty("--size", state.size);
+   const mobileSearchActive =
+  kind === "search" &&
+  stateName === "active" &&
+  window.innerWidth <= 768;
+
+node.style.setProperty("--x", mobileSearchActive ? "50%" : `${state.x}%`);
+node.style.setProperty("--y", mobileSearchActive ? "50%" : `${state.y}%`);
+node.style.setProperty("--size", mobileSearchActive ? "min(88vw, 88vh)" : state.size);
     node.style.setProperty("--scale", state.scale);
     node.style.setProperty("--z", `${state.z}px`);
     node.style.setProperty("--dx", `${state.dx}px`);
