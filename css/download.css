@@ -284,6 +284,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+  .app-bubble[data-kind="download"].focus .download-list-overlay {
+    left: 50%;
+    top: 50%;
+    width: 92%;
+    height: 78%;
+    padding: 12px 14px;
+    transform: translate(-50%, -50%);
+  }
+}
 /* Nieuwe inhoudsopmaak middenkolom */
 
 .download-card-text-section {
