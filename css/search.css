@@ -176,18 +176,18 @@ body.day-open #search {
 
 
 @media (max-width: 768px) {
-  .search.focus {
+  .search.open {
     --x: 50% !important;
     --y: 50% !important;
     --size: 88vmin !important;
     --scale: 1 !important;
   }
 
-  body.day-open #search.search.focus {
+  body.day-open #search.search.open {
     transform: scale(1) !important;
   }
 
-  .search.focus .search-menu {
+  .search.open .search-menu {
     width: 78%;
     max-height: 72vh;
     padding-left: 0;
