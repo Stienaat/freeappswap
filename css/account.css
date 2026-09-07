@@ -1,7 +1,7 @@
 .account {
   --x: 72%;
   --y: 32%;
-  --size: min(18vw, 22vh);
+  --size: min(15vw, 19vh);
 
   --opacity: 0;
   --time: 3800ms;
@@ -27,8 +27,6 @@
   --opacity: 1;
   padding: 0;
 }
-
-
 
 .account.focus {
   --x: 72%;
@@ -401,3 +399,12 @@
     top: 22%;
     transform: translate(-50%, -50%) scale(0.01);
   }
+  
+@media (max-width: 768px) {
+  .account.focus {
+    --x: 50%;
+    --y: 50%;
+    --size: min(92vw, 92vh);
+    --scale: 1;
+  }
+}
