@@ -39,9 +39,9 @@
       z-index: 40;
     }
     .app-bubble[data-kind="download"].focus {
-  --size: min(70vw, 115vh) !important;
-  --scale: 1 !important;
-}
+      --size: min(70vw, 115vh) !important;
+      --scale: 1 !important;
+    }
 
 .app-bubble[data-kind="download"].focus .download-list-overlay {
   position: absolute;
@@ -259,32 +259,6 @@
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 900px) {
-  .download-card-body {
-    grid-template-columns: minmax(140px, 27%) minmax(0, 1fr);
-  }
-
-  .download-card-meta {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 12px;
-  }
-}
-
-@media (max-width: 760px), (max-height: 650px) {
-  .download-card-body {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(130px, 30%) auto auto;
-    overflow-y: auto;
-  }
-
-  .download-card-meta {
-    grid-column: auto;
-    grid-template-columns: 1fr;
-  }
-}
-
 
 /* Nieuwe inhoudsopmaak middenkolom */
 
@@ -345,4 +319,33 @@
 .download-card-main .download-card-text-section {
   height: auto;
 
+}
+@media (max-width: 900px) {
+  .download-card-body {
+    grid-template-columns: minmax(140px, 27%) minmax(0, 1fr);
+  }
+
+  .download-card-meta {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+  }
+}
+
+@media (max-width: 760px), (max-height: 650px) {
+  .download-card-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(130px, 30%) auto auto;
+    overflow-y: auto;
+  }
+
+  .download-card-meta {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .app-bubble[data-kind="download"].focus {
+    --size: min(78vw, 115vh) !important;
+  }
 }

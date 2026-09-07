@@ -8,8 +8,17 @@ window.FreeAppSwapBubbles = (() => {
     search: {
       hidden: { x: 8, y: 23, size: "70px", scale: .08, z: 650, opacity: 0, dx: 0, dy: 0, pad: "9px" },
       idle: { x: 8, y: 23, size: "70px", scale: 1, z: 800, opacity: .96, dx: 0, dy: 0, pad: "9px" },
-      active: { x: 22, y: 34, size: "min(42vw, 42vh)", scale: 1, z: 1100, opacity: .98, dx: 0, dy: 0, pad: "clamp(18px, 4vw, 46px)" },
-      background: { x: 8, y: 23, size: "70px", scale: .88, z: 650, opacity: .88, dx: 0, dy: 0, pad: "9px" }
+active: {
+  x: window.innerWidth <= 768 ? 50 : 22,
+  y: window.innerWidth <= 768 ? 50 : 34,
+  size: window.innerWidth <= 768 ? "min(88vw, 88vh)" : "min(42vw, 42vh)",
+  scale: 1,
+  z: 1100,
+  opacity: .98,
+  dx: 0,
+  dy: 0,
+  pad: "clamp(18px, 4vw, 46px)"
+},      background: { x: 8, y: 23, size: "70px", scale: .88, z: 650, opacity: .88, dx: 0, dy: 0, pad: "9px" }
     },
     account: {
       hidden: { x: 62, y: 47, size: "min(20vw, 20vh)", scale: .04, z: 820, opacity: 0, dx: 0, dy: 0, pad: "clamp(10px, 2vw, 22px)" },
@@ -48,9 +57,7 @@ window.FreeAppSwapBubbles = (() => {
   stateName === "active" &&
   window.innerWidth <= 768;
 
-node.style.setProperty("--x", mobileSearchActive ? "50%" : `${state.x}%`);
-node.style.setProperty("--y", mobileSearchActive ? "50%" : `${state.y}%`);
-node.style.setProperty("--size", mobileSearchActive ? "min(88vw, 88vh)" : state.size);
+
     node.style.setProperty("--scale", state.scale);
     node.style.setProperty("--z", `${state.z}px`);
     node.style.setProperty("--dx", `${state.dx}px`);
