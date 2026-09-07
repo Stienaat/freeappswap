@@ -224,4 +224,10 @@
   .mercury-form-wide {
     grid-column: auto;
   }
+  @media (max-width: 768px) {
+  .app-bubble.mercury.focus {
+    --size: 103vmin !important;
+    --scale: 1 !important;
+  }
+}
 }

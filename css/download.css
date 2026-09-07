@@ -348,4 +348,10 @@
   .app-bubble[data-kind="download"].focus {
     --size: min(78vw, 115vh) !important;
   }
+  @media (max-width: 768px) {
+  .app-bubble[data-kind="download"].focus {
+    --size: 103vmin !important;
+    --scale: 1 !important;
+  }
+}
 }
