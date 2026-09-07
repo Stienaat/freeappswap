@@ -183,9 +183,9 @@ body.day-open #search {
     --scale: 1 !important;
   }
 
-  body.day-open #search.search.focus {
-    transform: scale(1) !important;
-  }
+body.day-open #search.search.focus {
+  transform: translate(-50%, -50%) scale(1) !important;
+}
 
   .search.focus .search-menu {
     width: 78%;
