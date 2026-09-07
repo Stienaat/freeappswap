@@ -16,8 +16,10 @@
     --size: min(25vw, 20vh);
   }
 
-  .account.focus {
-    --x: 67%;
-    --y: 43%;
-  }
+.account.focus {
+  --x: 50%;
+  --y: 50%;
+  --size: min(92vw, 92vh);
+  --scale: 1;
+}
 }

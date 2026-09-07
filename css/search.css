@@ -177,7 +177,7 @@ body.day-open #search {
   .search.focus {
     --x: 50%;
     --y: 50%;
-    --size: min(92vw, 92vh);
+    --size: min(62vw, 62vh);
   }
 
   .search.focus .search-menu {

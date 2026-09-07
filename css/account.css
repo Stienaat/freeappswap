@@ -400,11 +400,4 @@
     transform: translate(-50%, -50%) scale(0.01);
   }
   
-@media (max-width: 768px) {
-  .account.focus {
-    --x: 50%;
-    --y: 50%;
-    --size: min(92vw, 92vh);
-    --scale: 1;
-  }
 }
