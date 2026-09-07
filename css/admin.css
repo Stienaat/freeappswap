@@ -753,7 +753,11 @@ body.user-editor-open {
   font-size: 0.82rem;
   font-weight: 700;
 }
-
+  .app-bubble.admin.admin-phase-3 .admin-members-panel {
+    width: 78%;
+    height: 62%;
+    transform: scale(1);
+}
 
 
 /* ADMIN CONFIG CARD */

@@ -171,4 +171,11 @@ overflow-x: hidden;
   .card-meta {
     grid-template-columns: 1fr;
   }
+  @media (max-width: 768px) {
+  .card {
+    width: 84vw;
+    height: 68vh;
+    padding: 14px;
+  }
+}
 }

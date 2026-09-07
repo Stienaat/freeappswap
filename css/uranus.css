@@ -251,7 +251,7 @@ body.uranus-info-active .app-bubble:not(.uranus) {
 
 @media (max-width: 900px) {
   .app-bubble.uranus.info-open {
-    --size: min(94vw, 92vh) !important;
+    --size: 105vmin !important;
   }
 
   .uranus-scroll {
@@ -267,7 +267,7 @@ body.uranus-info-active .app-bubble:not(.uranus) {
 
 @media (max-width: 560px) {
   .app-bubble.uranus.info-open {
-    --size: min(98vw, 90vh) !important;
+    --size: 105vmin !important;
   }
 
   .uranus-scroll {

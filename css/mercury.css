@@ -226,7 +226,7 @@
   }
   @media (max-width: 768px) {
   .app-bubble.mercury.focus {
-    --size: 103vmin !important;
+    --size: 108vmin !important;
     --scale: 1 !important;
   }
 }
