@@ -652,8 +652,8 @@ body.user-editor-open {
 
 @media (max-width: 768px) {
   .user-app-editor {
-    width: 88vw;
-    height: 78vh;
+    width: 94vw;
+    height: 90vh;
   }
 }
 
@@ -691,11 +691,11 @@ body.user-editor-open {
     overflow: visible;
   }
 
-  .user-editor-media {
-    justify-self: center;
-    width: min(260px, 88vw);
-    height: 390px;
-  }
+.user-editor-media {
+  justify-self: center;
+  width: min(220px, 72vw);
+  height: 230px;
+}
 
   .user-editor-fields {
     overflow: visible;
