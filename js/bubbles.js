@@ -44,29 +44,29 @@ active: {
 
   function el(id) { return document.getElementById(`${id}Bubble`); }
 
-  function applyState(id, stateName, time = "3600ms") {
-    const node = el(id);
-    if (!node) return;
-    const state = states[id][stateName];
-    if (!state) return;
+ function applyState(id, stateName, time = "3600ms") {
+  const node = el(id);
+  if (!node) return;
 
-    node.classList.toggle("hidden", stateName === "hidden");
-    node.style.setProperty("--time", time);
-   const mobileSearchActive =
-  kind === "search" &&
-  stateName === "active" &&
-  window.innerWidth <= 768;
+  const state = states[id][stateName];
+  if (!state) return;
 
+  node.classList.toggle("hidden", stateName === "hidden");
 
-    node.style.setProperty("--scale", state.scale);
-    node.style.setProperty("--z", `${state.z}px`);
-    node.style.setProperty("--dx", `${state.dx}px`);
-    node.style.setProperty("--dy", `${state.dy}px`);
-    node.style.setProperty("--opacity", state.opacity);
-    node.style.setProperty("--pad", state.pad);
-    node.style.setProperty("--pointer", state.opacity > .25 ? "auto" : "none");
-    node.style.zIndex = Math.round(state.z + 3000);
-  }
+  node.style.setProperty("--time", time);
+  node.style.setProperty("--x", `${state.x}%`);
+  node.style.setProperty("--y", `${state.y}%`);
+  node.style.setProperty("--size", state.size);
+  node.style.setProperty("--scale", state.scale);
+  node.style.setProperty("--z", `${state.z}px`);
+  node.style.setProperty("--dx", `${state.dx}px`);
+  node.style.setProperty("--dy", `${state.dy}px`);
+  node.style.setProperty("--opacity", state.opacity);
+  node.style.setProperty("--pad", state.pad);
+  node.style.setProperty("--pointer", state.opacity > .25 ? "auto" : "none");
+
+  node.style.zIndex = Math.round(state.z + 3000);
+}
 
   function focus(id, isLoggedIn = false) {
     const all = ["home", "search", "account", "download", "upload"];
