@@ -650,11 +650,12 @@ body.user-editor-open {
     padding: 0;
   }
 
+@media (max-width: 768px) {
   .user-app-editor {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
+    width: 88vw;
+    height: 78vh;
   }
+}
 
   .user-editor-header {
     min-height: 72px;
