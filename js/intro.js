@@ -1,5 +1,3 @@
-console.log("intro module loaded");
-
 function createIntroStars() {
   const layer = document.getElementById("introStars");
   if (!layer) return;

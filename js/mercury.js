@@ -1,5 +1,3 @@
-console.log("mercury module loaded");
-
 const MERCURY_TYPES = {
   question: "Vraag",
   comment: "Opmerking",

@@ -1,5 +1,3 @@
-console.log("reviews module loaded");
-
 const REVIEW_STATUS_VISIBLE = "visible";
 
 function reviewEscape(value) {

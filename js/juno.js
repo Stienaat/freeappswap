@@ -1,5 +1,3 @@
-console.log("juno module loaded");
-
 window.createJunoBubble = function createJunoBubble() {
   if (document.querySelector('.app-bubble[data-kind="juno"]')) return;
 

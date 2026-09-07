@@ -16,7 +16,7 @@
   - globale login-status
   - search/download/upload/admin bubbles
 */
-console.log("account module loaded");
+
 window.FreeAppSwapMoon = {};
 
 

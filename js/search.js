@@ -1,5 +1,3 @@
-console.log("sun module loaded");
-
 const sunSearch = document.getElementById("search");
 
 function openSunSearch() {

@@ -1,5 +1,3 @@
-console.log("admin config module loaded");
-
 const SITE_CONFIG_JUNO_KEY = "juno";
 
 window.attachAdminConfigButton = function attachAdminConfigButton(admin) {
@@ -96,6 +94,7 @@ window.openAdminConfigCard = async function openAdminConfigCard() {
         <button class="admin-config-tab" data-tab="reviews" type="button">REVIEWS</button>
         <button class="admin-config-tab" data-tab="stats" type="button">STATISTIEKEN</button>
         <button class="admin-config-tab" data-tab="contact" type="button">CONTACT</button>
+        <button class="admin-config-tab" data-tab="categories" type="button">CATEGORIEËN</button>
       </nav>
 
       <main class="admin-config-body">
@@ -284,6 +283,37 @@ window.openAdminConfigCard = async function openAdminConfigCard() {
 
           <div id="adminContactStatus" class="admin-contact-status"></div>
         </section>
+        <section class="admin-config-page" data-page="categories">
+<div class="admin-category-toolbar">
+  <strong>CATEGORIEËN</strong>
+
+  <div class="admin-category-add">
+    <input
+      id="adminCategoryName"
+      type="text"
+      placeholder="Nieuwe categorie"
+      maxlength="80"
+    >
+
+    <select id="adminCategoryParent">
+      <option value="">Hoofdcategorie</option>
+    </select>
+    <label class="admin-category-active">
+    <input id="adminCategoryActive" type="checkbox" checked>
+        ACTIEF
+    </label>
+    <button id="btnAddAdminCategory" type="button">
+      TOEVOEGEN
+    </button>
+  </div>
+</div>
+
+  <div id="adminCategoryTree">
+    Categorieën worden hier geladen.
+  </div>
+
+  <div id="adminCategoryStatus"></div>
+</section>
       </main>
     </section>
   `;
@@ -314,6 +344,10 @@ window.openAdminConfigCard = async function openAdminConfigCard() {
       if (tabName === "stats") {
         loadAdminStats();
       }
+
+      if (tabName === "categories") {
+        loadAdminCategories();
+    }
     });
   });
 
@@ -342,6 +376,10 @@ window.openAdminConfigCard = async function openAdminConfigCard() {
       window.openJunoCard();
     }
   };
+
+  
+  overlay.querySelector("#btnAddAdminCategory").onclick =
+  addAdminCategory;
 
   form.onsubmit = async event => {
     event.preventDefault();
@@ -1042,6 +1080,239 @@ async function deleteAdminContactMessage(item) {
   closeAdminContactDetail();
   await loadAdminContactMessages();
   setAdminContactStatus("Bericht verwijderd.");
+}
+async function loadAdminCategories() {
+  const host = document.getElementById("adminCategoryTree");
+  const status = document.getElementById("adminCategoryStatus");
+
+  if (!host) return;
+
+  host.textContent = "Categorieën laden...";
+  if (status) status.textContent = "";
+
+  const { data, error } = await supabaseClient
+    .from("app_categories")
+    .select("id, name, parent_id, sort_order, active")
+    .order("sort_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    host.textContent = "Categorieën laden mislukt.";
+    if (status) status.textContent = error.message;
+    return;
+  }
+
+console.table(
+  (data || []).map(item => ({
+    name: item.name,
+    id: item.id,
+    parent_id: item.parent_id,
+    active: item.active
+  }))
+);
+
+const categories = data || [];
+
+const parentSelect = document.getElementById("adminCategoryParent");
+
+if (parentSelect) {
+  function categoryPath(item) {
+    const parts = [item.name];
+    let parentId = item.parent_id;
+
+    while (parentId) {
+      const parent = categories.find(cat => cat.id === parentId);
+      if (!parent) break;
+
+      parts.unshift(parent.name);
+      parentId = parent.parent_id;
+    }
+
+    return parts.join(" > ");
+  }
+
+  const options = [...categories]
+    .sort((a, b) =>
+      categoryPath(a).localeCompare(categoryPath(b), "nl")
+    )
+    .map(item => `
+      <option value="${adminContactEscape(item.id)}">
+        ${adminContactEscape(categoryPath(item))}
+      </option>
+    `)
+    .join("");
+
+  parentSelect.innerHTML =
+    `<option value="">Hoofdcategorie</option>` + options;
+}
+
+function renderCategoryLevel(parentId = null, level = 0) {
+  const children = categories
+    .filter(item => item.parent_id === parentId)
+    .sort((a, b) =>
+      (a.sort_order - b.sort_order) ||
+      a.name.localeCompare(b.name, "nl")
+    );
+
+  return children.map(item => `
+<div
+  class="admin-category-item"
+  data-category-id="${adminContactEscape(item.id)}"
+  style="padding-left: ${level * 28}px; cursor: pointer;"
+>
+  ${level > 0 ? "↳ " : ""}
+<span style="${item.active === false ? "color: #888; opacity: 0.65;" : ""}">
+  ${adminContactEscape(item.name)}
+</span>
+</div>
+    ${renderCategoryLevel(item.id, level + 1)}
+  `).join("");
+}
+
+host.innerHTML = renderCategoryLevel();
+host.querySelectorAll(".admin-category-item").forEach(element => {
+  element.onclick = () => {
+    const item = categories.find(
+      category => category.id === element.dataset.categoryId
+    );
+
+    if (!item) return;
+
+    console.log("Geselecteerde categorie:", item);
+
+const nameInput = document.getElementById("adminCategoryName");
+const parentSelect = document.getElementById("adminCategoryParent");
+
+
+if (nameInput) {
+  nameInput.value = item.name;
+  nameInput.dataset.categoryId = item.id;
+}
+
+if (parentSelect) {
+  Array.from(parentSelect.options).forEach(option => {
+    option.disabled = option.value === item.id;
+  });
+
+  parentSelect.value = item.parent_id || "";
+}
+
+const activeInput = document.getElementById("adminCategoryActive");
+
+if (activeInput) {
+  activeInput.checked = item.active !== false;
+}
+
+const addButton = document.getElementById("btnAddAdminCategory");
+
+if (addButton) {
+  addButton.textContent = "OPSLAAN";
+}
+  };
+});
+}
+
+async function addAdminCategory() {
+  const nameInput = document.getElementById("adminCategoryName");
+  const parentSelect = document.getElementById("adminCategoryParent");
+  const activeInput = document.getElementById("adminCategoryActive");
+  const status = document.getElementById("adminCategoryStatus");
+
+  if (!nameInput || !parentSelect) return;
+
+  const name = nameInput.value.trim();
+  const parentId = parentSelect.value || null;
+  const categoryId = nameInput.dataset.categoryId || null;
+  const active = activeInput?.checked !== false;
+
+  if (!name) {
+    if (status) status.textContent = "Geef een categorienaam in.";
+    return;
+  }
+
+if (status) {
+  status.textContent = categoryId
+    ? "Categorie opslaan..."
+    : "Categorie toevoegen...";
+}
+
+if (categoryId && parentId) {
+  const { data: categories, error: categoryError } = await supabaseClient
+    .from("app_categories")
+    .select("id, parent_id");
+
+  if (categoryError) {
+    console.error(categoryError);
+    if (status) {
+      status.textContent = "Categoriecontrole mislukt.";
+    }
+    return;
+  }
+
+  let currentId = parentId;
+
+  while (currentId) {
+    if (currentId === categoryId) {
+      if (status) {
+        status.textContent =
+          "Deze bovenliggende categorie zou een cirkel veroorzaken.";
+      }
+      return;
+    }
+
+    const current = categories.find(item => item.id === currentId);
+    if (!current) break;
+
+    currentId = current.parent_id;
+  }
+}
+
+let query;
+
+if (categoryId) {
+  query = supabaseClient
+    .from("app_categories")
+    .update({
+      name,
+      parent_id: parentId,
+      active,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", categoryId);
+} else {
+  query = supabaseClient
+    .from("app_categories")
+    .insert({
+      name,
+      parent_id: parentId,
+      sort_order: 0,
+      active: true
+    });
+}
+
+const { error } = await query;
+
+  if (error) {
+    console.error(error);
+    if (status) status.textContent = `Toevoegen mislukt: ${error.message}`;
+    return;
+  }
+
+  nameInput.value = "";
+  parentSelect.value = "";
+
+  delete nameInput.dataset.categoryId;
+
+const addButton = document.getElementById("btnAddAdminCategory");
+
+if (addButton) {
+  addButton.textContent = "TOEVOEGEN";
+}
+
+  if (status) status.textContent = "Categorie toegevoegd.";
+
+  await loadAdminCategories();
 }
 
 window.loadAdminContactMessages = loadAdminContactMessages;

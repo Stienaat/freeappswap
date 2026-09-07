@@ -1,5 +1,3 @@
-console.log("admin knowledge base module loaded");
-
 const KNOWLEDGE_SECTIONS = [
   ["welcome", "Welkom"],
   ["philosophy", "Filosofie"],

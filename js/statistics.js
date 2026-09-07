@@ -1,5 +1,3 @@
-console.log("statistics module loaded");
-
 async function incrementSiteCounter(counter) {
   const { error } = await supabaseClient.rpc(
     "increment_site_counter",

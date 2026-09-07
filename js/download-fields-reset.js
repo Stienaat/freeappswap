@@ -1,5 +1,3 @@
-console.log("download fields + card reset module loaded");
-
 (function () {
   "use strict";
 

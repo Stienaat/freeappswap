@@ -1,5 +1,3 @@
-console.log("analytics module loaded");
-
 async function recordAnalyticsEvent(eventName, appId = null, metadata = {}) {
   try {
     await supabaseClient.rpc("record_analytics_event", {

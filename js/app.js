@@ -334,7 +334,6 @@ function handleNavigationTarget(target) {
 
   if (target === "upload") {
     window.PlanetManager.activate("upload");
-    openUserAppEditor();
     return;
   }
 
@@ -1387,7 +1386,7 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
 
   let app = {
     name: "",
-    subtitle: "",
+  
     description: "",
     category: "",
     platform: "apk",
@@ -1448,8 +1447,6 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
             <input name="name" value="${escapeAdminEditorHtml(app.name)}" required>
           </label>
 
-   
-
           <label>Platform
             <select name="platform">
               <option value="apk" ${app.platform === "apk" ? "selected" : ""}>APK</option>
@@ -1458,9 +1455,11 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
               <option value="other" ${app.platform === "other" ? "selected" : ""}>OTHER</option>
             </select>
           </label>
-
           <label>Categorie
-            <input name="category" value="${escapeAdminEditorHtml(app.category)}">
+            <div
+              id="adminAppCategoryChain"
+              data-current-category="${escapeAdminEditorHtml(app.category || "")}"
+            ></div>
           </label>
 
           <label>Versie
@@ -1578,7 +1577,7 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
 
   document.body.appendChild(overlay);
   document.body.classList.add("admin-editor-open");
-
+  loadAdminAppCategoryChain();            
   overlay.addEventListener("click", event => {
     if (event.target === overlay) closeAdminAppEditor();
   });
@@ -1587,6 +1586,100 @@ async function openAdminAppEditor(appId = null, mode = "admin") {
   document.getElementById("btnCancelAdminEditor").onclick = closeAdminAppEditor;
   document.getElementById("adminAppEditorForm").onsubmit = saveAdminAppEditor;
   overlay.querySelector('[name="name"]')?.focus();
+}
+
+async function loadAdminAppCategoryChain() {
+  const host = document.getElementById("adminAppCategoryChain");
+  if (!host) return;
+
+  const currentCategory = host.dataset.currentCategory || "";
+
+  const currentParts = currentCategory
+    .split(">")
+    .map(part => part.trim())
+    .filter(Boolean);
+
+  const { data, error } = await supabaseClient
+    .from("app_categories")
+    .select("id, name, parent_id, sort_order, active")
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Venus categorieën laden mislukt:", error);
+    return;
+  }
+
+  const categories = data || [];
+
+  function getChildren(parentId) {
+    return categories
+      .filter(item => item.parent_id === parentId)
+      .sort((a, b) =>
+        (a.sort_order - b.sort_order) ||
+        a.name.localeCompare(b.name, "nl")
+      );
+  }
+
+  function addLevel(parentId = null, level = 0) {
+    const children = getChildren(parentId);
+    if (!children.length) return;
+
+    const select = document.createElement("select");
+    select.className = "admin-app-category-level";
+    select.dataset.level = level;
+
+    const title =
+      level === 0
+        ? "Categorie kiezen..."
+        : level === 1
+          ? "Subcategorie kiezen..."
+          : `Niveau ${level + 1} kiezen...`;
+
+    select.innerHTML =
+      `<option value="">${title}</option>` +
+      children.map(item => `
+        <option value="${item.id}">
+          ${item.name}
+        </option>
+      `).join("");
+
+    host.appendChild(select);
+
+    const oldPart = currentParts[level];
+
+    if (oldPart) {
+      const match = children.find(
+        item => item.name.toLowerCase() === oldPart.toLowerCase()
+      );
+
+      if (match) {
+        select.value = match.id;
+        addLevel(match.id, level + 1);
+      }
+    }
+  }
+
+  host.innerHTML = "";
+  addLevel(null, 0);
+
+  host.addEventListener("change", event => {
+  const select = event.target.closest(".admin-app-category-level");
+  if (!select) return;
+
+  const level = Number(select.dataset.level);
+
+  host.querySelectorAll(".admin-app-category-level").forEach(item => {
+    if (Number(item.dataset.level) > level) {
+      item.remove();
+    }
+  });
+
+  if (select.value) {
+    addLevel(select.value, level + 1);
+  }
+});
 }
 
 async function uploadApkToFreeAppsStorage(appId, file) {
@@ -1716,11 +1809,21 @@ async function saveAdminAppEditor(event) {
       ? selectedReadme
       : null;
   
+      const categoryPath = Array.from(
+  form.querySelectorAll(".admin-app-category-level")
+)
+  .map(select =>
+    select.value
+      ? select.options[select.selectedIndex]?.textContent.trim()
+      : ""
+  )
+  .filter(Boolean)
+  .join(" > ");
+
   const record = {
     name: String(formData.get("name") || "").trim(),
-   
     description: String(formData.get("description") || "").trim() || null,
-    category: String(formData.get("category") || "").trim() || null,
+    category: categoryPath || null,
     platform: String(formData.get("platform") || "apk").trim(),
     version: String(formData.get("version") || "").trim() || null,
     author: String(formData.get("author") || "").trim() || null,
@@ -2112,13 +2215,7 @@ async function openUserAppEditor() {
       </select>
     </label>
 
-    <label>Categorie
-      <select name="category">
-        <option value="games">Games</option>
-        <option value="utilities">Utilities</option>
-        <option value="tools">Tools</option>
-      </select>
-    </label>
+    <div id="userAppCategoryChain"></div>
 
     <label>Bestandsgrootte
       <input name="file_size" placeholder="bv. 15.3 MB">
@@ -2158,6 +2255,177 @@ async function openUserAppEditor() {
   document.body.appendChild(overlay);
   document.body.classList.add("user-editor-open");
 
+async function loadUserAppCategories() {
+  const host = document.getElementById("userAppCategoryChain");
+  if (!host) return;
+
+  const { data, error } = await supabaseClient
+    .from("app_categories")
+    .select("id, name, parent_id, sort_order, active")
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Categorieën laden mislukt:", error);
+    return;
+  }
+
+  const categories = data || [];
+
+  function getChildren(parentId) {
+    return categories
+      .filter(item => item.parent_id === parentId)
+      .sort((a, b) =>
+        (a.sort_order - b.sort_order) ||
+        a.name.localeCompare(b.name, "nl")
+      );
+  }
+
+  function addCategoryLevel(parentId = null, level = 0) {
+    const children = getChildren(parentId);
+    if (!children.length) return;
+
+    const label = document.createElement("label");
+
+    const title =
+      level === 0
+        ? "Categorie"
+        : level === 1
+          ? "Subcategorie"
+          : `Niveau ${level + 1}`;
+
+    label.append(document.createTextNode(title));
+
+    const select = document.createElement("select");
+    select.className = "user-app-category-level";
+    select.dataset.level = level;
+
+    select.innerHTML =
+      `<option value="">${title} kiezen...</option>` +
+      children.map(item => `
+        <option value="${item.id}">
+          ${item.name}
+        </option>
+      `).join("");
+
+    label.appendChild(select);
+    host.appendChild(label);
+  }
+
+  host.innerHTML = "";
+  addCategoryLevel(null, 0);
+  host.addEventListener("change", event => {
+  const select = event.target.closest(".user-app-category-level");
+  if (!select) return;
+
+  const level = Number(select.dataset.level);
+
+  host.querySelectorAll(".user-app-category-level").forEach(item => {
+    const itemLevel = Number(item.dataset.level);
+
+    if (itemLevel > level) {
+      item.closest("label")?.remove();
+    }
+  });
+
+  if (select.value) {
+    addCategoryLevel(select.value, level + 1);
+  }
+});
+}
+
+await loadUserAppCategories();
+
+overlay.addEventListener("change", async event => {
+  if (event.target.id !== "userAppCategory") return;
+
+  const categorySelect = event.target;
+  const subcategorySelect = document.getElementById("userAppSubcategory");
+  if (!subcategorySelect) return;
+
+  const parentId = categorySelect.value;
+
+  subcategorySelect.innerHTML =
+    `<option value="">Subcategorie kiezen...</option>`;
+
+  if (!parentId) {
+    subcategorySelect.disabled = true;
+    subcategorySelect.innerHTML =
+      `<option value="">Eerst categorie kiezen...</option>`;
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("app_categories")
+    .select("id, name, sort_order")
+    .eq("parent_id", parentId)
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Subcategorieën laden mislukt:", error);
+    return;
+  }
+
+  subcategorySelect.disabled = false;
+
+  subcategorySelect.innerHTML =
+    `<option value="">Subcategorie kiezen...</option>` +
+    (data || [])
+      .map(item => `
+        <option value="${item.id}">
+          ${item.name}
+        </option>
+      `)
+      .join("");
+});
+
+overlay.addEventListener("change", async event => {
+  if (event.target.id !== "userAppSubcategory") return;
+
+  const subcategorySelect = event.target;
+  const subsubcategorySelect =
+    document.getElementById("userAppSubsubcategory");
+
+  if (!subsubcategorySelect) return;
+
+  const parentId = subcategorySelect.value;
+
+  if (!parentId) {
+    subsubcategorySelect.disabled = true;
+    subsubcategorySelect.innerHTML =
+      `<option value="">Eerst subcategorie kiezen...</option>`;
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("app_categories")
+    .select("id, name, sort_order")
+    .eq("parent_id", parentId)
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Sub-subcategorieën laden mislukt:", error);
+    return;
+  }
+
+  subsubcategorySelect.disabled = false;
+
+  subsubcategorySelect.innerHTML =
+    `<option value="">Sub-subcategorie kiezen...</option>` +
+    (data || [])
+      .map(item => `
+        <option value="${item.id}">
+          ${item.name}
+        </option>
+      `)
+      .join("");
+});
+
   overlay.addEventListener("click", event => {
     if (event.target === overlay) closeUserAppEditor();
   });
@@ -2191,11 +2459,20 @@ if (authError || !user) {
   focusBubble("account");
   return;
 }
+const categoryPath = Array.from(
+  form.querySelectorAll(".user-app-category-level")
+)
+  .map(select => {
+    const option = select.options[select.selectedIndex];
+    return select.value ? option?.textContent.trim() : "";
+  })
+  .filter(Boolean)
+  .join(" > ");
 
   const record = {
     name: String(formData.get("name") || "").trim(), 
     description: String(formData.get("description") || "").trim(),
-    category: String(formData.get("category") || "").trim() || null,
+    category: categoryPath || null,
     platform: String(formData.get("platform") || "apk").trim().toLowerCase(),
     version: String(formData.get("version") || "").trim() || null,
     author: String(formData.get("author") || "").trim() || null,
@@ -2268,7 +2545,7 @@ if (authError || !user) {
   setTimeout(() => closeUserAppEditor(), 1400);
 }
 
-window.openUserAppEditor = openUserAppEditor;
+window.  openUserAppEditor;
 window.closeUserAppEditor = closeUserAppEditor;
 window.PlanetManager.register("upload", closeUserAppEditor);
 

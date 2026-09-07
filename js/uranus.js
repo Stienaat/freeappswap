@@ -1,5 +1,3 @@
-console.log("uranus module loaded");
-
 window.createUranusBubble = function createUranusBubble() {
   if (document.querySelector('.app-bubble[data-kind="uranus"]')) return;
 

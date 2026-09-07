@@ -219,7 +219,7 @@ document.body.classList.add("planet-overlay-open");
 
 function showFreeAppsNotice(message) {
 
-   console.log("showFreeAppsNotice:", message);
+  console.log("showFreeAppsNotice:", message);
   document.querySelector(".freeapps-notice")?.remove();
 
   const notice = document.createElement("div");
