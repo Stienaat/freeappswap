@@ -19,55 +19,95 @@
 
 window.FreeAppSwapMoon = {};
 
-
 function createMoonShadow() {
   if (document.querySelector(".moon-shadow")) return;
 
   const shadow = document.createElement("div");
   shadow.className = "moon-shadow";
-
   document.querySelector(".space").appendChild(shadow);
 }
 
+
 function setAccountMode(mode) {
   accountMode = mode;
+
   clearLoginError();
 
   const isStart = mode === "start";
   const isRegister = mode === "register";
 
-  accountTitle.textContent = isStart ? "ACCOUNT" : isRegister ? "REGISTREER" : "LOGIN";
-  accountStart.style.display = isStart ? "grid" : "none";
-  accountForm.style.display = isStart ? "none" : "grid";
-  account.classList.toggle("register-mode", isRegister);
+  accountTitle.textContent =
+    isStart
+      ? "ACCOUNT"
+      : isRegister
+        ? "REGISTREER"
+        : "LOGIN";
 
-  submitButton.textContent = isRegister ? "REGISTREER" : "LOGIN";
-  forgotPassword.style.display = isRegister ? "none" : "block";
+  accountStart.style.display =
+    isStart ? "grid" : "none";
+
+  accountForm.style.display =
+    isStart ? "none" : "grid";
+
+  account.classList.toggle(
+    "register-mode",
+    isRegister
+  );
+
+  submitButton.textContent =
+    isRegister ? "REGISTREER" : "LOGIN";
+
+  forgotPassword.style.display =
+    isRegister ? "none" : "block";
 
   nameInput.required = isRegister;
   passwordConfirmInput.required = isRegister;
+
   emailInput.placeholder = "Email";
-  passwordInput.autocomplete = isRegister ? "new-password" : "current-password";
+
+  passwordInput.autocomplete =
+    isRegister
+      ? "new-password"
+      : "current-password";
 
   if (isStart) {
     account.classList.remove("focus", "dim");
   } else {
     focusBubble("account");
-    setTimeout(() => emailInput.focus(), 350);
+
+    setTimeout(() => {
+      emailInput.focus();
+    }, 350);
   }
 }
+
 function showLoginError(text) {
   loginMessage.textContent = text;
 }
 
 function setMoonLoggedIn() {
-  account.classList.remove("focus", "dim", "far");
+  account.classList.remove(
+    "focus",
+    "dim",
+    "far"
+  );
+
   account.classList.add("logged-in-moon");
+
   createMoonShadow();
 }
-function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
+
+function updateMoonFocusState(
+  activeIsAccount,
+  activeIsSearch,
+  loggedIn
+) {
   if (activeIsAccount) {
-    account.classList.remove("far", "dim");
+    account.classList.remove(
+      "far",
+      "dim"
+    );
+
     account.classList.add("focus");
   } else {
     account.classList.remove("focus");
@@ -76,19 +116,30 @@ function updateMoonFocusState(activeIsAccount, activeIsSearch, loggedIn) {
       account.classList.add("far");
       account.classList.remove("dim");
     } else {
-      account.classList.toggle("dim", activeIsSearch);
+      account.classList.toggle(
+        "dim",
+        activeIsSearch
+      );
     }
   }
 }
+
 function clearMoonFocusState() {
-  account.classList.remove("focus", "dim");
+  account.classList.remove(
+    "focus",
+    "dim"
+  );
 }
+
 function openAccountMoon() {
   account.classList.add("open");
   setAccountMode("start");
 }
-account.addEventListener("mouseenter", () => focusBubble("account"));
-account.addEventListener("click", () => focusBubble("account"));
+
+account.addEventListener("click", event => {
+  event.stopPropagation();
+  window.focusBubble("account");
+});
 
 showLogin.addEventListener("click", event => {
   event.stopPropagation();

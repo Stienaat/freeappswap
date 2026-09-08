@@ -231,3 +231,37 @@
   }
 }
 }
+.app-bubble.mercury.mercury-center:not(.mercury-open) {
+  --x: 50% !important;
+  --y: 52% !important;
+
+  left: var(--x) !important;
+  top: var(--y) !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
+
+  transition:
+    left .9s cubic-bezier(.2,.8,.2,1),
+    top .9s cubic-bezier(.2,.8,.2,1);
+}
+
+.app-bubble.mercury.mercury-open {
+  --x: 49.5% !important;
+  --y: 50% !important;
+  --size: min(190vw, 190vh) !important;
+  --scale: 1 !important;
+
+  left: var(--x) !important;
+  top: var(--y) !important;
+  width: var(--size) !important;
+  height: var(--size) !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
+
+  transition:
+    width 3.4s cubic-bezier(.2,.8,.2,1),
+    height 3.4s cubic-bezier(.2,.8,.2,1),
+    transform 3.4s cubic-bezier(.2,.8,.2,1);
+
+  z-index: 220 !important;
+}

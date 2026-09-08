@@ -1,6 +1,6 @@
 .account {
-  --x: 72%;
-  --y: 32%;
+  --x: 5%;
+  --y: 14%;
   --size: min(15vw, 19vh);
 
   --opacity: 0;
@@ -28,12 +28,17 @@
   padding: 0;
 }
 
+
+
 .account.focus {
-  --x: 72%;
-  --y: 32%;
-  --size: min(34vw, 34vh);
-  --scale: 1.6;
-  --time: 2800ms;
+  animation: none !important;
+
+  --x: 50% !important;
+  --y: 50% !important;
+  --size: min(34vw, 34vh) !important;
+  --scale: 1.6 !important;
+  --time: 2800ms !important;
+
   z-index: 40;
   padding: 0;
 }

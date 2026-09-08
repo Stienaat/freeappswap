@@ -1,4 +1,5 @@
 window.createJunoBubble = function createJunoBubble() {
+    console.log("JUNO CREATE");
   if (document.querySelector('.app-bubble[data-kind="juno"]')) return;
 
   const el = document.createElement("div");
@@ -13,7 +14,7 @@ window.createJunoBubble = function createJunoBubble() {
     el,
     randomBetween(76, 89),
     randomBetween(28, 54),
-    "32px"
+    "46px"
   );
 
   el.addEventListener("click", event => {
@@ -232,8 +233,27 @@ async function openJunoCard() {
 
   window.PlanetManager?.activate("juno");
 
+  const junoPlanet = document.querySelector(
+    '.app-bubble[data-kind="juno"]'
+  );
+
+  junoPlanet?.classList.add("juno-center");
+
   const config = await loadJunoConfig();
   if (config.enabled === false) return;
+
+  
+  setTimeout(() => {
+    junoPlanet?.classList.add("juno-open");
+  }, 900);
+
+  setTimeout(() => {
+    openJunoCardContent(config);
+  }, 4300);
+
+}
+function openJunoCardContent(config) {
+
 
   const maxAmount = getJunoMaxAmount();
   const overlay = document.createElement("div");
@@ -363,6 +383,17 @@ function closeJunoCard() {
 
   overlay.classList.remove("show");
   document.body.classList.remove("juno-card-open");
+
+  const junoPlanet = document.querySelector(
+    '.app-bubble[data-kind="juno"]'
+  );
+
+  junoPlanet?.classList.remove("juno-open");
+  junoPlanet?.classList.remove("juno-center");
+
+  if (junoPlanet) {
+    junoPlanet.dataset.motionStatus = "1";
+  }
 
   setTimeout(() => overlay.remove(), 220);
 }

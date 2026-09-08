@@ -90,6 +90,17 @@ window.openMercuryCard = async function openMercuryCard() {
   window.closeMercuryCard();
   window.PlanetManager?.activate("mercury");
 
+  const mercuryPlanet = document.querySelector(
+  '.app-bubble[data-kind="mercury"]'
+);
+
+mercuryPlanet?.classList.add("mercury-center");
+
+await new Promise(resolve => setTimeout(resolve, 900));
+
+mercuryPlanet?.classList.add("mercury-open");
+
+await new Promise(resolve => setTimeout(resolve, 3400));
   const defaults = await getMercuryUserDefaults();
 
   const overlay = document.createElement("div");
@@ -202,6 +213,27 @@ window.openMercuryCard = async function openMercuryCard() {
   });
 };
 
+window.closeMercuryCard = function closeMercuryCard() {
+  const overlay = document.getElementById("mercuryCardOverlay");
+
+  if (overlay) {
+    overlay.classList.remove("show");
+    document.body.classList.remove("mercury-card-open");
+
+    setTimeout(() => overlay.remove(), 220);
+  }
+
+  const mercuryPlanet = document.querySelector(
+    '.app-bubble[data-kind="mercury"]'
+  );
+
+  mercuryPlanet?.classList.remove("mercury-open");
+  mercuryPlanet?.classList.remove("mercury-center");
+
+  if (mercuryPlanet) {
+    mercuryPlanet.dataset.motionStatus = "1";
+  }
+};
 async function submitMercuryMessage(event) {
   event.preventDefault();
 
@@ -258,15 +290,7 @@ async function submitMercuryMessage(event) {
   }, 1800);
 }
 
-window.closeMercuryCard = function closeMercuryCard() {
-  const overlay = document.getElementById("mercuryCardOverlay");
-  if (!overlay) return;
 
-  overlay.classList.remove("show");
-  document.body.classList.remove("mercury-card-open");
-
-  setTimeout(() => overlay.remove(), 220);
-};
 
 document.addEventListener("keydown", event => {
   if (

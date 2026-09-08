@@ -77,20 +77,14 @@ body.day-open .intro-birth::before {
 }
 
 .intro-birth.run .intro-earth {
-  animation: earthBirth 10s cubic-bezier(.12,.78,.16,1) forwards;
+animation: earthBirth 10s cubic-bezier(.75, 0, 1, .25) forwards;
 }
 
 @keyframes earthBirth {
   0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(.001);
-    filter: blur(12px) brightness(3);
-  }
-
-  20% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(.05);
-    filter: blur(10px) brightness(2.4);
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(.015);
+    filter: blur(4px) brightness(2);
   }
 
   100% {
@@ -99,6 +93,7 @@ body.day-open .intro-birth::before {
     filter: blur(0) brightness(1);
   }
 }
+
 .intro-title,
 .intro-text {
   position: absolute;

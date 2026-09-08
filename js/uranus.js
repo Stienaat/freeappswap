@@ -9,7 +9,7 @@ window.createUranusBubble = function createUranusBubble() {
   el.title = "HELP & INFO";
 
   el.innerHTML = `
-    <div class="uranus-label" aria-hidden="true">?</div>
+    <div class="uranus-label" aria-hidden="true">i</div>
     <section class="uranus-info" aria-hidden="true">
       <button
         class="uranus-close"
@@ -139,31 +139,41 @@ Wachtwoorden worden niet door FreeApps Exchange opgeslagen of zichtbaar gemaakt;
   const closeButton = el.querySelector(".uranus-close");
   const scrollPanel = el.querySelector(".uranus-scroll");
 
-  function openUranusInfo() {
-    if (el.classList.contains("info-open")) return;
+function openUranusInfo() {
+  if (el.classList.contains("info-open")) return;
 
-    window.PlanetManager?.activate("uranus");
+  window.PlanetManager?.activate("uranus");
+  el.dataset.motionStatus = "3";
+  el.title = "";
+
+  // stap 1: eerst naar centrum, op huidige grootte
+  el.classList.add("uranus-center");
+
+  setTimeout(() => {
+    // stap 2: daarna pas uitgroeien
     el.classList.add("info-open");
-    el.dataset.motionStatus = "3";
+
     info.setAttribute("aria-hidden", "false");
     document.body.classList.add("uranus-info-active");
-    el.title = "";
 
     requestAnimationFrame(() => {
       scrollPanel.scrollTop = 0;
       scrollPanel.focus({ preventScroll: true });
     });
-  }
+  }, 900);
+}
 
-  function closeUranusInfo() {
-    if (!el.classList.contains("info-open")) return;
+function closeUranusInfo() {
+  if (!el.classList.contains("info-open")) return;
 
-    el.classList.remove("info-open");
-    el.dataset.motionStatus = "1";
-    info.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("uranus-info-active");
-    el.title = "HELP & INFO";
-  }
+  el.classList.remove("info-open");
+  el.classList.remove("uranus-center");
+
+  el.dataset.motionStatus = "1";
+  info.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("uranus-info-active");
+  el.title = "HELP & INFO";
+}
 
   el.addEventListener("click", (event) => {
     if (event.target.closest(".uranus-close")) return;

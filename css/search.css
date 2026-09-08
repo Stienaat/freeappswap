@@ -17,10 +17,18 @@
 
 .search {
   cursor: pointer;
-    --x: 2%;
-    --y: 5%;
-    --size: min(15vw, 11vh);
-  }
+
+  --x: 5%;
+  --y: 14%;
+  --size: min(15vw, 11vh);
+
+  transition:
+    left 2800ms cubic-bezier(.2, .8, .2, 1),
+    top 2800ms cubic-bezier(.2, .8, .2, 1),
+    width 2800ms cubic-bezier(.2, .8, .2, 1),
+    height 2800ms cubic-bezier(.2, .8, .2, 1),
+    transform 2800ms cubic-bezier(.2, .8, .2, 1);
+}
 
 /* Kleine zoekbol: icoon kleiner, tekst iets groter */
 
@@ -40,7 +48,7 @@
 .search.focus {
   --x: 24%;
   --y: 28%;
-  --size: min(45vw, 45vh);
+  --size: min(80vw, 800vh);
   --scale: 1;
   --opacity: .98;
   --time: 4200ms;
@@ -77,8 +85,9 @@ body.day-open #search {
   opacity: 1;
   pointer-events: auto;
 
-  transform: scale(1.5);
+  transform: translate(-50%, -50%) scale(1);
 }
+
 .search-menu {
   width: 62%;
   display: none;
@@ -181,6 +190,7 @@ body.day-open #search {
     --y: 50% !important;
     --size: 88vmin !important;
     --scale: 1 !important;
+    --time: 600ms !important;
   }
 
 body.day-open #search.search.focus {

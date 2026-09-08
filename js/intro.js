@@ -20,32 +20,39 @@ window.startIntro = async function startIntro() {
 
   const intro = document.getElementById("introBirth");
 
-  await sleep(400);
+ // Figuranten meteen aanmaken.
+  window.createUranusBubble?.();
+ setTimeout(() => {
+  window.createJunoBubble?.();
+}, 0);
+
+  await sleep(4300);
 
   intro?.classList.add("run");
 
-  setTimeout(() => {
-    document.querySelector(".intro-title")?.classList.add("show");
-  }, 5000);
+  await sleep(4300);
 
-  setTimeout(() => {
-    document.querySelector(".intro-text-top")?.classList.add("show");
-  }, 9000);
+  intro?.classList.add("run");
 
-  setTimeout(() => {
-    document.querySelector(".intro-text-bottom")?.classList.add("show");
-  }, 11000);
+ setTimeout(() => {
+  document.querySelector(".intro-title")?.classList.add("show");
+}, 2200);
 
-  setTimeout(() => {
+setTimeout(() => {
+  document.querySelector(".intro-text-top")?.classList.add("show");
+}, 3200);
+
+setTimeout(() => {
+  document.querySelector(".intro-text-bottom")?.classList.add("show");
+}, 4200);
+
+setTimeout(() => {
   document.querySelector(".intro-title")?.classList.add("hide");
   document.querySelector(".intro-text-top")?.classList.add("hide");
   document.querySelector(".intro-text-bottom")?.classList.add("hide");
-}, 15000);
-
-  setTimeout(async () => {
-    await sleep(5450);
-    openAccountMoon();
-    window.createUranusBubble?.();
-    window.createJunoBubble?.();
-  }, 7000);
+}, 6500);
+setTimeout(async () => {
+  await sleep(5450);
+  openAccountMoon();
+}, 1000);
 };

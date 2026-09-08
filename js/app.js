@@ -330,12 +330,31 @@ document.querySelectorAll(".search-link").forEach(button => {
   });
 });
 
+
 function handleNavigationTarget(target) {
 
-  if (target === "upload") {
-    window.PlanetManager.activate("upload");
-    return;
-  }
+if (target === "account") {
+  document.querySelector(".account")?.click();
+  return;
+}
+
+if (
+  target === "upload" ||
+  target === "uranus" ||
+  target === "juno" ||
+  target === "mercury"
+) {
+  const sun = document.querySelector(".search");
+
+  sun?.classList.remove("focus");
+
+  document
+    .querySelector(`.app-bubble[data-kind="${target}"]`)
+    ?.click();
+
+  return;
+}
+
 
   if (target === "download") {
     renderDownloadStart();
@@ -575,10 +594,20 @@ function preparePlanetBubble(el, finalX, finalY, size) {
     // detailkaart niet meteen door de centrale manager wordt gesloten.
     window.PlanetManager.activate(focusGroup);
 
-    if (kind === "upload") {
+if (kind === "upload") {
+  el.classList.add("upload-center");
+
+  setTimeout(() => {
+    el.classList.add("upload-open");
+
+    setTimeout(() => {
       openUserAppEditor();
-      return;
-    }
+    }, 3400);
+
+  }, 900);
+
+  return;
+}
 
     // Passieve bollen mogen andere open onderdelen wel sluiten,
     // maar openen zelf geen algemeen focusvenster.
@@ -591,14 +620,93 @@ function preparePlanetBubble(el, finalX, finalY, size) {
 
   document.querySelector(".space").appendChild(el);
 
+document.querySelector(".space").appendChild(el);
+
+// Kleine onderlinge verschillen maken de intro natuurlijker.
+// Soms vertrekken twee planeten bijna samen.
+const introDelays = {
+  mercury: 300,
+  admin: 1100,      // Venus
+  download: 1900,   // Mars
+  upload: 2050,     // Jupiter bijna samen met Mars
+  uranus: 3000,
+  juno: 3800
+};
+
+const introDelay = introDelays[el.dataset.kind] ?? 1000;
+
+setTimeout(() => {
   requestAnimationFrame(() => {
     el.style.setProperty("--x", `${finalX}%`);
     el.style.setProperty("--y", `${finalY}%`);
     el.style.setProperty("--scale", "1");
     el.style.setProperty("--opacity", ".96");
 
-    // Laat eerst de bol rustig binnenkomen, daarna begint de vrije wrap-beweging.
-    setTimeout(() => startWrapMotion(el, finalX, finalY), 5400);
+    // Eerst rustig naar de positie zweven,
+    // daarna neemt de normale vrije beweging het over.
+    setTimeout(() => {
+      startWrapMotion(el, finalX, finalY);
+    }, 5400);
+  });
+}, introDelay);
+}
+
+function handlePlanetCollisions(el, motion) {
+  const rect1 = el.getBoundingClientRect();
+
+  const x1 = rect1.left + rect1.width / 2;
+  const y1 = rect1.top + rect1.height / 2;
+
+  // Iets kleiner dan de echte afbeelding:
+  // zo mogen planeten visueel bijna tegen elkaar komen.
+  const r1 = Math.min(rect1.width, rect1.height) * 0.43;
+
+  document.querySelectorAll(".app-bubble").forEach(other => {
+    if (other === el) return;
+    if (!other._wrapMotion) return;
+
+    // Geen botsingen met planeten die momenteel open/focus zijn.
+    if (
+      other.classList.contains("focus") ||
+      other.dataset.motionStatus === "0" ||
+      other.dataset.motionStatus === "3"
+    ) {
+      return;
+    }
+
+    const otherMotion = other._wrapMotion;
+    const rect2 = other.getBoundingClientRect();
+
+    const x2 = rect2.left + rect2.width / 2;
+    const y2 = rect2.top + rect2.height / 2;
+
+    const r2 = Math.min(rect2.width, rect2.height) * 0.43;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance === 0 || distance >= r1 + r2) return;
+
+    // Alleen reageren wanneer ze naar elkaar toe bewegen.
+    const nx = dx / distance;
+    const ny = dy / distance;
+
+    const relativeVx = motion.vx - otherMotion.vx;
+    const relativeVy = motion.vy - otherMotion.vy;
+
+    const approaching = relativeVx * nx + relativeVy * ny;
+
+    if (approaching <= 0) return;
+
+    // Component langs de botsingslijn uitwisselen.
+    const impulse = approaching;
+
+    motion.vx -= impulse * nx;
+    motion.vy -= impulse * ny;
+
+    otherMotion.vx += impulse * nx;
+    otherMotion.vy += impulse * ny;
   });
 }
 
@@ -662,6 +770,7 @@ if (
     motion.x += motion.vx * dt;
     motion.y += motion.vy * dt;
 
+    handlePlanetCollisions(el, motion);
     // Wrap-around: links eruit = rechts terug, rechts eruit = links terug,
     // boven eruit = onder terug, onder eruit = boven terug.
     const margin = 8;
@@ -857,6 +966,7 @@ function focusBubble(kind) {
     );
   });
 }
+window.focusBubble = focusBubble;
 
 const planetSpace = document.querySelector(".space");
 
@@ -875,6 +985,8 @@ planetSpace?.addEventListener("click", event => {
 search.addEventListener("click", event => {
   event.stopPropagation();
 
+  console.log("SUN CLICK", { loggedIn });
+
   if (!loggedIn) {
     setAccountMode("login");
     focusBubble("account");
@@ -882,8 +994,40 @@ search.addEventListener("click", event => {
     return;
   }
 
+  console.log("SUN FOCUS");
+
   focusBubble("search");
+
+  console.log("DIRECT NA FOCUS:", search.className);
+
+  setTimeout(() => {
+    console.log("100ms LATER:", search.className);
+  }, 100);
+  setTimeout(() => {
+  console.log("500ms LATER:", search.className);
+}, 500);
+
+setTimeout(() => {
+  console.log("1000ms LATER:", search.className);
+}, 1000);
+
+setTimeout(() => {
+  console.log("2000ms LATER:", search.className);
+}, 2000);
+setTimeout(() => {
+  console.log("3000ms LATER:", search.className);
+}, 3000);
+
+setTimeout(() => {
+  console.log("4500ms LATER:", search.className);
+}, 4500);
+
+setTimeout(() => {
+  console.log("6000ms LATER:", search.className);
+}, 6000);
 });
+
+
 
 exportUsersJson.addEventListener("click", event => {
   event.stopPropagation();
@@ -2007,8 +2151,20 @@ window.closeAdminAppEditor = closeAdminAppEditor;
    ========================================================= */
 
 function closeUserAppEditor() {
+
   document.getElementById("userAppEditorOverlay")?.remove();
   document.body.classList.remove("user-editor-open");
+
+  const uploadPlanet = document.querySelector(
+    '.app-bubble[data-kind="upload"]'
+  );
+
+  uploadPlanet?.classList.remove("upload-open");
+  uploadPlanet?.classList.remove("upload-center");
+
+  if (uploadPlanet) {
+    uploadPlanet.dataset.motionStatus = "1";
+  }
 }
 
 function setUserEditorStatus(text, isError = false) {
@@ -2556,3 +2712,4 @@ createAppBubble("upload");
 appBubblesCreated = true;
 
 openSunSearch();
+

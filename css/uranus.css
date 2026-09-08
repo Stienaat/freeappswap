@@ -14,14 +14,14 @@
   overflow: visible;
   filter: drop-shadow(18px 24px 22px rgba(0, 0, 0, .18));
   cursor: pointer;
-  transition:
-    left .95s cubic-bezier(.2, .8, .2, 1),
-    top .95s cubic-bezier(.2, .8, .2, 1),
-    width .95s cubic-bezier(.2, .8, .2, 1),
-    height .95s cubic-bezier(.2, .8, .2, 1),
-    transform .95s cubic-bezier(.2, .8, .2, 1),
-    filter .35s ease;
-  --size: min(25vw, 30vh) !important;
+transition:
+  left 2800ms cubic-bezier(.2, .8, .2, 1),
+  top 2800ms cubic-bezier(.2, .8, .2, 1),
+  width 2800ms cubic-bezier(.2, .8, .2, 1),
+  height 2800ms cubic-bezier(.2, .8, .2, 1),
+  transform 2800ms cubic-bezier(.2, .8, .2, 1),
+  filter .35s ease;
+  --size: min(15vw, 20vh) !important;
   --scale: 1 !important;
 
 }
@@ -35,14 +35,14 @@
 .uranus-label {
   position: absolute;
   left: 50%;
-  top: 51%;
+  top: 45%;
   transform: translate(-50%, -50%);
   min-width: max-content;
   padding: .34rem .68rem;
   border-radius: 999px;
  
   color: yellow;
-  font-size: clamp(3rem, 1.5vw, 1rem);
+  font-size: clamp(4rem, 1.5vw, 1rem);
   font-weight: 600;
   letter-spacing: .02em;
   text-shadow: 0 2px 6px rgba(0, 0, 0, .9);
@@ -58,25 +58,25 @@
    ========================================================= */
 
 .app-bubble.uranus.info-open {
-  --x: 52% !important;
-  --y: 50% !important;
-  --size: min(105vw, 120vh) !important;
-  --scale: 2 !important;
+  --x: 50% !important;
+  --y: 52% !important;
+  --size: min(125vw, 125vh) !important;
+  --scale: 1 !important;
 
   left: var(--x) !important;
   top: var(--y) !important;
   width: var(--size) !important;
   height: var(--size) !important;
-  transform: translate(-53%, -48%) scale(1) !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
 
   z-index: 220 !important;
   cursor: default;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(225, 249, 255, .13), rgba(15, 73, 92, .12)),
-    url("../assets/images/uranus.PNG")
-    center / cover no-repeat;
 
+  background:
+    url("../assets/images/uranus.PNG")
+    center / contain no-repeat;
 }
 
 /* Geen donkere overlay over de omgeving. Alleen andere bollen treden licht terug. */
@@ -84,6 +84,16 @@ body.uranus-info-active .app-bubble:not(.uranus) {
   opacity: .42;
   pointer-events: none;
   transition: opacity .35s ease;
+}
+
+.app-bubble.uranus.uranus-center:not(.info-open) {
+  --x: 50% !important;
+  --y: 52% !important;
+
+  left: var(--x) !important;
+  top: var(--y) !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
 }
 
 /* =========================================================
@@ -290,4 +300,20 @@ body.uranus-info-active .app-bubble:not(.uranus) {
     width: 38px;
     height: 38px;
   }
+}
+.app-bubble.uranus.uranus-focus {
+  --x: 50% !important;
+  --y: 50% !important;
+  --size: min(100vw, 100vh) !important;
+  --scale: 1 !important;
+  --time: 2800ms !important;
+
+  left: var(--x) !important;
+  top: var(--y) !important;
+  width: var(--size) !important;
+  height: var(--size) !important;
+
+  transform: translate(-50%, -50%) scale(1) !important;
+
+  z-index: 220 !important;
 }
