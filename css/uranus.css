@@ -14,15 +14,15 @@
   overflow: visible;
   filter: drop-shadow(18px 24px 22px rgba(0, 0, 0, .18));
   cursor: pointer;
-transition:
-  left 2800ms cubic-bezier(.2, .8, .2, 1),
-  top 2800ms cubic-bezier(.2, .8, .2, 1),
-  width 2800ms cubic-bezier(.2, .8, .2, 1),
-  height 2800ms cubic-bezier(.2, .8, .2, 1),
-  transform 2800ms cubic-bezier(.2, .8, .2, 1),
-  filter .35s ease;
-  --size: min(15vw, 20vh) !important;
-  --scale: 1 !important;
+  transition:
+    left 2800ms cubic-bezier(.2, .8, .2, 1),
+    top 2800ms cubic-bezier(.2, .8, .2, 1),
+    width 2800ms cubic-bezier(.2, .8, .2, 1),
+    height 2800ms cubic-bezier(.2, .8, .2, 1),
+    transform 2800ms cubic-bezier(.2, .8, .2, 1),
+    filter .35s ease;
+    --size: min(15vw, 20vh) !important;
+    --scale: 1 !important;
 
 }
 

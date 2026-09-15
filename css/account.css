@@ -5,7 +5,7 @@
 
   --opacity: 0;
   --time: 3800ms;
-  z-index: 15;
+  z-index: 5;
   cursor: default;
   filter: drop-shadow(22px 28px 26px rgba(0,0,0,.20));
 }
@@ -28,8 +28,6 @@
   padding: 0;
 }
 
-
-
 .account.focus {
   animation: none !important;
 
@@ -38,8 +36,7 @@
   --size: min(34vw, 34vh) !important;
   --scale: 1.6 !important;
   --time: 2800ms !important;
-
-  z-index: 40;
+  z-index: 5;
   padding: 0;
 }
 
@@ -68,11 +65,9 @@
 .account:not(.focus) .account-label {
   display: grid;
   place-items: center;
-
   width: 100%;
   height: 100%;
   margin: 0;
-
   font-size: clamp(14px, 2.4vw, 28px);
   font-weight: 950;
   letter-spacing: 0.08em;
@@ -116,7 +111,6 @@
 
 .account-form input {
   background: rgba(255,255,255,.92);
-
   padding: 0 2em;
   color: #111733;
   outline: none;
